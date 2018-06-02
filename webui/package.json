@@ -1,0 +1,11 @@
+{
+  "name": "okr-portal-webui",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Irina Chi",
+  "license": "GPL-3.0"
+}
