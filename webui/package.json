@@ -2,8 +2,9 @@
   "name": "okr-portal-webui",
   "version": "0.1.0",
   "description": "",
-  "main": "index.html",
+  "main": "src/index.html",
   "scripts": {
+    "build": "npx parcel index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Irina Chi",
