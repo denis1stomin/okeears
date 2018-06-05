@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.html",
   "scripts": {
-    "build": "npx parcel index.html",
+    "build": "npx parcel build",
+    "clean": "rm -R dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Irina Chi",
