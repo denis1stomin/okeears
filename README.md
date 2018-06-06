@@ -1,17 +1,11 @@
-# OKRPortal
+# OKR (Objectives and Key Results) Portal
 
-## UI Installation
-
-* `npm install`
-* `npm install -g parcel-bundler` (https://parceljs.org)
+TODO: Add good general description here
+Microsoft Azure AD authentication, Graph API, OneDrive API etc
 
 
-## Running / Development
+## Useful links
 
-* `parcel index.html` or `npx parcel`
-* Visit your app at [http://localhost:1234](http://localhost:1234).
+OpenAPI (aka Swagger) specification
+https://app.swaggerhub.com/apis/denis1stomin/OKRPortal/
 
-
-### Building
-
-* `npx parcel build` (development)
