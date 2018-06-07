@@ -7,14 +7,15 @@ const instance = axios.create({
 
 export default {
     state: {
-        me: [{
-            name: ''
-        }],
-
-        orgtree: {
-            name: 'Justin ',
-            upn: 'justin.bieber@music.com'
+        me: {
+            name: 'Justin'
         },
+
+        orgtree: [{
+            name: 'Jesus',
+        }, {
+            name: 'Justin'
+        }],
         
         error: ''
     },

@@ -1,9 +1,6 @@
 <template>
     <div class="org-tree">
-        <span class="org-tree-item">Idioma</span>
-        <span class="org-tree-item">OKR</span>
-        <span class="org-tree-item">Core</span>
-        <span class="org-tree-item">{{userName}}</span>
+        <span class="org-tree-item" v-for="user in orgtree">{{user.name}}</span>
     </div>
 </template>
 
@@ -12,9 +9,9 @@
         name: 'OrgTree',
 
         computed: {
-            userName: {
+            orgtree: {
                 get() {
-                    return this.$store.state.user.orgtree.name;
+                    return this.$store.state.user.orgtree;
                 }
             }
         }
