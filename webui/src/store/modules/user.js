@@ -1,6 +1,6 @@
 import axios from 'axios/index';
 
-const instance = axios.create({
+const httpClient = axios.create({
     baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.1.0',
     headers: {'Accept': 'application/json'}
 });
@@ -40,13 +40,13 @@ export default {
 
     actions: {
         GET_USER(user) {
-            instance.get('/me')
+            httpClient.get('/me')
                 .then(response => user.commit('USER_COMPLETE', response.data))
                 .catch(error => user.commit('USER_FAILED', error))
         },
 
         GET_ORGTREE(orgtree) {
-            instance.get('/me/orgtree')
+            httpClient.get('/me/orgtree')
                 .then(response => orgtree.commit('ORGTREE_COMPLETE', response.data))
                 .catch(error => orgtree.commit('ORGTREE_FAILED', error))
         }

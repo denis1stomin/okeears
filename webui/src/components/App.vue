@@ -7,10 +7,8 @@
         </header>
 
         <div class="content">
-            <nav>
-                <SearchForm/>
-                <OrgTree/>
-            </nav>
+            <SearchForm/>
+            <OrgTree/>
         </div>
     </div>
 </template>
