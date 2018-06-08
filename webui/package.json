@@ -2,8 +2,10 @@
   "name": "okr-portal-webui",
   "version": "0.1.0",
   "description": "",
-  "main": "index.html",
+  "main": "src/index.html",
   "scripts": {
+    "build": "parcel build src/index.html --public-url ./",
+    "clean": "if [ -d dist ]; then rm -R dist; fi",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Irina Chi",

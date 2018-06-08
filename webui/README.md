@@ -1,17 +1,12 @@
-# OKRPortal
+# OKRPortal Web UI
 
-## UI Installation
+## Build UI
 
+* `npm run clean`
 * `npm install`
-* `npm install -g parcel-bundler` (https://parceljs.org)
-
+* `npm run build` (production mode)
 
 ## Running / Development
 
 * `parcel index.html` or `npx parcel`
 * Visit your app at [http://localhost:1234](http://localhost:1234).
-
-
-### Building
-
-* `npx parcel build` (development)
