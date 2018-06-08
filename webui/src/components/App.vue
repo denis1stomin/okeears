@@ -1,17 +1,36 @@
 <template>
-    <div class='container'>
-        Hello {{msg}}!
+    <div class="container">
+        <header class="header">
+            <h4 class="title">OKR Portal</h4>
+
+            <span class="user-name">{{user.name}}</span>
+        </header>
+
+        <div class="content">
+            <SearchForm/>
+            <OrgTree/>
+        </div>
     </div>
 </template>
 
 <script>
-    export default {
-        name: 'app',
+    import SearchForm from './SearchForm'
+    import OrgTree from './OrgTree'
 
-        data() {
-            return {
-                msg: 'OKR'
+    export default {
+        components: {SearchForm, OrgTree},
+
+        computed: {
+            user: {
+                get() {
+                    return this.$store.state.user.me;
+                }
             }
+        },
+
+        mounted() {
+            this.$store.dispatch("GET_USER");
+            this.$store.dispatch("GET_ORGTREE");
         }
     }
 </script>
