@@ -25,7 +25,7 @@
         computed: {
             user: {
                 get() {
-                    return this.$store.state.user.me[0];
+                    return this.$store.state.user.me;
                 }
             }
         },

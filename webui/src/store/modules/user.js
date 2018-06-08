@@ -41,14 +41,14 @@ export default {
     actions: {
         GET_USER(user) {
             instance.get('/me')
-                .then(response => user.commit('ORGTREE_COMPLETE', response.data))
-                .catch(error => user.commit('ORGTREE_FAILED', error))
+                .then(response => user.commit('USER_COMPLETE', response.data))
+                .catch(error => user.commit('USER_FAILED', error))
         },
 
         GET_ORGTREE(orgtree) {
             instance.get('/me/orgtree')
-                .then(response => orgtree.commit('USER_COMPLETE', response.data))
-                .catch(error => orgtree.commit('USER_FAILED', error))
+                .then(response => orgtree.commit('ORGTREE_COMPLETE', response.data))
+                .catch(error => orgtree.commit('ORGTREE_FAILED', error))
         }
     }
 }
