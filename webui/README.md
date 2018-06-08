@@ -10,4 +10,3 @@
 
 * `parcel index.html` or `npx parcel`
 * Visit your app at [http://localhost:1234](http://localhost:1234).
-

@@ -8,4 +8,3 @@ Microsoft Azure AD authentication, Graph API, OneDrive API etc
 
 OpenAPI (aka Swagger) specification
 https://app.swaggerhub.com/apis/denis1stomin/OKRPortal/
-
