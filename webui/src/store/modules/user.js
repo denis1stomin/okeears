@@ -8,14 +8,10 @@ const httpClient = axios.create({
 export default {
     state: {
         me: {
-            name: 'Justin'
+            name: ''
         },
 
-        orgtree: [{
-            name: 'Jesus',
-        }, {
-            name: 'Justin'
-        }],
+        orgtree: [],
         
         error: ''
     },
