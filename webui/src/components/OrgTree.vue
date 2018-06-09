@@ -4,9 +4,9 @@
             {{user.name}}
             <div class="org-tree-item-links">
                 View on
-                <a v-bind:href="user.aadlink">Portal</a>
-                <a v-bind:href="user.o365link">O365</a>
-                <a v-bind:href="user.delvelink">Delve</a>
+                <a target="_blank" :href="user.aadlink">Portal</a>
+                <a target="_blank" :href="user.o365link">O365</a>
+                <a target="_blank" :href="user.delvelink">Delve</a>
             </div>
         </span>
     </div>
