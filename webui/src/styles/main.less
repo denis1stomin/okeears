@@ -17,6 +17,8 @@ body {
     border-bottom: 1px solid #eee;
     box-shadow: 0 1px 5px 0 #eee;
     opacity: .95;
+    color: white;
+    background-color: black;
 
     .title {
       display: inline-block;
@@ -35,7 +37,7 @@ body {
     max-width: 300px;
     margin-top: 60px;
     padding: 30px;
-
+    background: darkorange;
   }
 
   .search-form {
@@ -74,5 +76,22 @@ body {
     display: flex;
     flex-direction: column;
     margin-top: 30px;
+
+    .org-tree-item {
+      background: darkolivegreen;
+      min-height: 60px;
+      padding: 10px;
+      font-weight: bold;
+      color: navajowhite;
+      font-size: 20px;
+      margin: 5px;
+
+      .org-tree-item-links {
+        color: grey;
+        font-size: 15px;
+        text-align: right;
+      }
+    }
   }
 }
+
