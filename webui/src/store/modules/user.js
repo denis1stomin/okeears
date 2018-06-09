@@ -8,14 +8,10 @@ const httpClient = axios.create({
 export default {
     state: {
         me: {
-            name: 'Justin'
+            name: ''
         },
 
-        orgtree: [{
-            name: 'Jesus',
-        }, {
-            name: 'Justin'
-        }],
+        orgtree: [],
         
         error: ''
     },
@@ -23,6 +19,13 @@ export default {
     mutations: {
         ORGTREE_COMPLETE(state, payload) {
             state.orgtree = payload;
+
+            state.orgtree.push(Object.assign({}, state.orgtree[0]));
+            state.orgtree.push(Object.assign({}, state.orgtree[0]));
+            state.orgtree[1].id = '351393bd-ebae-4d7e-b755-26b148b700d6';
+            state.orgtree[1].name = 'Bob Marley';
+            state.orgtree[2].id = '7003753e-4337-499d-9daf-bca9756a274b';
+            state.orgtree[2].name = 'Dima Bilan';
         },
 
         ORGTREE_FAILED(state, payload) {
