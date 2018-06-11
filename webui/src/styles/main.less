@@ -12,6 +12,7 @@ body {
 .container {
   display: grid;
   grid-template-columns: auto 1fr;
+  grid-template-rows: 60px 1fr 60px;
   grid-template-areas: 'header header' 'menu content' 'footer footer';
   min-height: 100vh;
 
@@ -19,7 +20,7 @@ body {
     grid-area: header;
     height: 60px;
     color: white;
-    background-color: black;
+    background-color: #333;
 
     .title {
       display: inline-block;
@@ -36,19 +37,22 @@ body {
   .menu {
     grid-area: menu;
     padding: 30px;
-    border-right: 1px solid #eee;
+    background: #7d7abc;
   }
 
   .content {
     grid-area: content;
     padding: 30px;
+    background: #c3c3e1;;
   }
 
   .footer {
     grid-area: footer;
     height: 30px;
     padding: 15px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #333;
+    background: #333;
+    color: #fff;
   }
 }
 
