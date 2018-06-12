@@ -6,19 +6,28 @@
             <span class="user-name">{{user.name}}</span>
         </header>
 
-        <div class="content">
+        <div class="menu">
             <SearchForm/>
             <OrgTree/>
         </div>
+
+        <div class="content">
+            <OKR/>
+        </div>
+
+        <footer class="footer">
+            @idioma
+        </footer>
     </div>
 </template>
 
 <script>
     import SearchForm from './SearchForm'
     import OrgTree from './OrgTree'
+    import OKR from './OKR'
 
     export default {
-        components: {SearchForm, OrgTree},
+        components: {SearchForm, OrgTree, OKR},
 
         computed: {
             user: {
@@ -31,6 +40,7 @@
         mounted() {
             this.$store.dispatch("GET_USER");
             this.$store.dispatch("GET_ORGTREE");
+            this.$store.dispatch("GET_OBJECTIVES");
         }
     }
 </script>
