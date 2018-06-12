@@ -1,24 +1,26 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: Oxygen, "Segoe UI", "Helvetica Neue", sans-serif;
+  color: #333;
+}
+
+.title {
+  margin: 0;
 }
 
 .container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 60px 1fr 60px;
+  grid-template-areas: 'header header' 'menu content' 'footer footer';
+  min-height: 100vh;
+
   .header {
-    width: 100%;
+    grid-area: header;
     height: 60px;
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    padding: 0;
-    z-index: 10000;
-    background: white;
-    border-bottom: 1px solid #eee;
-    box-shadow: 0 1px 5px 0 #eee;
-    opacity: .95;
     color: white;
-    background-color: black;
+    background-color: #333;
 
     .title {
       display: inline-block;
@@ -32,14 +34,28 @@ body {
     }
   }
 
-  .content {
-    width: 40%;
-    max-width: 300px;
-    margin-top: 60px;
+  .menu {
+    grid-area: menu;
     padding: 30px;
-    background: darkorange;
+    background: #7d7abc;
+  }
+
+  .content {
+    grid-area: content;
+    padding: 30px;
+    background: #c3c3e1;;
+  }
+
+  .footer {
+    grid-area: footer;
+    height: 30px;
+    padding: 15px;
+    border-top: 1px solid #333;
+    background: #333;
+    color: #fff;
   }
 }
 
+@import "./okr";
 @import "./orgtree";
 @import "./searchForm";
