@@ -29,6 +29,15 @@
     export default {
         components: {SearchForm, OrgTree, OKR},
 
+        //watch: {
+        //    user: {
+        //        handler: () => {
+        //            this.$store.dispatch("GET_ORGTREE");
+        //            this.$store.dispatch("GET_OBJECTIVES");
+        //        }
+        //    }
+        //},
+
         computed: {
             user: {
                 get() {
@@ -38,7 +47,7 @@
         },
 
         mounted() {
-            this.$store.dispatch("GET_USER");
+            this.$store.dispatch("GET_CURRENT_USER");
             this.$store.dispatch("GET_ORGTREE");
             this.$store.dispatch("GET_OBJECTIVES");
         }
