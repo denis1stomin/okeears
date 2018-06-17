@@ -6,33 +6,33 @@
                :placeholder="placeholder"
                v-model="text"/>
         <div class="search-button">
+            <span class="input-plus" @click="addObjectives">+</span>
             <slot/>
         </div>
     </form>
 </template>
 
 <script>
-    import Icon from './Icon'
-
     export default {
         name: 'SearchForm',
-
-        components: {Icon},
 
         props: ['name', 'placeholder'],
 
         computed: {
             text: {
                 get() {
-                    return '';
+                    return this.$store.state.okr.newObjective;
                 },
 
                 set(changed) {
-                    this.$store.commit('INPUT_CHANGED', {
-                        prop: this.name,
-                        value: changed
-                    })
+                    this.$store.commit('CREATE_OBJECTIVE', changed);
                 }
+            }
+        },
+
+        methods: {
+            addObjectives(){
+                this.$store.dispatch('ADD_OBJECTIVE');
             }
         }
     }

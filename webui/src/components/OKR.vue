@@ -3,7 +3,6 @@
         <h3 class="title">OKR Editor</h3>
 
         <InputForm placeholder="Let's create new Object">
-            <span class="input-plus">+</span>
         </InputForm>
 
         <div class="objectives" v-for="objective in objectives">
@@ -26,7 +25,7 @@
         computed: {
             objectives: {
                 get() {
-                    return this.$store.state.user.objectives;
+                    return this.$store.state.okr.objectives;
                 }
             }
         }

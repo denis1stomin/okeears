@@ -11,8 +11,6 @@ export default {
 
         orgtree: [],
 
-        objectives: [],
-        
         error: ''
     },
 
@@ -39,14 +37,6 @@ export default {
         USER_FAILED(state, payload) {
             state.error = payload
         },
-
-        OBJECTIVES_COMPLETE(state, payload) {
-            state.objectives = payload
-        },
-
-        OBJECTIVES_FAILED(state, payload) {
-            state.error = payload
-        },
     },
 
     actions: {
@@ -60,12 +50,6 @@ export default {
             httpClient.get('/me/orgtree')
                 .then(response => orgtree.commit('ORGTREE_COMPLETE', response.data))
                 .catch(error => orgtree.commit('ORGTREE_FAILED', error))
-        },
-
-        GET_OBJECTIVES(orgtree) {
-            httpClient.get('/me/objectives')
-                .then(response => orgtree.commit('OBJECTIVES_COMPLETE', response.data))
-                .catch(error => orgtree.commit('OBJECTIVES_FAILED', error))
         }
     }
 }
