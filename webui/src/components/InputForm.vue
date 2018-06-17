@@ -1,34 +1,40 @@
 <template>
-    <form class="search-form">
+    <div class="input-form"
+         :action="action"
+         :initValue="initValue">
         <label :for="name"></label>
-        <input class="search-input" type="text"
+        <input type="text"
+               v-model="text"
                :id="name"
                :placeholder="placeholder"
-               v-model="text"/>
-        <div class="search-button">
+               @keyup.enter="initAction"/>
+        <div class="action-button" @click="initAction">
             <slot/>
         </div>
-    </form>
+    </div>
 </template>
 
 <script>
     export default {
-        name: 'SearchForm',
+        name: 'InputForm',
 
-        props: ['name', 'placeholder', 'type'],
+        props: ['name', 'placeholder', 'action', 'initValue'],
 
         computed: {
             text: {
                 get() {
-                    return this.$store.state.okr.newObjective;
+                    return this.initValue;
                 },
 
                 set(changed) {
-                    this.$store.commit('CREATE_OBJECTIVE', {
-                        prop: this.type,
-                        statement: changed
-                    })
+                    this.$store.commit('CHANGE_INPUT', changed);
                 }
+            }
+        },
+
+        methods: {
+            initAction() {
+                return this.action();
             }
         }
     }

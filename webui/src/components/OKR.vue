@@ -2,7 +2,9 @@
     <div class="okr">
         <h3 class="title">OKR Editor</h3>
 
-        <InputForm placeholder="Let's create new Object">
+        <InputForm placeholder="Let's create new Object"
+                   :init-value="newObjective"
+                   :action="addObjective">
             <span class="input-plus">+</span>
         </InputForm>
 
@@ -28,6 +30,19 @@
                 get() {
                     return this.$store.state.okr.objectives;
                 }
+            },
+
+            newObjective: {
+                get() {
+                    return this.$store.state.okr.newObjective;
+                }
+            }
+        },
+
+
+        methods: {
+            addObjective(){
+                this.$store.dispatch('ADD_OBJECTIVE');
             }
         }
     }

@@ -19,21 +19,23 @@ export default {
             state.error = payload;
         },
 
-        CREATE_OBJECTIVE(state, objective){
-            state.newobjective = objective;
+        CHANGE_INPUT(state, objective){
+            console.log('create', objective);
+            state.newObjective = objective;
         },
 
         ADD_OBJECTIVE(state){
             state.objectives.push({
                 statement: state.newObjective
             });
+            state.newObjective = '';
         },
 
         EDIT_OBJECTIVE(state, objective){
             let objectives = state.objectives;
             objectives.splice(objectives.indexOf(objective), 1);
             state.objectives = objectives;
-            state.newobjective = objective.body;
+            state.newObjective = objective.body;
         },
 
         REMOVE_OBJECTIVE(state, objective){
