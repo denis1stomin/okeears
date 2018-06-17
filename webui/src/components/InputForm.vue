@@ -15,18 +15,18 @@
     export default {
         name: 'SearchForm',
 
-        props: ['name', 'placeholder'],
+        props: ['name', 'placeholder', 'type'],
 
         computed: {
             text: {
                 get() {
-                    return '';
+                    return this.$store.state.okr.newObjective;
                 },
 
                 set(changed) {
-                    this.$store.commit('INPUT_CHANGED', {
-                        prop: this.name,
-                        value: changed
+                    this.$store.commit('CREATE_OBJECTIVE', {
+                        prop: this.type,
+                        statement: changed
                     })
                 }
             }
