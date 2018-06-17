@@ -26,7 +26,7 @@
         computed: {
             objectives: {
                 get() {
-                    return this.$store.state.user.objectives;
+                    return this.$store.state.okr.objectives;
                 }
             }
         }

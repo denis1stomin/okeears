@@ -12,12 +12,8 @@
 </template>
 
 <script>
-    import Icon from './Icon'
-
     export default {
         name: 'SearchForm',
-
-        components: {Icon},
 
         props: ['name', 'placeholder'],
 
