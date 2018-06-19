@@ -1,0 +1,14 @@
+{
+  "name": "fake-api-srv",
+  "version": "0.9.0",
+  "description": "Fake OKR server for development purposes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Denis I",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.14.0"
+  }
+}
