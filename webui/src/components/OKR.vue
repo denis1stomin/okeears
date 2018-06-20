@@ -2,17 +2,20 @@
     <div class="okr">
         <h3 class="title">OKR Editor</h3>
 
-        <InputForm placeholder="Let's create new Object"
+        <InputForm placeholder="Let's create a new Object"
+                   :action="addObjective"
                    :init-value="newObjective"
-                   :action="addObjective">
-            <span class="input-plus">+</span>
+                   objid="id">
+            <span class="input-icon">+</span>
         </InputForm>
 
         <div class="objectives" v-for="objective in objectives">
-            <span class="objective">{{objective.statement}}</span>
-            <div class="key-results" v-for="keyresult in objective.keyresults">
-                <span class="key-result">{{keyresult.statement}}</span>
-            </div>
+            <InputForm placeholder=""
+                       :action="editObjective"
+                       :init-value="objective.statement"
+                       :objid="objective.id">
+                <span class="input-icon">-</span>
+            </InputForm>
         </div>
     </div>
 </template>
@@ -41,8 +44,12 @@
 
 
         methods: {
-            addObjective(){
+            addObjective() {
                 this.$store.dispatch('ADD_OBJECTIVE');
+            },
+
+            editObjective() {
+                this.$store.dispatch('EDIT_OBJECTIVE');
             }
         }
     }

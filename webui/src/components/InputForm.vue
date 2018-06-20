@@ -7,6 +7,7 @@
                v-model="text"
                :id="name"
                :placeholder="placeholder"
+               :objid="objid"
                @keyup.enter="initAction"/>
         <div class="action-button" @click="initAction">
             <slot/>
@@ -18,7 +19,7 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'initValue'],
+        props: ['name', 'placeholder', 'action', 'initValue', 'objid'],
 
         computed: {
             text: {
@@ -27,7 +28,10 @@
                 },
 
                 set(changed) {
-                    this.$store.commit('CHANGE_INPUT', changed);
+                    this.$store.commit('CHANGE_INPUT', {
+                        id: this.objid || 'id',
+                        value: changed
+                    });
                 }
             }
         },

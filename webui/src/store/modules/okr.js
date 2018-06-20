@@ -20,8 +20,13 @@ export default {
         },
 
         CHANGE_INPUT(state, objective){
-            console.log('create', objective);
-            state.newObjective = objective;
+            console.log('state', state.objectives);
+            state.objectives.forEach(function (obj) {
+                if (obj.id === objective.id)
+                    obj.statement = objective.value;
+                else
+                    state.newObjective = objective.value
+            });
         },
 
         ADD_OBJECTIVE(state){
@@ -47,7 +52,7 @@ export default {
             objective.completed = !objective.completed;
         },
 
-        CLEAR_OBJECTIVE(state){
+        DELETE_OBJECTIVE(state){
             state.newObjective = '';
         }
     },
@@ -65,25 +70,25 @@ export default {
         CREATE_OBJECTIVE({commit}, objective){
             commit('GET_OBJECTIVE', objective);
         },
-        
+
         ADD_OBJECTIVE({commit}){
             commit('ADD_OBJECTIVE');
         },
-        
+
         EDIT_OBJECTIVE({commit}, objective){
             commit('EDIT_OBJECTIVE', objective);
         },
-        
+
         REMOVE_OBJECTIVE({commit}, objective){
             commit('REMOVE_OBJECTIVE', objective);
         },
-        
+
         COMPLETE_OBJECTIVE({commit}, objective){
             commit('COMPLETE_OBJECTIVE', objective);
         },
-        
-        CLEAR_OBJECTIVE({commit}){
-            commit('CLEAR_objective');
+
+        DELETE_OBJECTIVE({commit}){
+            commit('DELETE_objective');
         }
     }
 }

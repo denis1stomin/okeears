@@ -2,20 +2,52 @@
   min-width: 230px;
   max-width: 550px;
   margin: 0 auto;
-  
+
   .title {
     margin: 10px 0 35px;
+  }
+
+  .input-icon {
+    font-size: 20px;
   }
 
   .objectives {
     margin: 10px 0;
 
-    .inout-plus {
-      font-size: 20px;
+    .input-form {
+      &:hover,
+      &:focus,
+      &:focus-within {
+        background: #fff;
+        border-color: #c3c4e2;
+
+        input {
+          background: #fff;
+        }
+
+        .input-icon {
+          visibility: visible;
+        }
+      }
     }
 
-    .key-results {
-      margin: 10px;
+    .input-form {
+      background: #c3c4e2;
+      border-color: #c3c4e2;
+      transition: all 0.5s ease-out;
+
+      input {
+        background: #c3c4e2;
+        transition: all 0.5s ease-out;
+        &:focus {
+          background: #fff;
+        }
+      }
+
+      .input-icon {
+        visibility: hidden;
+        transition: all 0.5s ease-out;
+      }
     }
   }
 }
