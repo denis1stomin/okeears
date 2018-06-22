@@ -59,9 +59,8 @@ export default {
 
     actions: {
         GET_OBJECTIVES({commit}) {
-            okrSvc.getSubjectObjectives(
-                'me',
-                // user.state.selectedSubject.id,
+            okrSvc.getObjectives(
+                user.state.selectedSubject.id,
                 data => commit('OBJECTIVES_COMPLETE', data),
                 err => commit('OBJECTIVES_FAILED', err)
             );
