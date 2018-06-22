@@ -93,7 +93,7 @@ export default {
 
         // Gets objectives for a selected subject
         GET_OBJECTIVES(context) {
-            okrSvc.getSubjectObjectives(
+            okrSvc.getObjectives(
                 context.state.selectedSubject.id,
                 data => context.commit('OBJECTIVES_COMPLETE', data),
                 err => context.commit('OBJECTIVES_FAILED', err)
