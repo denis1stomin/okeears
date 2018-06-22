@@ -45,7 +45,9 @@
 
         methods: {
             addObjective() {
-                this.$store.dispatch('ADD_OBJECTIVE');
+                this.$store.dispatch('ADD_OBJECTIVE', {
+                    statement: this.$store.state.okr.newObjective
+                });
             },
 
             editObjective() {

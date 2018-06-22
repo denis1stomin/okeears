@@ -19,8 +19,7 @@ export default {
             state.error = payload;
         },
 
-        CHANGE_INPUT(state, objective){
-            console.log('state', state.objectives);
+        CHANGE_INPUT(state, objective) {
             state.objectives.forEach(function (obj) {
                 if (obj.id === objective.id)
                     obj.statement = objective.value;
@@ -29,30 +28,32 @@ export default {
             });
         },
 
-        ADD_OBJECTIVE(state){
-            state.objectives.push({
-                statement: state.newObjective
-            });
+        ADD_OBJECTIVE(state, payload) {
+            state.objectives = payload;
             state.newObjective = '';
         },
 
-        EDIT_OBJECTIVE(state, objective){
+        ADD_OBJECTIVE_FAILED(state, payload) {
+            state.error = payload;
+        },
+
+        EDIT_OBJECTIVE(state, objective) {
             let objectives = state.objectives;
             objectives.splice(objectives.indexOf(objective), 1);
             state.objectives = objectives;
             state.newObjective = objective.body;
         },
 
-        REMOVE_OBJECTIVE(state, objective){
+        REMOVE_OBJECTIVE(state, objective) {
             let objectives = state.objectives;
             objectives.splice(objectives.indexOf(objective), 1);
         },
 
-        COMPLETE_OBJECTIVE(state, objective){
+        COMPLETE_OBJECTIVE(state, objective) {
             objective.completed = !objective.completed;
         },
 
-        DELETE_OBJECTIVE(state){
+        DELETE_OBJECTIVE(state) {
             state.newObjective = '';
         }
     },
@@ -66,27 +67,33 @@ export default {
             );
         },
 
-        CREATE_OBJECTIVE({commit}, objective){
-            commit('GET_OBJECTIVE', objective);
+        CREATE_OBJECTIVE({commit}, objective) {
+            commit('CHANGE_INPUT', objective);
         },
 
-        ADD_OBJECTIVE({commit}){
-            commit('ADD_OBJECTIVE');
+        ADD_OBJECTIVE({commit}, objective) {
+            console.log('obj', objective);
+            okrSvc.addObjective(
+                user.state.selectedSubject.id,
+                objective,
+                data => commit('ADD_OBJECTIVE', data),
+                err => commit('ADD_OBJECTIVE_FAILED', err)
+            )
         },
 
-        EDIT_OBJECTIVE({commit}, objective){
+        EDIT_OBJECTIVE({commit}, objective) {
             commit('EDIT_OBJECTIVE', objective);
         },
 
-        REMOVE_OBJECTIVE({commit}, objective){
+        REMOVE_OBJECTIVE({commit}, objective) {
             commit('REMOVE_OBJECTIVE', objective);
         },
 
-        COMPLETE_OBJECTIVE({commit}, objective){
+        COMPLETE_OBJECTIVE({commit}, objective) {
             commit('COMPLETE_OBJECTIVE', objective);
         },
 
-        DELETE_OBJECTIVE({commit}){
+        DELETE_OBJECTIVE({commit}) {
             commit('DELETE_objective');
         }
     }

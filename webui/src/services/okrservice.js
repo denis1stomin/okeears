@@ -5,8 +5,8 @@ class OkrService {
     constructor(tokenService, httpClientFactory) {
         this.tokenService = tokenService;
         this.httpClient = httpClientFactory.create({
-            //baseURL: 'http://localhost:8001',
-            baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
+            baseURL: 'http://localhost:8001',
+            // baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
             headers: {'Accept': 'application/json'}
         });
     }
@@ -20,9 +20,9 @@ class OkrService {
             .catch(err => errHandler(err));
     }
 
-    createObjective(subjectId, objectiveObj, dataHandler, errHandler) {
+    addObjective(subjectId, objective, dataHandler, errHandler) {
         this.httpClient
-            .post(`/${subjectId}/objectives`, objectiveObj)
+            .post(`/${subjectId}/objectives`, objective)
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
     }
