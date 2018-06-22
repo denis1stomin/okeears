@@ -2,7 +2,7 @@
     <div class="okr">
         <h3 class="title">OKR Editor</h3>
 
-        <InputForm placeholder="Let's create a new Object"
+        <InputForm placeholder="Let's create a new objective"
                    :action="addObjective"
                    :init-value="newObjective"
                    objid="id">
