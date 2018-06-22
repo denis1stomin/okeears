@@ -41,7 +41,8 @@ class OkrService {
     deleteObjective(subjectId, objectiveId, successHandler, errHandler) {
         const token = this.tokenService.getToken();
         this.httpClient
-            .delete(`/subjects/${subjectId}/objectives/${objectiveId}`)
+            //.delete(`/subjects/${subjectId}/objectives/${objectiveId}`)
+            .delete(`/objectives/${objectiveId}`)
             .then(resp => successHandler(resp))
             .catch(err => errHandler(err));
     }
