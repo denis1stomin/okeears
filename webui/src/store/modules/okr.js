@@ -44,16 +44,20 @@ export default {
             state.newObjective = objective.body;
         },
 
-        REMOVE_OBJECTIVE(state, objective) {
+        DELETE_OBJECTIVE(state, objective) {
             let objectives = state.objectives;
             objectives.splice(objectives.indexOf(objective), 1);
+        },
+
+        DELETE_OBJECTIVE_FAILED(state, payload) {
+            state.error = payload;
         },
 
         COMPLETE_OBJECTIVE(state, objective) {
             objective.completed = !objective.completed;
         },
 
-        DELETE_OBJECTIVE(state) {
+        CLEAR_OBJECTIVE(state) {
             state.newObjective = '';
         }
     },
@@ -72,7 +76,6 @@ export default {
         },
 
         ADD_OBJECTIVE({commit}, objective) {
-            console.log('obj', objective);
             okrSvc.addObjective(
                 user.state.selectedSubject.id,
                 objective,
@@ -85,16 +88,21 @@ export default {
             commit('EDIT_OBJECTIVE', objective);
         },
 
-        REMOVE_OBJECTIVE({commit}, objective) {
-            commit('REMOVE_OBJECTIVE', objective);
+        DELETE_OBJECTIVE({commit}, objective) {
+            okrSvc.deleteObjective(
+                user.state.selectedSubject.id,
+                objective.id,
+                data => commit('DELETE_OBJECTIVE', data),
+                err => commit('DELETE_OBJECTIVE_FAILED', err)
+            )
         },
 
         COMPLETE_OBJECTIVE({commit}, objective) {
             commit('COMPLETE_OBJECTIVE', objective);
         },
 
-        DELETE_OBJECTIVE({commit}) {
-            commit('DELETE_objective');
+        CLEAR_OBJECTIVE({commit}) {
+            commit('CLEAR_OBJECTIVE');
         }
     }
 }

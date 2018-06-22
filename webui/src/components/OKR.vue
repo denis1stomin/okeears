@@ -6,7 +6,7 @@
                    :action="addObjective"
                    :init-value="newObjective"
                    objid="id">
-            <span class="input-icon">+</span>
+            <span class="input-icon" @click="addObjective">+</span>
         </InputForm>
 
         <div class="objectives" v-for="objective in objectives">
@@ -14,7 +14,7 @@
                        :action="editObjective"
                        :init-value="objective.statement"
                        :objid="objective.id">
-                <span class="input-icon">-</span>
+                <span class="input-icon" @click="deleteObjective(objective)">-</span>
             </InputForm>
         </div>
     </div>
@@ -52,6 +52,10 @@
 
             editObjective() {
                 this.$store.dispatch('EDIT_OBJECTIVE');
+            },
+
+            deleteObjective(objective) {
+                this.$store.dispatch('DELETE_OBJECTIVE', objective);
             }
         }
     }

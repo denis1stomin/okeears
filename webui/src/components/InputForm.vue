@@ -9,7 +9,7 @@
                :placeholder="placeholder"
                :objid="objid"
                @keyup.enter="initAction"/>
-        <div class="action-button" @click="initAction">
+        <div class="action-button">
             <slot/>
         </div>
     </div>
