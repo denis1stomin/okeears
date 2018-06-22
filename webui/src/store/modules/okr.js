@@ -63,6 +63,11 @@ export default {
     },
 
     actions: {
+
+        // COMMENT : здесь где-то либо через watch либо через EventBus надо
+        //           надо добавить подписку на изменение user.state.selectedSubject.
+        //           По изменению будем вызывать action GET_OBJECTIVES()
+
         GET_OBJECTIVES({commit}) {
             okrSvc.getObjectives(
                 user.state.selectedSubject.id,
@@ -74,6 +79,9 @@ export default {
         CREATE_OBJECTIVE({commit}, objective) {
             commit('CHANGE_INPUT', objective);
         },
+
+        // COMMENT : предлагаю объединить тела методов
+        //           CREATE_OBJECTIVE и ADD_OBJECTIVE
 
         ADD_OBJECTIVE({commit}, objective) {
             okrSvc.addObjective(
@@ -92,6 +100,8 @@ export default {
             okrSvc.deleteObjective(
                 user.state.selectedSubject.id,
                 objective.id,
+                // COMMENT : метод delete не возращает objective,
+                //           поэтому внутри мутации неправильная логика.
                 data => commit('DELETE_OBJECTIVE', data),
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
