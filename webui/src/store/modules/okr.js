@@ -28,12 +28,12 @@ export default {
             });
         },
 
-        ADD_OBJECTIVE(state, payload) {
+        CREATE_OBJECTIVE(state, payload) {
             state.objectives = payload;
             state.newObjective = '';
         },
 
-        ADD_OBJECTIVE_FAILED(state, payload) {
+        CREATE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
         },
 
@@ -76,33 +76,50 @@ export default {
             );
         },
 
-        CREATE_OBJECTIVE({commit}, objective) {
-            commit('CHANGE_INPUT', objective);
-        },
+        CREATE_OBJECTIVE({state, commit}, objective) {
+            // clear creator input
+            commit('CLEAR_OBJECTIVE');
 
-        // COMMENT : предлагаю объединить тела методов
-        //           CREATE_OBJECTIVE и ADD_OBJECTIVE
+            // change local objectives list
+            let changedList = state.objectives;
+            changedList.push(objective);
+            commit('OBJECTIVES_COMPLETE', changedList);
 
-        ADD_OBJECTIVE({commit}, objective) {
-            okrSvc.addObjective(
+            // send request to create new objective
+            okrSvc.createObjective(
                 user.state.selectedSubject.id,
                 objective,
-                data => commit('ADD_OBJECTIVE', data),
-                err => commit('ADD_OBJECTIVE_FAILED', err)
+                data => {
+                    // when objective is created new id is returned.
+                    // we need to update the id field
+                    let changedList = state.objectives;
+                    let idx = changedList.indexOf(objective);
+                    if (idx > -1)
+                    {
+                        changedList[idx].id = data.id;
+                        commit('OBJECTIVES_COMPLETE', changedList);
+                    }
+                },
+                err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
         },
 
         EDIT_OBJECTIVE({commit}, objective) {
-            commit('EDIT_OBJECTIVE', objective);
+            //commit('EDIT_OBJECTIVE', objective);
         },
 
-        DELETE_OBJECTIVE({commit}, objective) {
+        DELETE_OBJECTIVE({state, commit}, objective) {
+            // delete from local objectives list
+            var idx = state.objectives.indexOf(objective);
+            if (idx > -1) {
+                state.objectives.splice(idx, 1);
+            }
+
+            // send request to delete the objective
             okrSvc.deleteObjective(
                 user.state.selectedSubject.id,
                 objective.id,
-                // COMMENT : метод delete не возращает objective,
-                //           поэтому внутри мутации неправильная логика.
-                data => commit('DELETE_OBJECTIVE', data),
+                data => { /* successfully deleted */ },
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
         },

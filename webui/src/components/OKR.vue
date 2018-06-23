@@ -45,13 +45,13 @@
 
         methods: {
             addObjective() {
-                this.$store.dispatch('ADD_OBJECTIVE', {
+                this.$store.dispatch('CREATE_OBJECTIVE', {
                     statement: this.$store.state.okr.newObjective
                 });
             },
 
             editObjective() {
-                this.$store.dispatch('EDIT_OBJECTIVE');
+                //this.$store.dispatch('EDIT_OBJECTIVE');
             },
 
             deleteObjective(objective) {

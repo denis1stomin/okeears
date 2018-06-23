@@ -24,7 +24,7 @@ class OkrService {
             .catch(err => errHandler(err));
     }
 
-    addObjective(subjectId, objective, dataHandler, errHandler) {
+    createObjective(subjectId, objective, dataHandler, errHandler) {
         this.httpClient
             .post(`/subjects/${subjectId}/objectives`, objective)
             .then(resp => dataHandler(resp.data))
