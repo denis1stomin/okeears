@@ -40,46 +40,9 @@
   ],
   "objectives": [
     {
-      "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+      "statement": "Do beautifull product",
       "subjectId": "592fcca2-f7a8-4633-ba34-8dabcf7b5953",
-      "statement": "Release a product's paid features",
-      "keyresults": [
-        {
-          "id": "d290f1ee-6c54-4b01-90e6-d701748f0852",
-          "statement": "Common REST API to consume data",
-          "complete": false,
-          "targetDate": "2016-08-29T09:12:33.001Z"
-        }
-      ],
-      "targetDate": "2016-08-29T09:12:33.001Z"
-    },
-    {
-      "id": "b6e219f4-5195-48e7-b73c-bc99b8b6d217",
-      "subjectId": "592fcca2-f7a8-4633-ba34-8dabcf7b5953",
-      "statement": "Release new functionality faster",
-      "keyresults": [
-        {
-          "id": "501ab86d-00d8-4a80-82f7-8d5335c617d0",
-          "statement": "Make release iteration shorter",
-          "complete": false,
-          "targetDate": "2016-08-29T09:12:33.001Z"
-        }
-      ],
-      "targetDate": "2016-08-29T09:12:33.001Z"
-    },
-    {
-      "id": "dc2a9d92-0e35-4275-86a6-00fdce3d3ec8",
-      "subjectId": "592fcca2-f7a8-4633-ba34-8dabcf7b5953",
-      "statement": "Make the product very popular",
-      "keyresults": [
-        {
-          "id": "7694c27a-d478-4b73-996a-c8ba195f9e67",
-          "statement": "Make some noise",
-          "complete": false,
-          "targetDate": "2016-08-29T09:12:33.001Z"
-        }
-      ],
-      "targetDate": "2016-08-29T09:12:33.001Z"
+      "id": "c3uAptu"
     }
   ]
 }
