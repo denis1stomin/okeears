@@ -20,11 +20,14 @@ export default {
         },
 
         CHANGE_INPUT(state, objective) {
+            if (!objective.id) {
+                state.newObjective = objective.value;
+                return;
+            }
+
             state.objectives.forEach(function (obj) {
                 if (obj.id === objective.id)
                     obj.statement = objective.value;
-                else
-                    state.newObjective = objective.value
             });
         },
 
@@ -65,7 +68,7 @@ export default {
     actions: {
 
         // COMMENT : здесь где-то либо через watch либо через EventBus надо
-        //           надо добавить подписку на изменение user.state.selectedSubject.
+        //           добавить подписку на изменение user.state.selectedSubject.
         //           По изменению будем вызывать action GET_OBJECTIVES()
 
         GET_OBJECTIVES({commit}) {
@@ -94,8 +97,7 @@ export default {
                     // we need to update the id field
                     let changedList = state.objectives;
                     let idx = changedList.indexOf(objective);
-                    if (idx > -1)
-                    {
+                    if (idx > -1) {
                         changedList[idx].id = data.id;
                         commit('OBJECTIVES_COMPLETE', changedList);
                     }
@@ -110,7 +112,7 @@ export default {
 
         DELETE_OBJECTIVE({state, commit}, objective) {
             // delete from local objectives list
-            var idx = state.objectives.indexOf(objective);
+            let idx = state.objectives.indexOf(objective);
             if (idx > -1) {
                 state.objectives.splice(idx, 1);
             }
@@ -119,7 +121,8 @@ export default {
             okrSvc.deleteObjective(
                 user.state.selectedSubject.id,
                 objective.id,
-                data => { /* successfully deleted */ },
+                data => { /* successfully deleted */
+                },
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
         },

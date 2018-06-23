@@ -4,8 +4,7 @@
 
         <InputForm placeholder="Let's create a new objective"
                    :action="addObjective"
-                   :init-value="newObjective"
-                   objid="id">
+                   :init-value="newObjective">
             <span class="input-icon" @click="addObjective">+</span>
         </InputForm>
 

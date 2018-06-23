@@ -29,7 +29,7 @@
 
                 set(changed) {
                     this.$store.commit('CHANGE_INPUT', {
-                        id: this.objid || 'id',
+                        id: this.objid,
                         value: changed
                     });
                 }
