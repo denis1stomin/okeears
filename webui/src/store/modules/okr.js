@@ -5,8 +5,6 @@ export default {
     state: {
         objectives: [],
 
-        newObjective: '',
-
         error: ''
     },
 
@@ -19,32 +17,12 @@ export default {
             state.error = payload;
         },
 
-        CHANGE_INPUT(state, objective) {
-            if (!objective.id) {
-                state.newObjective = objective.value;
-                return;
-            }
-
-            state.objectives.forEach(function (obj) {
-                if (obj.id === objective.id)
-                    obj.statement = objective.value;
-            });
-        },
-
         CREATE_OBJECTIVE(state, payload) {
             state.objectives = payload;
-            state.newObjective = '';
         },
 
         CREATE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
-        },
-
-        EDIT_OBJECTIVE(state, objective) {
-            let objectives = state.objectives;
-            objectives.splice(objectives.indexOf(objective), 1);
-            state.objectives = objectives;
-            state.newObjective = objective.body;
         },
 
         DELETE_OBJECTIVE(state, objective) {
@@ -54,14 +32,6 @@ export default {
 
         DELETE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
-        },
-
-        COMPLETE_OBJECTIVE(state, objective) {
-            objective.completed = !objective.completed;
-        },
-
-        CLEAR_OBJECTIVE(state) {
-            state.newObjective = '';
         }
     },
 
@@ -80,9 +50,6 @@ export default {
         },
 
         CREATE_OBJECTIVE({state, commit}, objective) {
-            // clear creator input
-            commit('CLEAR_OBJECTIVE');
-
             // change local objectives list
             let changedList = state.objectives;
             changedList.push(objective);
@@ -106,13 +73,26 @@ export default {
             )
         },
 
-        EDIT_OBJECTIVE({commit}, objective) {
-            //commit('EDIT_OBJECTIVE', objective);
+        EDIT_OBJECTIVE({state, commit}, objective) {
+            // update in local objectives list
+            let idx = state.objectives.findIndex((x) => x.id === objective.id);
+            if (idx > -1) {
+                state.objectives[idx].statement = objective.statement;
+            }
+
+            // send request to change the objective
+            okrSvc.changeObjective(
+                user.state.selectedSubject.id,
+                objective,
+                data => { /* successfully updated */
+                },
+                err => commit('DELETE_OBJECTIVE_FAILED', err)
+            )
         },
 
-        DELETE_OBJECTIVE({state, commit}, objective) {
+        DELETE_OBJECTIVE({state, commit}, objectiveId) {
             // delete from local objectives list
-            let idx = state.objectives.indexOf(objective);
+            let idx = state.objectives.findIndex((x) => x.id === objectiveId);
             if (idx > -1) {
                 state.objectives.splice(idx, 1);
             }
@@ -120,19 +100,11 @@ export default {
             // send request to delete the objective
             okrSvc.deleteObjective(
                 user.state.selectedSubject.id,
-                objective.id,
+                objectiveId,
                 data => { /* successfully deleted */
                 },
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
-        },
-
-        COMPLETE_OBJECTIVE({commit}, objective) {
-            commit('COMPLETE_OBJECTIVE', objective);
-        },
-
-        CLEAR_OBJECTIVE({commit}) {
-            commit('CLEAR_OBJECTIVE');
         }
     }
 }
