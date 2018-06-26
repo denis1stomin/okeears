@@ -1,14 +1,17 @@
 class AuditService {
     constructor() {
-        this.records = [];
+        this.changes = [
+            'Dima Bilan has changed an objective',
+            'Dima Bilan has changed an objective 2'
+        ];
     }
 
-    pushRecord(event) {
-        this.records.push(event);
+    log(changeDescription) {
+        this.changes.push(`${new Data()} ${changeDescription}`);
     }
 
-    getRecords() {
-        return this.records;
+    getLogs(count = 10) {
+        return this.changes.slice(-count);
     }
 }
 
