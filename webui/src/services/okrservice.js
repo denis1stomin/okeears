@@ -5,24 +5,37 @@ class OkrService {
     constructor(tokenService, httpClientFactory) {
         this.tokenService = tokenService;
         this.httpClient = httpClientFactory.create({
-            //baseURL: 'http://localhost:8001',
+            // baseURL: 'http://localhost:8001',
             baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
-            headers: {'Accept': 'application/json'}
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
         });
     }
 
     getObjectives(subjectId, dataHandler, errHandler) {
         //const token = this.tokenService.getToken();
+        let subjPath = subjectId ? `/subjects/${subjectId}` : '/me';
         this.httpClient
             //.headers('Authorization', `Bearer ${token}`)
-            .get(`/${subjectId || 'me'}/objectives`)
+            .get(`${subjPath}/objectives`)
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
     }
 
-    createObjective(subjectId, objectiveObj, dataHandler, errHandler) {
+    createObjective(subjectId, objective, dataHandler, errHandler) {
         this.httpClient
-            .post(`/${subjectId}/objectives`, objectiveObj)
+            .post(`/subjects/${subjectId}/objectives`, objective)
+            .then(resp => dataHandler(resp.data))
+            .catch(err => errHandler(err));
+    }
+
+    changeObjective(subjectId, objective, dataHandler, errHandler) {
+        objective.subjectId = subjectId;    // temp
+        this.httpClient
+            //.put(`/subjects/${subjectId}/objectives/${objective.id}`, objective)
+            .put(`/objectives/${objective.id}`, objective)
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
     }
@@ -30,21 +43,22 @@ class OkrService {
     deleteObjective(subjectId, objectiveId, successHandler, errHandler) {
         const token = this.tokenService.getToken();
         this.httpClient
-            .delete(`/${subjectId}/objectives/${objectiveId}`)
+            //.delete(`/subjects/${subjectId}/objectives/${objectiveId}`)
+            .delete(`/objectives/${objectiveId}`)
             .then(resp => successHandler(resp))
             .catch(err => errHandler(err));
     }
 
     getObjectiveKeyResults(subjectId, objectiveId, dataHandler, errHandler) {
         this.httpClient
-            .get(`/${subjectId}/objectives/${objectiveId}/keyresults`)
+            .get(`/subjects/${subjectId}/objectives/${objectiveId}/keyresults`)
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
     }
 
     putObjectiveKeyResults(subjectId, objectiveId, keyResultsObj, dataHandler, errHandler) {
         this.httpClient
-            .put(`/${subjectId}/objectives/${objectiveId}/keyresults`, keyResultsObj)
+            .put(`/subjects/${subjectId}/objectives/${objectiveId}/keyresults`, keyResultsObj)
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
     }
