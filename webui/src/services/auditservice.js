@@ -7,7 +7,7 @@ class AuditService {
     }
 
     log(changeDescription) {
-        this.changes.push(`${new Data()} ${changeDescription}`);
+        this.changes.push(`${new Date()} ${changeDescription}`);
     }
 
     getLogs(count = 10) {

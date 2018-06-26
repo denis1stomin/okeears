@@ -15,6 +15,11 @@
                 <span class="input-icon" @click="deleteObjective(objective.id)">-</span>
             </InputForm>
         </div>
+
+        <div class="changeLog">
+            <p>Change log:</p>
+            <div v-for="record in logs">{{record}}</div>
+        </div>
     </div>
 </template>
 
@@ -31,19 +36,29 @@
                 get() {
                     return this.$store.state.okr.objectives;
                 }
+            },
+
+            logs: {
+                get() {
+                    return this.$store.state.audit.changes;
+                }
             }
         },
 
-
         methods: {
             addObjectiveOnClick() {
-                this.addObjective(this.$refs.newObjForm.value);
+                let statement = this.$refs.newObjForm.value;
+                this.addObjective(statement);
+
+                this.logChange(`Me created '${statement}'`);
             },
 
             addObjective(objStatement) {
                 this.$store.dispatch('CREATE_OBJECTIVE', {
                     statement: objStatement
                 });
+
+                this.logChange(`Me created '${objStatement}'`);
             },
 
             editObjective(objId, objStatement) {
@@ -51,10 +66,18 @@
                     id: objId,
                     statement: objStatement
                 });
+
+                this.logChange(`Me changed '${objStatement}'`);
             },
 
             deleteObjective(objectiveId) {
                 this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
+
+                this.logChange(`Me deleted '${objectiveId}'`);
+            },
+
+            logChange(description) {
+                this.$store.dispatch('POST_AUDIT_ITEM', description);
             }
         }
     }

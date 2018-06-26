@@ -23,14 +23,17 @@ export default {
 
     actions: {
 
-        GET_CHANGES({commit}) {
+        GET_AUDIT_LOGS({commit}) {
             let changes = auditSvc.getLogs();
             commit('GET_CHANGES', changes);
         },
 
-        POST_CHANGE({state, commit}, change) {
-            state.changes.push(change);
-            auditSvc.log(change);
+        POST_AUDIT_ITEM({state, commit}, newChange) {
+            let changes = state.changes;
+            changes.push(newChange);
+            commit('GET_CHANGES', changes);
+
+            auditSvc.log(newChange);
         }
     }
 }
