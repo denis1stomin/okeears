@@ -84,8 +84,7 @@ export default {
             okrSvc.changeObjective(
                 user.state.selectedSubject.id,
                 objective,
-                data => { /* successfully updated */
-                },
+                data => { /* successfully updated */ },
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
         },
@@ -101,8 +100,7 @@ export default {
             okrSvc.deleteObjective(
                 user.state.selectedSubject.id,
                 objectiveId,
-                data => { /* successfully deleted */
-                },
+                data => { /* successfully deleted */ },
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
         }

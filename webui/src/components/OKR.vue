@@ -2,9 +2,9 @@
     <div class="okr">
         <h3 class="title">OKR Editor</h3>
 
-        <InputForm placeholder="Let's create a new objective"
+        <InputForm ref="newObjForm" placeholder="Let's create a new objective"
                    :action="addObjective">
-            <span class="input-icon" @click="addObjective">+</span>
+            <span class="input-icon" @click="addObjectiveOnClick()">+</span>
         </InputForm>
 
         <div class="objectives" v-for="objective in objectives">
@@ -36,6 +36,10 @@
 
 
         methods: {
+            addObjectiveOnClick() {
+                this.addObjective(this.$refs.newObjForm.value);
+            },
+
             addObjective(objStatement) {
                 this.$store.dispatch('CREATE_OBJECTIVE', {
                     statement: objStatement
