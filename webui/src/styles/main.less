@@ -17,8 +17,11 @@ body {
   min-height: 100vh;
 
   .header {
-    grid-area: header;
     height: 60px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    grid-area: header;
     color: white;
     background-color: #333;
 
@@ -38,6 +41,10 @@ body {
     grid-area: menu;
     padding: 30px;
     background: #7d7abc;
+
+    .input-form {
+      margin-bottom: 30px;
+    }
   }
 
   .content {
@@ -58,4 +65,4 @@ body {
 
 @import "./okr";
 @import "./orgtree";
-@import "./searchForm";
+@import "./inputForm";

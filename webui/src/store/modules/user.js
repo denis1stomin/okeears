@@ -1,5 +1,4 @@
 import subjectSvc from './../../services/subjectservice';
-import okrSvc from './../../services/okrservice';
 
 export default {
     state: {
@@ -15,9 +14,6 @@ export default {
         // selected subject (a single item from current org tree)
         selectedSubject: {},
 
-        // objectives for a selected subject
-        objectives: [],
-        
         // last error
         error: ''
     },
@@ -41,15 +37,7 @@ export default {
 
         ORGTREE_FAILED(state, payload) {
             state.error = payload;
-        },
-
-        OBJECTIVES_COMPLETE(state, payload) {
-            state.objectives = payload;
-        },
-
-        OBJECTIVES_FAILED(state, payload) {
-            state.error = payload;
-        },
+        }
     },
 
     getters: {
@@ -88,15 +76,6 @@ export default {
                 context.state.interestingSubject.id,
                 data => context.commit('ORGTREE_COMPLETE', data),
                 err => context.commit('ORGTREE_FAILED', err)
-            );
-        },
-
-        // Gets objectives for a selected subject
-        GET_OBJECTIVES(context) {
-            okrSvc.getObjectives(
-                context.state.selectedSubject.id,
-                data => context.commit('OBJECTIVES_COMPLETE', data),
-                err => context.commit('OBJECTIVES_FAILED', err)
             );
         }
     }
