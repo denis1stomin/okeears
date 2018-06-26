@@ -2,18 +2,17 @@
     <div class="okr">
         <h3 class="title">OKR Editor</h3>
 
-        <InputForm placeholder="Let's create a new objective"
-                   :action="addObjective"
-                   :init-value="newObjective">
-            <span class="input-icon" @click="addObjective">+</span>
+        <InputForm ref="newObjForm" placeholder="Let's create a new objective"
+                   :action="addObjective">
+            <span class="input-icon" @click="addObjectiveOnClick()">+</span>
         </InputForm>
 
         <div class="objectives" v-for="objective in objectives">
             <InputForm placeholder=""
                        :action="editObjective"
-                       :init-value="objective.statement"
+                       :value="objective.statement"
                        :objid="objective.id">
-                <span class="input-icon" @click="deleteObjective(objective)">-</span>
+                <span class="input-icon" @click="deleteObjective(objective.id)">-</span>
             </InputForm>
         </div>
     </div>
@@ -32,29 +31,30 @@
                 get() {
                     return this.$store.state.okr.objectives;
                 }
-            },
-
-            newObjective: {
-                get() {
-                    return this.$store.state.okr.newObjective;
-                }
             }
         },
 
 
         methods: {
-            addObjective() {
+            addObjectiveOnClick() {
+                this.addObjective(this.$refs.newObjForm.value);
+            },
+
+            addObjective(objStatement) {
                 this.$store.dispatch('CREATE_OBJECTIVE', {
-                    statement: this.$store.state.okr.newObjective
+                    statement: objStatement
                 });
             },
 
-            editObjective() {
-                //this.$store.dispatch('EDIT_OBJECTIVE');
+            editObjective(objId, objStatement) {
+                this.$store.dispatch('EDIT_OBJECTIVE', {
+                    id: objId,
+                    statement: objStatement
+                });
             },
 
-            deleteObjective(objective) {
-                this.$store.dispatch('DELETE_OBJECTIVE', objective);
+            deleteObjective(objectiveId) {
+                this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
             }
         }
     }

@@ -32,8 +32,10 @@ class OkrService {
     }
 
     changeObjective(subjectId, objective, dataHandler, errHandler) {
+        objective.subjectId = subjectId;    // temp
         this.httpClient
-            .put(`/subjects/${subjectId}/objectives/${objective.id}`, objective)
+            //.put(`/subjects/${subjectId}/objectives/${objective.id}`, objective)
+            .put(`/objectives/${objective.id}`, objective)
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
     }

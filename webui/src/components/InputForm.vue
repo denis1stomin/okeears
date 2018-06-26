@@ -1,7 +1,7 @@
 <template>
     <div class="input-form"
          :action="action"
-         :initValue="initValue">
+         :value="value">
         <label :for="name"></label>
         <input type="text"
                v-model="text"
@@ -19,26 +19,26 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'initValue', 'objid'],
+        props: ['name', 'placeholder', 'action', 'value', 'objid'],
 
         computed: {
             text: {
                 get() {
-                    return this.initValue;
+                    return this.value;
                 },
 
                 set(changed) {
-                    this.$store.commit('CHANGE_INPUT', {
-                        id: this.objid,
-                        value: changed
-                    });
+                    this.value = changed;
                 }
             }
         },
 
         methods: {
             initAction() {
-                return this.action();
+                if (this.objid)
+                    return this.action(this.objid, this.value);
+                else
+                    return this.action(this.value);
             }
         }
     }
