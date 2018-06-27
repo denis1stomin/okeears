@@ -8,13 +8,11 @@ export default {
     },
 
     mutations: {
-
         GET_CHANGES(state, payload) {
-            state.objectives = payload;
+            state.changes = payload;
         },
 
-        POST_CHANGE(state, payload) {
-        },
+        POST_CHANGE(state, payload) { },
 
         REQUEST_FAILED(state, err) {
             state.error = err;
@@ -22,7 +20,6 @@ export default {
     },
 
     actions: {
-
         GET_AUDIT_LOGS({commit}) {
             let changes = auditSvc.getLogs();
             commit('GET_CHANGES', changes);
