@@ -67,8 +67,7 @@ export default {
             // GET_OBJECTIVES
         },
 
-        SET_SELECTED_SUBJECT(context, subject) {
-        },
+        SET_SELECTED_SUBJECT(context, subject) { },
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {

@@ -2,9 +2,10 @@
     <div class="okr">
         <h3 class="title">OKR Editor</h3>
 
-        <InputForm ref="newObjForm" placeholder="Let's create a new objective"
+        <InputForm ref="newObjForm"
+                   placeholder="Let's create a new objective"
                    :action="addObjective">
-            <span class="input-icon" @click="addObjectiveOnClick()">+</span>
+            <span class="input-icon" @click="addObjective($refs.newObjForm.value)">+</span>
         </InputForm>
 
         <div class="objectives" v-for="objective in objectives">
@@ -15,16 +16,19 @@
                 <span class="input-icon" @click="deleteObjective(objective.id)">-</span>
             </InputForm>
         </div>
+
+        <ChangeLog/>
     </div>
 </template>
 
 <script>
     import InputForm from './InputForm'
+    import ChangeLog from './ChangeLog'
 
     export default {
         name: 'OKR',
 
-        components: {InputForm},
+        components: {InputForm, ChangeLog},
 
         computed: {
             objectives: {
@@ -34,16 +38,13 @@
             }
         },
 
-
         methods: {
-            addObjectiveOnClick() {
-                this.addObjective(this.$refs.newObjForm.value);
-            },
-
             addObjective(objStatement) {
                 this.$store.dispatch('CREATE_OBJECTIVE', {
                     statement: objStatement
                 });
+
+                this.logChange(`Me created '${objStatement}'`);
             },
 
             editObjective(objId, objStatement) {
@@ -51,10 +52,18 @@
                     id: objId,
                     statement: objStatement
                 });
+
+                this.logChange(`Me changed '${objStatement}'`);
             },
 
-            deleteObjective(objectiveId) {
-                this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
+            deleteObjective(objId) {
+                this.$store.dispatch('DELETE_OBJECTIVE', objId);
+
+                this.logChange(`Me deleted '${objId}'`);
+            },
+
+            logChange(description) {
+                this.$store.dispatch('POST_AUDIT_ITEM', description);
             }
         }
     }
