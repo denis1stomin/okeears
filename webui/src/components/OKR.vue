@@ -47,10 +47,7 @@
 
         methods: {
             addObjectiveOnClick() {
-                let statement = this.$refs.newObjForm.value;
-                this.addObjective(statement);
-
-                this.logChange(`Me created '${statement}'`);
+                this.addObjective(this.$refs.newObjForm.value);
             },
 
             addObjective(objStatement) {

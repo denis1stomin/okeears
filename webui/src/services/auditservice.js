@@ -1,17 +1,17 @@
 class AuditService {
     constructor() {
-        this.changes = [
-            'Dima Bilan has changed an objective',
-            'Dima Bilan has changed an objective 2'
+        this.changesList = [
+            '2018-06-27T19:55:57.985Z Dima Bilan has changed an objective',
+            '2018-06-27T19:57:57.985Z Dima Bilan has changed another objective'
         ];
     }
 
     log(changeDescription) {
-        this.changes.push(`${new Date()} ${changeDescription}`);
+        this.changesList.push(changeDescription);
     }
 
-    getLogs(count = 10) {
-        return this.changes.slice(-count);
+    getLogs() {
+        return this.changesList;
     }
 }
 

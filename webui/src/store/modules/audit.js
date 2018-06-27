@@ -10,7 +10,7 @@ export default {
     mutations: {
 
         GET_CHANGES(state, payload) {
-            state.objectives = payload;
+            state.changes = payload;
         },
 
         POST_CHANGE(state, payload) {
@@ -29,11 +29,13 @@ export default {
         },
 
         POST_AUDIT_ITEM({state, commit}, newChange) {
-            let changes = state.changes;
-            changes.push(newChange);
-            commit('GET_CHANGES', changes);
+            let changeDescription = `${(new Date()).toISOString()} ${newChange}`;
 
-            auditSvc.log(newChange);
+            let changes = state.changes;
+            changes.push(changeDescription);
+            commit('GET_CHANGES', changes.slice(-5 /* last 5 changes */));
+
+            auditSvc.log(changeDescription);
         }
     }
 }
