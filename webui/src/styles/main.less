@@ -5,6 +5,10 @@ body {
   color: #333;
 }
 
+h4 {
+  font-weight: 400;
+}
+
 .title {
   margin: 0;
 }
@@ -40,7 +44,8 @@ body {
   .menu {
     grid-area: menu;
     padding: 30px;
-    background: #7d7abc;
+    background: #e7e6f2;
+    box-shadow: 2px 2px 5px 0 rgba(51, 51, 51, .5);
 
     .input-form {
       margin-bottom: 30px;
@@ -50,7 +55,7 @@ body {
   .content {
     grid-area: content;
     padding: 30px;
-    background: #c3c3e1;;
+    position: relative;
   }
 
   .footer {
@@ -65,5 +70,5 @@ body {
 
 @import "./okr";
 @import "./orgtree";
-@import "./inputForm";
+@import "./input-form";
 @import "./change-log";
