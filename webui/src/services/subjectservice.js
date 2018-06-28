@@ -1,8 +1,7 @@
 import axios from 'axios/index';
 
 class SubjectService {
-    constructor(tokenService, httpClientFactory) {
-        this.tokenService = tokenService;
+    constructor(httpClientFactory) {
         this.httpClient = httpClientFactory.create({
             baseURL: 'http://localhost:8001',
             // baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
@@ -11,7 +10,6 @@ class SubjectService {
     }
 
     getCurrentUser(dataHandler, errHandler) {
-        const token = this.tokenService.getToken();
         this.httpClient
             //.headers('Authorization', `Bearer ${token}`)
             .get('/me')
@@ -20,7 +18,6 @@ class SubjectService {
     }
 
     getSubjectOrgTree(subjectId, dataHandler, errHandler) {
-        const token = this.tokenService.getToken();
         this.httpClient
             //.headers('Authorization', `Bearer ${token}`)
             .get(`/${subjectId || 'me'}/orgtree`)
@@ -30,4 +27,4 @@ class SubjectService {
 }
 
 // Single instance pattern
-export default new SubjectService(undefined, axios);
+export default new SubjectService(axios);

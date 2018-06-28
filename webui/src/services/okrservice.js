@@ -1,8 +1,7 @@
 import axios from 'axios/index';
 
 class OkrService {
-    constructor(tokenService, httpClientFactory) {
-        this.tokenService = tokenService;
+    constructor(httpClientFactory) {
         this.httpClient = httpClientFactory.create({
             baseURL: 'http://localhost:8001',
             // baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
@@ -14,7 +13,6 @@ class OkrService {
     }
 
     getObjectives(subjectId, dataHandler, errHandler) {
-        //const token = this.tokenService.getToken();
         let subjPath = subjectId ? `/subjects/${subjectId}` : '/me';
         this.httpClient
             //.headers('Authorization', `Bearer ${token}`)
@@ -40,7 +38,6 @@ class OkrService {
     }
 
     deleteObjective(subjectId, objectiveId, successHandler, errHandler) {
-        const token = this.tokenService.getToken();
         this.httpClient
             //.delete(`/subjects/${subjectId}/objectives/${objectiveId}`)
             .delete(`/objectives/${objectiveId}`)
@@ -64,4 +61,4 @@ class OkrService {
 }
 
 // Single instance pattern
-export default new OkrService(undefined, axios);
+export default new OkrService(axios);
