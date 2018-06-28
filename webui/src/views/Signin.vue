@@ -4,12 +4,13 @@
 
 <script>
     export default {
-        name: 'signin',
-
         mounted() {
-            this.$auth.handleAuthentication().then((data) => {
-                this.$router.push({ name: 'home' })
-            })
+            console.log('lalalla');
+            //this.$auth.handleAuthentication().then((data) => {
+            //    this.$router.push({ name: 'home' })
+            //});
+
+            this.$router.push({ name: 'home' });
         }
     }
 </script>

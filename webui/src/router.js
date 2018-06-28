@@ -7,7 +7,7 @@ import auth from './store/modules/auth'
 Vue.use(Router);
 
 const checkAuth = (to, from, next) => {
-    next();
+    next({ name: 'signin' });
     return;
 
     if (store.$auth.isAuthenticated) {
