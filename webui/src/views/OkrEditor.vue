@@ -29,9 +29,9 @@
 </template>
 
 <script>
-    import InputForm from './InputForm'
-    import OrgTree from './OrgTree'
-    import OKR from './OKR'
+    import InputForm from './../components/InputForm'
+    import OrgTree from './../components/OrgTree'
+    import OKR from './../components/OKR'
 
     export default {
         components: {InputForm, OrgTree, OKR},
