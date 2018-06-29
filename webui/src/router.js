@@ -7,26 +7,13 @@ import auth from './store/modules/auth'
 Vue.use(Router);
 
 const checkAuth = (to, from, next) => {
-    next({ name: 'signin' });
-    return;
-
-    if (store.$auth.isAuthenticated) {
+    if (auth.getters.IS_AUTHENTICATED()) {
         next();
         return;
     }
 
-    next({ name: 'signin' });
+    auth.actions.LOGIN();
 };
-
-//if (to.name == 'signin') {
-//    next()
-//}
-//else if (router.app.$auth.isAuthenticated()) {
-//    next()
-//}
-//else {
-//    router.app.$auth.login()
-//}
 
 const router = new Router({
     mode: 'history',
