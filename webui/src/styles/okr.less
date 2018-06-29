@@ -1,7 +1,11 @@
 .okr {
   min-width: 230px;
-  max-width: 550px;
+  max-width: 600px;
+  height: 100%;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .title {
     margin: 10px 0 35px;
@@ -13,31 +17,35 @@
 
   .objectives {
     margin: 10px 0;
-
-    .input-form {
-      &:hover,
-      &:focus,
-      &:focus-within {
-        background: #fff;
-        border-color: #c3c4e2;
-
-        input {
-          background: #fff;
-        }
-
-        .input-icon {
-          visibility: visible;
-        }
+    background: #fff;
+    border: 1px solid #ffe347;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    &:hover {
+      .input-form .input-icon {
+        visibility: visible;
       }
     }
 
     .input-form {
-      background: #c3c4e2;
-      border-color: #c3c4e2;
+      background: #ffe347;
+      border: none;
+      border-bottom: 1px solid #ffe347;
+      border-radius: 5px 5px 0 0;
+      box-shadow: none;
       transition: all 0.5s ease-out;
+      &:hover,
+      &:focus,
+      &:focus-within {
+        background: #fff;
+
+        input {
+          background: #fff;
+        }
+      }
 
       input {
-        background: #c3c4e2;
+        background: #ffe347;
         transition: all 0.5s ease-out;
         &:focus {
           background: #fff;
@@ -48,6 +56,10 @@
         visibility: hidden;
         transition: all 0.5s ease-out;
       }
+    }
+
+    .key-results {
+      margin: 10px;
     }
   }
 }

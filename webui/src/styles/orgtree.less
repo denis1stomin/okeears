@@ -6,22 +6,25 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
-    padding: 10px;
     background: #fff;
+    border: 1px solid #ffe347;
     border-radius: 5px;
-    box-shadow: 2px 2px 5px 0 rgba(51, 51, 51, .5);
-    transition: all 0.3s ease-out;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+    transition: transform 0.3s ease-out;
     &:hover {
       transform: scale(1.05);
     }
 
     .org-tree-item-name {
       margin-bottom: 10px;
+      padding: 5px 10px;
+      background: #ffe347;
     }
 
     .org-tree-item-links {
-      color: #757575;
+      padding: 5px 10px;
       font-size: 14px;
+      color: #757575;
 
       .org-tree-item-link {
         color: #6457A6;
