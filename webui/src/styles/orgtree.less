@@ -4,14 +4,41 @@
 
   .org-tree-item {
     margin-bottom: 10px;
-    padding: 10px;
-    background: #c3c2e0;
-    line-height: 2em;
+    background: #fff;
+    border: 1px solid #ffe347;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+    transition: transform 0.3s ease-out;
+    &:hover {
+      transform: scale(1.05);
+    }
 
-    .org-tree-item-links {
-      color: grey;
-      font-size: 15px;
-      text-align: right;
+    .org-tree-item-header {
+      padding: 5px 10px;
+      background: #ffe347;
+    }
+
+    .org-tree-item-body {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+
+      .org-tree-item-title {
+        margin-bottom: 5px;
+      }
+
+      .org-tree-item-links {
+        color: #757575;
+
+        .org-tree-item-link {
+          color: #6457A6;
+          text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <header class="header">
-            <h4 class="title">OKR Portal</h4>
+            <h2 class="title">OKR Portal</h2>
 
             <span class="user-name">{{user.name}}</span>
         </header>

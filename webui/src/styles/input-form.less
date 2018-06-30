@@ -2,8 +2,8 @@
   display: flex;
   padding: 5px 10px;
   background: #fff;
-  border: 1px solid #e6e6e6;
   align-items: center;
+  box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, .5);
   &:focus {
     border-color: #7d7abc;
   }
@@ -28,12 +28,11 @@
     padding: 0;
     background: none;
     border: none;
-    color: #6f5c5d;
-    fill: #6f5c5d;
+    color: #7d7abc;
+    fill: #7d7abc;
     cursor: pointer;
+    transition: transform 0.3s ease-out;
     &:hover {
-      color: #235cbd;
-      fill: #235cbd;
       transform: scale(1.2);
     }
   }
