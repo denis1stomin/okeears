@@ -16,7 +16,6 @@
                            :action="editObjective"
                            :value="objective.statement"
                            :objid="objective.id">
-                    <span class="input-icon" @click="deleteObjective(objective.id)">-</span>
                 </InputForm>
 
                 <div class="key-results">
@@ -28,6 +27,10 @@
                     <div class="empty-key-results" v-if="!objective.keyresults">
                         Now let's create ambitious key result
                     </div>
+                </div>
+
+                <div class="objective-icons">
+                    <span @click="deleteObjective(objective.id)"><TrashIcon/></span>
                 </div>
             </div>
 
@@ -41,6 +44,7 @@
 </template>
 
 <script>
+    import TrashIcon from './Icons/TrashIcon'
     import PlusIcon from './Icons/PlusIcon'
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
@@ -48,7 +52,7 @@
     export default {
         name: 'OKR',
 
-        components: {PlusIcon, InputForm, ChangeLog},
+        components: {TrashIcon, PlusIcon, InputForm, ChangeLog},
 
         computed: {
             objectives: {
