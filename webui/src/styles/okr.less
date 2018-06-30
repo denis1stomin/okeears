@@ -11,8 +11,8 @@
     margin: 10px 0 35px;
   }
 
-  .input-icon {
-    font-size: 20px;
+  .empty-objectives {
+    margin: 10px 0;
   }
 
   .objectives {
@@ -34,10 +34,9 @@
       border-radius: 5px 5px 0 0;
       box-shadow: none;
       transition: all 0.5s ease-out;
-      &:hover,
       &:focus,
       &:focus-within {
-        box-shadow: inset 1px 1px 3px 0 rgba(0, 0, 0, 0.5);
+        box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.5);
       }
 
       input {
@@ -51,8 +50,16 @@
       }
     }
 
+    .empty-key-results {
+      color: #757575;
+    }
+
     .key-results {
       margin: 10px;
+
+      .key-result {
+        margin: 5px 0;
+      }
     }
   }
 }

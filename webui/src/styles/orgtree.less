@@ -3,8 +3,6 @@
   flex-direction: column;
 
   .org-tree-item {
-    display: flex;
-    flex-direction: column;
     margin-bottom: 10px;
     background: #fff;
     border: 1px solid #ffe347;
@@ -15,22 +13,30 @@
       transform: scale(1.05);
     }
 
-    .org-tree-item-name {
-      margin-bottom: 10px;
+    .org-tree-item-header {
       padding: 5px 10px;
       background: #ffe347;
     }
 
-    .org-tree-item-links {
-      padding: 5px 10px;
-      font-size: 14px;
-      color: #757575;
+    .org-tree-item-body {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
 
-      .org-tree-item-link {
-        color: #6457A6;
-        text-decoration: none;
-        &:hover {
-          text-decoration: underline;
+      .org-tree-item-title {
+        margin-bottom: 5px;
+      }
+
+      .org-tree-item-links {
+        font-size: 14px;
+        color: #757575;
+
+        .org-tree-item-link {
+          color: #6457A6;
+          text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }

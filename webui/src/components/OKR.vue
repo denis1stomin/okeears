@@ -17,12 +17,19 @@
                     <span class="input-icon" @click="deleteObjective(objective.id)">-</span>
                 </InputForm>
 
-                <div class="key-results" v-for="keyresult in objective.keyresults">
-                    <span>{{keyresult.statement}}</span>
+                <div class="key-results">
+                    <div class="key-result" v-if="objective.keyresults.length"
+                         v-for="keyresult in objective.keyresults">
+                        <span>{{keyresult.statement}}</span>
+                    </div>
+
+                    <div class="empty-key-results" v-if="!objective.keyresults">
+                        Now let's create ambitious key result
+                    </div>
                 </div>
             </div>
 
-            <div v-if="!objectives.length">
+            <div class="empty-objectives" v-if="!objectives.length">
                 <span>You don't have objectives yet. Let's create first! ;)</span>
             </div>
         </div>
