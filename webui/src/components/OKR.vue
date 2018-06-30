@@ -31,6 +31,8 @@
 
                 <div class="objective-icons">
                     <span @click="deleteObjective(objective.id)"><TrashIcon/></span>
+                    <span><CopyIcon/></span>
+                    <span><SendIcon/></span>
                 </div>
             </div>
 
@@ -45,6 +47,8 @@
 
 <script>
     import TrashIcon from './Icons/TrashIcon'
+    import CopyIcon from './Icons/CopyIcon'
+    import SendIcon from './Icons/SendIcon'
     import PlusIcon from './Icons/PlusIcon'
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
@@ -52,7 +56,7 @@
     export default {
         name: 'OKR',
 
-        components: {TrashIcon, PlusIcon, InputForm, ChangeLog},
+        components: {TrashIcon, CopyIcon, SendIcon, PlusIcon, InputForm, ChangeLog},
 
         computed: {
             objectives: {
