@@ -6,7 +6,9 @@
             <InputForm ref="newObjForm"
                        placeholder="Let's create a new objective"
                        :action="addObjective">
-                <span class="input-icon" @click="addObjective($refs.newObjForm.value)">+</span>
+                <span class="input-icon" @click="addObjective($refs.newObjForm.value)">
+                    <PlusIcon/>
+                </span>
             </InputForm>
 
             <div class="objectives" v-if="objectives.length" v-for="objective in objectives">
@@ -39,13 +41,14 @@
 </template>
 
 <script>
+    import PlusIcon from './Icons/PlusIcon'
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
 
     export default {
         name: 'OKR',
 
-        components: {InputForm, ChangeLog},
+        components: {PlusIcon, InputForm, ChangeLog},
 
         computed: {
             objectives: {
