@@ -66,10 +66,26 @@
     }
   }
 
+  .objective-like-icon {
+    position: absolute;
+    top: 5px;
+    left: -45px;
+
+    .icon {
+      width: 30px;
+      fill: #ccc;
+      cursor: pointer;
+      transition: all 0.5s ease-out;
+      &.objective-like-icon-selected {
+        fill: #ffe347;
+      }
+    }
+  }
+
   .objective-icons {
     position: absolute;
-    right: -110px;
     top: 5px;
+    right: -110px;
 
     .icon {
       width: 30px;

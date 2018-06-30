@@ -29,6 +29,10 @@
                     </div>
                 </div>
 
+                <div class="objective-like-icon" @click="objective.like = !objective.like">
+                    <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
+                </div>
+
                 <div class="objective-icons">
                     <span @click="deleteObjective(objective.id)"><TrashIcon/></span>
                     <span><CopyIcon/></span>
@@ -49,6 +53,7 @@
     import TrashIcon from './Icons/TrashIcon'
     import CopyIcon from './Icons/CopyIcon'
     import SendIcon from './Icons/SendIcon'
+    import StarIcon from './Icons/StarIcon'
     import PlusIcon from './Icons/PlusIcon'
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
@@ -56,7 +61,7 @@
     export default {
         name: 'OKR',
 
-        components: {TrashIcon, CopyIcon, SendIcon, PlusIcon, InputForm, ChangeLog},
+        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog},
 
         computed: {
             objectives: {
