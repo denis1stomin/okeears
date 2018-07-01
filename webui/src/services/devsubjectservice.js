@@ -1,17 +1,15 @@
 import axios from 'axios/index';
 
-class SubjectService {
-    constructor(httpClientFactory) {
-        this.httpClient = httpClientFactory.create({
-            baseURL: 'http://localhost:8001',
-            // baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
+export default class DevSubjectService {
+    constructor(config, tokenProvider) {
+        this.httpClient = axios.create({
+            baseURL: config.baseURL,
             headers: {'Accept': 'application/json'}
         });
     }
 
     getCurrentUser(dataHandler, errHandler) {
         this.httpClient
-            //.headers('Authorization', `Bearer ${token}`)
             .get('/me')
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
@@ -19,12 +17,8 @@ class SubjectService {
 
     getSubjectOrgTree(subjectId, dataHandler, errHandler) {
         this.httpClient
-            //.headers('Authorization', `Bearer ${token}`)
             .get(`/${subjectId || 'me'}/orgtree`)
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
     }
 }
-
-// Single instance pattern
-export default new SubjectService(axios);

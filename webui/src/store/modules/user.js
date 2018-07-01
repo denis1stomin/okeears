@@ -1,5 +1,13 @@
 import auth from './auth';
-import subjectSvc from './../../services/subjectservice';
+import SubjectService from './../../services/devsubjectservice';
+
+let subjectSvc = new SubjectService(
+    {
+        baseURL: 'http://localhost:8001'
+        // baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0'
+    },
+    null
+);
 
 export default {
     state: {

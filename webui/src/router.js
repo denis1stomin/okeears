@@ -37,11 +37,11 @@ const router = new Router({
             component: Signin,
             beforeEnter: (to, from, next) => { next({ name: 'home' }) }
         }
+
         // TODO : signout
         // TODO : home page before user is authenticated page
-        // TODO : fake editor page
+        // TODO : fake editor page ?
         // TODO : user settings page
-        
     ]
 });
 
