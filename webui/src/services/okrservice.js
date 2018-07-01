@@ -5,8 +5,8 @@ class OkrService {
     constructor(tokenService, httpClientFactory) {
         this.tokenService = tokenService;
         this.httpClient = httpClientFactory.create({
-            baseURL: 'http://localhost:8001',
-            // baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
+            // baseURL: 'http://localhost:8001',
+            baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
