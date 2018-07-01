@@ -1,6 +1,6 @@
 <template>
     <svg class="icon icon-trash" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.057 512.057">
-        <circle style="fill:#7d7abc;" cx="256.028" cy="256" r="256"/>
+        <circle style="fill:#FFE347;" cx="256.028" cy="256" r="256"/>
         <path style="fill:#4FB379;"
               d="M103.824,290.107h304.408V461.89c-42.563,31.496-95.17,50.167-152.204,50.167
               s-109.641-18.671-152.204-50.167V290.107z"/>

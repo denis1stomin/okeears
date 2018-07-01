@@ -1,6 +1,6 @@
 <template>
-    <svg class="icon icon-plus" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-        <circle style="fill:7d7abc;" cx="256" cy="256" r="256"/>
+    <svg class="icon icon-send" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <circle style="fill:FFE347;" cx="256" cy="256" r="256"/>
         <g>
             <path style="fill:#F5F5F5;"
                   d="M184,172H96c-4.416,0-8-3.584-8-8s3.584-8,8-8h88c4.416,0,8,3.584,8,8S188.416,172,184,172z"/>
