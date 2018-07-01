@@ -12,6 +12,13 @@ const checkAuth = (to, from, next) => {
         return;
     }
 
+    auth.actions.HANDLE_CURRENT_LOCATION();
+
+    if (auth.getters.IS_AUTHENTICATED()) {
+        next();
+        return;
+    }
+
     auth.actions.LOGIN();
 };
 
@@ -27,8 +34,14 @@ const router = new Router({
         {
             path: '/signin',
             name: 'signin',
-            component: Signin
+            component: Signin,
+            beforeEnter: (to, from, next) => { next({ name: 'home' }) }
         }
+        // TODO : signout
+        // TODO : home page before user is authenticated page
+        // TODO : fake editor page
+        // TODO : user settings page
+        
     ]
 });
 

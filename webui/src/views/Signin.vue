@@ -5,10 +5,10 @@
 <script>
     export default {
         mounted() {
-            //this.$auth.handleAuthentication().then((data) => {
-            //    this.$router.push({ name: 'home' })
-            //});
-            //this.$router.push({ name: 'home' });
+
+            // THIS PAGE IS NOT USED CURRENTLY.
+            // BUT IT WILL BE USED LATER WHEN THE APP WILL HAVE MORE THAN ONE PAGE.
+
         }
     }
 </script>

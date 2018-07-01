@@ -6,7 +6,7 @@ const authConfig = {
     tenant: '57a18dd1-7522-4744-8df1-eda5260dc1e8',
     clientId: '6f9caa6b-b5cf-467d-a326-f25cb0aca8f2',
     //redirectUri: 'https://okr.idioma.club/signin',
-    redirectUri: 'http://localhost:8000/signin',
+    //redirectUri: 'http://localhost:8000/signin',
     endpoints: [
         'https://graph.microsoft.com'
         //'https://graph.microsoft.com/v1.0/me',
@@ -20,49 +20,44 @@ export default {
 
     getters: {
         IS_AUTHENTICATED() {
+            console.log(authContext.getCachedUser());
             return authContext.getCachedUser();
         },
 
         GET_TOKEN() {
-            return '';
+            let resourceId = 'https://graph.microsoft.com';
+            authContext.acquireToken(resourceId, (errorDesc, token, error) => {
+                if (error) {
+                    console.log(error);
+                    console.log(errorDesc);
+                    //authContext.acquireTokenRedirect(resourceId, null, null);
+                }
+                else {
+                    console.log(token);
+                }
+            });
+
+            return authContext.getCachedToken(resourceId);
         }
     },
 
     actions: {
-        // Handles current window location parameters to check token existance etc
+        // Handles current window location parameters to check/parse token etc
         HANDLE_CURRENT_LOCATION() {
-            //if (!config.popUp) {
-            //    if (authenticationContext.isCallback(window.location.hash)) {
-            //        authenticationContext.handleWindowCallback();
-            //    }
-            //    else {
-            //        var user = authenticationContext.getCachedUser();
-            //        if (user && window.parent === window && !window.opener) {
-            //            // Display the user
-            //            displayUserAndShowSignOutButton(user);
-            //
-            //            // Call the protected API to show the content of the todo list
-            //            acquireAnAccessTokenAndCallTheProtectedService();
-            //        }
-            //    }
-            //}
+            if (!authConfig.popUp) {
+                if (authContext.isCallback(window.location.hash)) {
+                    authContext.handleWindowCallback();
+                }
+                else {
+                    var user = authContext.getCachedUser();
+                    if (user && window.parent === window && !window.opener) {
+                        acquireAnAccessTokenAndCallTheProtectedService();
+                    }
+                }
 
-            //function acquireAnAccessTokenAndCallTheProtectedService() {
-            //    showProgress("acquiring an access token for the Web API");
-            //    authenticationContext.acquireToken(webApiConfig.resourceId, function (errorDesc, token, error) {
-            //        if (error) {
-            //            if (config.popUp) {
-            //                authenticationContext.acquireTokenPopup(webApiConfig.resourceId, null, null, onAccessToken);
-            //            }
-            //            else {
-            //                authenticationContext.acquireTokenRedirect(webApiConfig.resourceId, null, null);
-            //            }
-            //        }
-            //        else {
-            //            onAccessToken(errorDesc, token, error);
-            //        }
-            //    });
-            //}
+                console.log(authContext.getCachedUser());
+                //console.log(authContext.getUser());
+            }
         },
 
         LOGIN() {

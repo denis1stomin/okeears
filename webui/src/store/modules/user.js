@@ -1,3 +1,4 @@
+import auth from './auth';
 import subjectSvc from './../../services/subjectservice';
 
 export default {
@@ -49,6 +50,9 @@ export default {
     actions: {
         // Gets current authentificated user
         GET_CURRENT_USER(context) {
+
+            console.log(auth.getters.GET_TOKEN());
+
             subjectSvc.getCurrentUser(
                 data => context.commit('CURRENT_USER_COMPLETE', data),
                 err => context.commit('CURRENT_USER_FAILED', err)
