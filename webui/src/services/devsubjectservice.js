@@ -3,7 +3,7 @@ import axios from 'axios/index';
 export default class DevSubjectService {
     constructor(config, tokenProvider) {
         this.httpClient = axios.create({
-            baseURL: config.baseURL,
+            baseURL: config.services.uris.subjectservice || config.services.uris.general || undefined,
             headers: {'Accept': 'application/json'}
         });
     }

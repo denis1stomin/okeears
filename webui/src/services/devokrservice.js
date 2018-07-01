@@ -1,10 +1,9 @@
 import axios from 'axios/index';
 
-class OkrService {
-    constructor(httpClientFactory) {
-        this.httpClient = httpClientFactory.create({
-            baseURL: 'http://localhost:8001',
-            // baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
+export default class DevOkrService {
+    constructor(config, tokenProvider) {
+        this.httpClient = axios.create({
+            baseURL: config.services.uris.okrservice || config.services.uris.general || undefined,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -15,7 +14,6 @@ class OkrService {
     getObjectives(subjectId, dataHandler, errHandler) {
         let subjPath = subjectId ? `/subjects/${subjectId}` : '/me';
         this.httpClient
-            //.headers('Authorization', `Bearer ${token}`)
             .get(`${subjPath}/objectives`)
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
@@ -59,6 +57,3 @@ class OkrService {
             .catch(err => errHandler(err));
     }
 }
-
-// Single instance pattern
-export default new OkrService(axios);

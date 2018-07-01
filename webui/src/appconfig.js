@@ -1,14 +1,13 @@
 // Global application configuration file
-var AppConfig = {
-    app: {
-        services: {
-            uris: {
-                general: 'http://localhost:8001',
-                subjectservice: '',
-                okrservice: '',
-                auditservice: '',
-                medalservice: ''
-            }
+window.AppConfig = {
+    services: {
+        uris: {
+            general: 'http://localhost:8001',
+            // general: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0'
+            subjectservice: null,
+            okrservice: null,
+            auditservice: null,
+            medalservice: null
         }
     },
 

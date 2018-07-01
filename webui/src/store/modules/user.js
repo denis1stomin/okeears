@@ -1,13 +1,7 @@
 import auth from './auth';
 import SubjectService from './../../services/devsubjectservice';
 
-let subjectSvc = new SubjectService(
-    {
-        baseURL: 'http://localhost:8001'
-        // baseURL: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0'
-    },
-    null
-);
+let subjectSvc = new SubjectService(window.AppConfig, null);
 
 export default {
     state: {
