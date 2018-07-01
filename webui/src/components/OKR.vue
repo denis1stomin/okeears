@@ -6,7 +6,9 @@
             <InputForm ref="newObjForm"
                        placeholder="Let's create a new objective"
                        :action="addObjective">
-                <span class="input-icon" @click="addObjective($refs.newObjForm.value)">+</span>
+                <span class="input-icon" @click="addObjective($refs.newObjForm.value)">
+                    <PlusIcon/>
+                </span>
             </InputForm>
 
             <div class="objectives" v-if="objectives.length" v-for="objective in objectives">
@@ -14,7 +16,6 @@
                            :action="editObjective"
                            :value="objective.statement"
                            :objid="objective.id">
-                    <span class="input-icon" @click="deleteObjective(objective.id)">-</span>
                 </InputForm>
 
                 <div class="key-results">
@@ -26,6 +27,16 @@
                     <div class="empty-key-results" v-if="!objective.keyresults">
                         Now let's create ambitious key result
                     </div>
+                </div>
+
+                <div class="objective-like-icon" @click="objective.like = !objective.like">
+                    <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
+                </div>
+
+                <div class="objective-icons">
+                    <span @click="deleteObjective(objective.id)"><TrashIcon/></span>
+                    <span><CopyIcon/></span>
+                    <span><SendIcon/></span>
                 </div>
             </div>
 
@@ -39,13 +50,18 @@
 </template>
 
 <script>
+    import TrashIcon from './Icons/TrashIcon'
+    import CopyIcon from './Icons/CopyIcon'
+    import SendIcon from './Icons/SendIcon'
+    import StarIcon from './Icons/StarIcon'
+    import PlusIcon from './Icons/PlusIcon'
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
 
     export default {
         name: 'OKR',
 
-        components: {InputForm, ChangeLog},
+        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog},
 
         computed: {
             objectives: {
