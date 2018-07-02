@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
-RUN npm install npx
+#RUN npm install -g npx
 
 # Bundle app source
 COPY . .
