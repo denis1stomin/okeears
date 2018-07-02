@@ -57,7 +57,7 @@ export default {
 
         // Searches subjects using text search
         SEARCH_SUBJECTS(context, searchQuery) {
-            // TODO : make search query and show most 5-10 found names
+            // TODO: make search query and show most 5-10 found names
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {

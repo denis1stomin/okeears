@@ -42,9 +42,9 @@
         },
 
         mounted() {
-            this.$store.dispatch("GET_CURRENT_USER");
-            this.$store.dispatch("GET_ORGTREE");
-            this.$store.dispatch("GET_OBJECTIVES");
+            this.$store.dispatch('GET_CURRENT_USER');
+            this.$store.dispatch('GET_ORGTREE');
+            this.$store.dispatch('GET_OBJECTIVES', this.user);
             this.$store.dispatch('GET_AUDIT_LOGS');
         }
     }
