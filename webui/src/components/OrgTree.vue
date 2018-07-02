@@ -1,6 +1,6 @@
 <template>
     <div class="org-tree">
-        <div class="org-tree-item" v-for="user in orgtree" @click="showInterestedOKR">
+        <div class="org-tree-item" v-for="user in orgtree" @click="showInterestingOKR(user)">
             <div class="org-tree-item-header org-tree-item-name">{{user.name}}</div>
             <div class="org-tree-item-body">
                 <span class="org-tree-item-title">{{user.jobTitle}}</span>
@@ -28,8 +28,8 @@
         },
 
         methods: {
-            showInterestingOKR() {
-                this.$store.dispatch('SET_SELECTED_SUBJECT');
+            showInterestingOKR(user) {
+                this.$store.dispatch('SET_SELECTED_SUBJECT', user);
             }
         }
     }
