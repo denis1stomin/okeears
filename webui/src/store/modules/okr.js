@@ -41,9 +41,9 @@ export default {
         //           добавить подписку на изменение user.state.selectedSubject.
         //           По изменению будем вызывать action GET_OBJECTIVES()
 
-        GET_OBJECTIVES({commit}, objective) {
+        GET_OBJECTIVES({commit}) {
             okrSvc.getObjectives(
-                objective.id,
+                user.state.selectedSubject.id,
                 data => commit('OBJECTIVES_COMPLETE', data),
                 err => commit('OBJECTIVES_FAILED', err)
             );

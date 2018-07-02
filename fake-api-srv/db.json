@@ -57,20 +57,6 @@
       ]
     },
     {
-      "statement": "Make the product popular",
-      "subjectId": "592fcca2-f7a8-4633-ba34-8dabcf7b5953",
-      "id": "dKd6fuH",
-      "like": true,
-      "keyresults": [
-        {
-          "statement": "Make it reliable and secure"
-        },
-        {
-          "statement": "Make it opensource"
-        }
-      ]
-    },
-    {
       "statement": "Generate smooth UX",
       "subjectId": "592fcca2-f7a8-4633-ba34-8dabcf7b5953",
       "id": "SMhp~mC",

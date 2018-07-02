@@ -29,7 +29,7 @@
 
         methods: {
             showInterestedOKR(user) {
-                this.$store.dispatch('GET_OBJECTIVES', user);
+                this.$store.dispatch('SET_SELECTED_SUBJECT', user);
             }
         }
     }
