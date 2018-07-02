@@ -57,8 +57,14 @@
       ]
     },
     {
-      "statement": "Make the product popular",
+      "statement": "Generate smooth UX",
       "subjectId": "592fcca2-f7a8-4633-ba34-8dabcf7b5953",
+      "id": "SMhp~mC",
+      "like": false
+    },
+    {
+      "statement": "Make the product popular",
+      "subjectId": "593f2a21-b91b-4425-805a-ba6477efe4bb",
       "id": "dKd6fuH",
       "like": true,
       "keyresults": [
@@ -71,10 +77,9 @@
       ]
     },
     {
-      "statement": "Generate smooth UX",
+      "statement": "Спеть новую песню",
       "subjectId": "592fcca2-f7a8-4633-ba34-8dabcf7b5953",
-      "id": "SMhp~mC",
-      "like": false
+      "id": "C40EvUG"
     }
   ]
 }
