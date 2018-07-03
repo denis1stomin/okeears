@@ -40,14 +40,18 @@ export default {
 
         ORGTREE_FAILED(state, payload) {
             state.error = payload;
+        },
+
+        SELECTED_SUBJECT(state, payload) {
+            state.selectedSubject = payload;
         }
     },
 
-    getters: {
-        SELECTED_SUBJECT(state) {
-            return state.selectedSubject;
-        }
-    },
+    // getters: {
+    //     SELECTED_SUBJECT(state) {
+    //         return state.selectedSubject;
+    //     }
+    // },
 
     actions: {
         // Gets current authentificated user
@@ -63,7 +67,7 @@ export default {
 
         // Searches subjects using text search
         SEARCH_SUBJECTS(context, searchQuery) {
-            // TODO : make search query and show most 5-10 found names
+            // TODO: make search query and show most 5-10 found names
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {
@@ -73,7 +77,10 @@ export default {
             // GET_OBJECTIVES
         },
 
-        SET_SELECTED_SUBJECT(context, subject) { },
+        SET_SELECTED_SUBJECT({commit, dispatch}, subject) {
+            commit('SELECTED_SUBJECT', subject);
+            dispatch('GET_OBJECTIVES');
+        },
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
