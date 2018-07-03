@@ -4,7 +4,7 @@
   "description": "Fake OKR server for development purposes",
   "main": "index.js",
   "scripts": {
-    "start": "npx json-server -w db.json -r routes.json -p 8001 -H 0.0.0.0",
+    "start": "npx json-server -w db.json -r routes.json -p 8001 -H 0.0.0.0 -m middleware.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Denis I",
