@@ -1,10 +1,10 @@
 <template>
     <div class="okr">
         <div class="okr-editor">
-            <h3 class="title">Plan your Objectives and Key Results</h3>
+            <h3 class="title">Plan your objectives and key results</h3>
 
             <InputForm ref="newObjForm"
-                       placeholder="Let’s create ambitious objectives"
+                       placeholder="Let’s create ambitious objective"
                        :action="addObjective">
                 <span class="input-icon" @click="addObjective($refs.newObjForm.value)">
                     <PlusIcon/>
@@ -25,7 +25,7 @@
                     </div>
 
                     <div class="empty-key-results" v-if="!objective.keyresults">
-                        Key Result I want to achieve
+                        Key result I want to achieve
                     </div>
                 </div>
 
