@@ -12,7 +12,6 @@ window.AppConfig = {
     },
 
     auth: {
-        tenant: '57a18dd1-7522-4744-8df1-eda5260dc1e8',
         clientId: '6f9caa6b-b5cf-467d-a326-f25cb0aca8f2',
         loginResource: 'https://graph.microsoft.com'
         //cacheLocation: 'localStorage',
