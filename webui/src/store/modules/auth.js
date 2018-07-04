@@ -7,6 +7,10 @@ export default {
 
     getters: {
         IS_AUTHENTICATED() {
+            return this.GET_USER();
+        },
+
+        GET_USER() {
             console.log(authContext.getCachedUser());
             return authContext.getCachedUser();
         },
@@ -41,7 +45,6 @@ export default {
                 }
             }
             console.log(authContext.getCachedUser());
-            //console.log(authContext.getUser());
         },
 
         LOGIN() {

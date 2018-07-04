@@ -62,10 +62,16 @@ export default {
     actions: {
         // Gets current authentificated user
         GET_CURRENT_USER(context) {
-            subjectSvc.getCurrentUser(
-                data => context.commit('CURRENT_USER_COMPLETE', data),
-                err => context.commit('CURRENT_USER_FAILED', err)
-            );
+
+            // TEMPORARY SOLUTION TO USE REAL DATA FROM TOKEN
+            let user = auth.getters.GET_USER();
+            context.commit('CURRENT_USER_COMPLETE', { name: user.userName })
+
+            // TODO : RETURN GRAPH REQUEST
+            //subjectSvc.getCurrentUser(
+            //    data => context.commit('CURRENT_USER_COMPLETE', data),
+            //    err => context.commit('CURRENT_USER_FAILED', err)
+            //);
         },
 
         // Searches subjects using text search
