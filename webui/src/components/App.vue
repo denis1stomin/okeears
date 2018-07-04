@@ -7,7 +7,7 @@
         </header>
 
         <div class="menu">
-            <InputForm placeholder="Search friends">
+            <InputForm placeholder="Look at your teammates">
                 <SearchIcon/>
             </InputForm>
             <OrgTree/>
