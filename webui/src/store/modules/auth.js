@@ -16,7 +16,8 @@ export default {
         },
 
         GET_TOKEN() {
-            let resourceId = 'https://graph.microsoft.com';
+            //let resourceId = 'https://graph.microsoft.com';
+            let resourceId = window.AppConfig.auth.loginResource;
             authContext.acquireToken(resourceId, (errorDesc, token, error) => {
                 if (error) {
                     console.log(error);

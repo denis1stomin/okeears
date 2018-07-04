@@ -13,7 +13,8 @@ window.AppConfig = {
 
     auth: {
         clientId: '6f9caa6b-b5cf-467d-a326-f25cb0aca8f2',
-        loginResource: 'https://graph.microsoft.com'
+        loginResource: 'https://graph.microsoft.com',
+        isAngular: false
         //cacheLocation: 'localStorage',
         //redirectUri: 'https://okr.idioma.club/signin',
         //redirectUri: 'http://localhost:8000/signin',

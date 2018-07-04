@@ -15,7 +15,7 @@ export default class GraphSubjectService {
             .api('/me')
             //.select("displayName")
             .get()
-            .then(dataHandler)
+            .then((resp) => dataHandler(resp.body))
             .catch(errHandler);
     }
 

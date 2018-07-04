@@ -29,11 +29,15 @@ export default {
 
     mutations: {
         CURRENT_USER_COMPLETE(state, payload) {
+            console.log('user complete ***', payload);
             state.me = payload;
             // by default an user wants to see her org tree
-            state.interestingSubject = payload;
+            //state.interestingSubject = payload;       // FOR DEMO
             // by default an user wants to see her objectives
             state.selectedSubject = payload;
+
+            // TODO : use setter here !!! and remove from page load
+            //this.SET_INTERESTING_SUBJECT(payload);
         },
 
         CURRENT_USER_FAILED(state, payload) {
@@ -41,11 +45,16 @@ export default {
         },
 
         ORGTREE_COMPLETE(state, payload) {
+            console.log('orgtree complete ***', payload);
             state.orgtree = payload;
         },
 
         ORGTREE_FAILED(state, payload) {
             state.error = payload;
+        },
+
+        INTERESTING_SUBJECT(state, payload) {
+            state.interestingSubject = payload;
         },
 
         SELECTED_SUBJECT(state, payload) {
@@ -67,7 +76,7 @@ export default {
             context.commit('CURRENT_USER_COMPLETE', {
                 id: user.profile.oid,
                 name: user.userName,
-                upn: user.profile.upn
+                displayName: `${user.profile.given_name} ${user.profile.family_name}`
             })
         },
 
@@ -77,10 +86,9 @@ export default {
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {
-            // store.interestingSubject = subject;
-            // GET_ORGTREE for subject
-            // SET_SELECTED_SUBJECT as subject
-            // GET_OBJECTIVES
+            commit('INTERESTING_SUBJECT', subject);
+            dispatch('GET_ORGTREE');
+            dispatch('SET_SELECTED_SUBJECT', subject);
         },
 
         SET_SELECTED_SUBJECT({commit, dispatch}, subject) {
@@ -92,8 +100,18 @@ export default {
         GET_ORGTREE(context) {
             subjectSvc.getSubjectOrgTree(
                 context.state.interestingSubject.id,
-                data => context.commit('ORGTREE_COMPLETE', data),
-                err => context.commit('ORGTREE_FAILED', err)
+                data => {
+                    // Add current user only for demo
+                    let user = Object.assign({}, context.state.me);
+                    user.name = user.displayName;
+                    user.aadlink = `https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/${user.id}`;
+                    user.o365link = `https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/${user.id}`;
+                    user.delvelink = `https://nam.delve.office.com/?u=${user.id}`;
+                    data.push(user);
+
+                    context.commit('ORGTREE_COMPLETE', data);
+                },
+                err => commit('ORGTREE_FAILED', err)
             );
         }
     }
