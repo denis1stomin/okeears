@@ -1,7 +1,13 @@
 import auth from './auth';
-import SubjectService from './../../services/devsubjectservice';
+import GraphSubjectService from './../../services/graphsubjectservice';
 
-let subjectSvc = new SubjectService(window.AppConfig, null);
+let subjectSvc = new GraphSubjectService(
+    window.AppConfig, (done) => {
+        // first parameter takes an error if you can't get an access token
+        let token = auth.getters.GET_TOKEN();
+        // TODO: trick
+        done(null, token);
+    });
 
 export default {
     state: {
@@ -48,7 +54,7 @@ export default {
     },
 
     // getters: {
-    //     SELECTED_SUBJECT(state) {
+    //     GET_SELECTED_SUBJECT(state) {
     //         return state.selectedSubject;
     //     }
     // },
@@ -56,9 +62,6 @@ export default {
     actions: {
         // Gets current authentificated user
         GET_CURRENT_USER(context) {
-
-            console.log(auth.getters.GET_TOKEN());
-
             subjectSvc.getCurrentUser(
                 data => context.commit('CURRENT_USER_COMPLETE', data),
                 err => context.commit('CURRENT_USER_FAILED', err)
