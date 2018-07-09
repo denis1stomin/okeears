@@ -2,7 +2,6 @@
 window.AppConfig = {
     services: {
         uris: {
-            // general: 'https://virtserver.swaggerhub.com/denis1stomin/OKRPortal/0.5.0',
             general: 'http://d319b4af8ad541c48b45ff6c3872b0d3.westeurope.azurecontainer.io:8001',
             subjectservice: null,
             okrservice: null,

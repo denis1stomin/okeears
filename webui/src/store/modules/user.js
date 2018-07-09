@@ -29,7 +29,6 @@ export default {
 
     mutations: {
         CURRENT_USER_COMPLETE(state, payload) {
-            console.log('user complete ***', payload);
             state.me = payload;
             // by default an user wants to see her org tree
             //state.interestingSubject = payload;       // FOR DEMO
@@ -45,7 +44,6 @@ export default {
         },
 
         ORGTREE_COMPLETE(state, payload) {
-            console.log('orgtree complete ***', payload);
             state.orgtree = payload;
         },
 
@@ -98,21 +96,26 @@ export default {
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
-            subjectSvc.getSubjectOrgTree(
-                context.state.interestingSubject.id,
-                data => {
-                    // Add current user only for demo
-                    let user = Object.assign({}, context.state.me);
-                    user.name = user.displayName;
-                    user.aadlink = `https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/${user.id}`;
-                    user.o365link = `https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/${user.id}`;
-                    user.delvelink = `https://nam.delve.office.com/?u=${user.id}`;
-                    data.push(user);
-
-                    context.commit('ORGTREE_COMPLETE', data);
-                },
-                err => commit('ORGTREE_FAILED', err)
+            subjectSvc.getCurrentUser(
+                data => context.commit('ORGTREE_COMPLETE', [data]),
+                err => console.log(err)
             );
+
+            //subjectSvc.getSubjectOrgTree(
+            //    context.state.interestingSubject.id,
+            //    data => {
+            //        // Add current user only for demo
+            //        let user = Object.assign({}, context.state.me);
+            //        user.name = user.displayName;
+            //        user.aadlink = `https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/${user.id}`;
+            //        user.o365link = `https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/${user.id}`;
+            //        user.delvelink = `https://nam.delve.office.com/?u=${user.id}`;
+            //        data.push(user);
+//
+            //        context.commit('ORGTREE_COMPLETE', data);
+            //    },
+            //    err => commit('ORGTREE_FAILED', err)
+            //);
         }
     }
 }

@@ -11,7 +11,6 @@ export default {
         },
 
         GET_USER() {
-            console.log(authContext.getCachedUser());
             return authContext.getCachedUser();
         },
 
@@ -22,10 +21,10 @@ export default {
                 if (error) {
                     console.log(error);
                     console.log(errorDesc);
-                    //authContext.acquireTokenRedirect(resourceId, null, null);
+                    authContext.acquireTokenRedirect(resourceId, null, null);
                 }
                 else {
-                    //console.log(token);
+                    console.log(token);
                 }
             });
 
@@ -42,10 +41,9 @@ export default {
             else {
                 var user = authContext.getCachedUser();
                 if (user && window.parent === window && !window.opener) {
-                    acquireAnAccessTokenAndCallTheProtectedService();
+                    //acquireAnAccessTokenAndCallTheProtectedService();
                 }
             }
-            console.log(authContext.getCachedUser());
         },
 
         LOGIN() {
