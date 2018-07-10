@@ -15,20 +15,8 @@ export default {
         },
 
         GET_TOKEN() {
-            //let resourceId = 'https://graph.microsoft.com';
-            let resourceId = window.AppConfig.auth.loginResource;
-            authContext.acquireToken(resourceId, (errorDesc, token, error) => {
-                if (error) {
-                    console.log(error);
-                    console.log(errorDesc);
-                    authContext.acquireTokenRedirect(resourceId, null, null);
-                }
-                else {
-                    console.log(token);
-                }
-            });
-
-            return authContext.getCachedToken(resourceId);
+            let resource = window.AppConfig.auth.graphResource;
+            return authContext.getCachedToken(resource);
         }
     },
 
@@ -41,7 +29,16 @@ export default {
             else {
                 var user = authContext.getCachedUser();
                 if (user && window.parent === window && !window.opener) {
-                    //acquireAnAccessTokenAndCallTheProtectedService();
+                    let resource = window.AppConfig.auth.graphResource;
+                    authContext.acquireToken(resource, (errorDesc, token, error) => {
+                        if (error) {
+                            console.log(error, errorDesc);
+                            authContext.acquireTokenRedirect(resource, null, null);
+                        }
+                        else {
+                            console.log(token);
+                        }
+                    });
                 }
             }
         },

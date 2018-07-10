@@ -33,10 +33,7 @@ export default {
             // by default an user wants to see her org tree
             //state.interestingSubject = payload;       // FOR DEMO
             // by default an user wants to see her objectives
-            state.selectedSubject = payload;
-
-            // TODO : use setter here !!! and remove from page load
-            //this.SET_INTERESTING_SUBJECT(payload);
+            //state.selectedSubject = payload;
         },
 
         CURRENT_USER_FAILED(state, payload) {
@@ -75,7 +72,9 @@ export default {
                 id: user.profile.oid,
                 name: user.userName,
                 displayName: `${user.profile.given_name} ${user.profile.family_name}`
-            })
+            });
+
+            context.dispatch('SET_INTERESTING_SUBJECT', user);
         },
 
         // Searches subjects using text search
@@ -84,20 +83,23 @@ export default {
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {
-            commit('INTERESTING_SUBJECT', subject);
-            dispatch('GET_ORGTREE');
-            dispatch('SET_SELECTED_SUBJECT', subject);
+            context.commit('INTERESTING_SUBJECT', subject);
+            context.dispatch('GET_ORGTREE');
+            context.dispatch('SET_SELECTED_SUBJECT', subject);
         },
 
-        SET_SELECTED_SUBJECT({commit, dispatch}, subject) {
-            commit('SELECTED_SUBJECT', subject);
-            dispatch('GET_OBJECTIVES');
+        SET_SELECTED_SUBJECT(context, subject) {
+            context.commit('SELECTED_SUBJECT', subject);
+            context.dispatch('GET_OBJECTIVES');
         },
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
             subjectSvc.getCurrentUser(
-                data => context.commit('ORGTREE_COMPLETE', [data]),
+                data => {
+                    console.log(data);
+                    context.commit('ORGTREE_COMPLETE', [data]);
+                },
                 err => console.log(err)
             );
 
