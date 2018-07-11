@@ -7,11 +7,6 @@ import auth from './store/modules/auth'
 Vue.use(Router);
 
 const checkAuth = (to, from, next) => {
-    if (auth.getters.IS_AUTHENTICATED()) {
-        next();
-        return;
-    }
-
     auth.actions.HANDLE_CURRENT_LOCATION();
 
     if (auth.getters.IS_AUTHENTICATED()) {

@@ -97,7 +97,6 @@ export default {
         GET_ORGTREE(context) {
             subjectSvc.getCurrentUser(
                 data => {
-                    console.log(data);
                     context.commit('ORGTREE_COMPLETE', [data]);
                 },
                 err => console.log(err)
@@ -105,17 +104,7 @@ export default {
 
             //subjectSvc.getSubjectOrgTree(
             //    context.state.interestingSubject.id,
-            //    data => {
-            //        // Add current user only for demo
-            //        let user = Object.assign({}, context.state.me);
-            //        user.name = user.displayName;
-            //        user.aadlink = `https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/${user.id}`;
-            //        user.o365link = `https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/${user.id}`;
-            //        user.delvelink = `https://nam.delve.office.com/?u=${user.id}`;
-            //        data.push(user);
-//
-            //        context.commit('ORGTREE_COMPLETE', data);
-            //    },
+            //    data => context.commit('ORGTREE_COMPLETE', data),
             //    err => commit('ORGTREE_FAILED', err)
             //);
         }

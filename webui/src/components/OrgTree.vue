@@ -2,9 +2,10 @@
     <div class="org-tree">
         <div class="org-tree-item" :class="{'org-tree-item-selected': user.id === selectedSubject.id}"
              v-for="user in orgtree" @click="selectInterestingSubject(user)">
-            <div class="org-tree-item-header org-tree-item-name">{{user.name}}</div>
+            <div class="org-tree-item-header org-tree-item-name">{{user.displayName}}</div>
             <div class="org-tree-item-body">
                 <span class="org-tree-item-title">{{user.jobTitle}}</span>
+                <span class="org-tree-item-title">{{user.officeLocation}}</span>
                 <span class="org-tree-item-links">
                     View in
                     <a class="org-tree-item-link" target="_blank" :href="user.delvelink">Delve</a>

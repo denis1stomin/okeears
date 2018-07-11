@@ -36,7 +36,7 @@ export default {
                             authContext.acquireTokenRedirect(resource, null, null);
                         }
                         else {
-                            console.log(token);
+                            console.log('got access token');
                         }
                     });
                 }
