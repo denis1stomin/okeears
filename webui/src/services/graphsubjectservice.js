@@ -20,6 +20,9 @@ export default class GraphSubjectService {
     }
 
     getSubjectOrgTree(subjectId, dataHandler, errHandler) {
-        devSvc.getSubjectOrgTree(subjectId, dataHandler, errHandler);
+        this.getCurrentUser(
+            (user) => dataHandler([user]),
+            errHandler
+        );
     }
 }

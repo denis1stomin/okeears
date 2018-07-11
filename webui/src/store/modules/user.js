@@ -95,18 +95,11 @@ export default {
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
-            subjectSvc.getCurrentUser(
-                data => {
-                    context.commit('ORGTREE_COMPLETE', [data]);
-                },
+            subjectSvc.getSubjectOrgTree(
+                context.state.interestingSubject.id,
+                data => context.commit('ORGTREE_COMPLETE', data),
                 err => console.log(err)
             );
-
-            //subjectSvc.getSubjectOrgTree(
-            //    context.state.interestingSubject.id,
-            //    data => context.commit('ORGTREE_COMPLETE', data),
-            //    err => commit('ORGTREE_FAILED', err)
-            //);
         }
     }
 }
