@@ -1,5 +1,7 @@
-import okrSvc from './../../services/okrservice';
+import OkrService from './../../services/devokrservice';
 import user from './user'
+
+let okrSvc = new OkrService(window.AppConfig, null);
 
 export default {
     state: {

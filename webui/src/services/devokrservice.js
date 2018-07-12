@@ -1,11 +1,9 @@
 import axios from 'axios/index';
-import authSvc from './authservice';
 
-class OkrService {
-    constructor(tokenService, httpClientFactory) {
-        this.tokenService = tokenService;
-        this.httpClient = httpClientFactory.create({
-            baseURL: 'http://d319b4af8ad541c48b45ff6c3872b0d3.westeurope.azurecontainer.io:8001',
+export default class DevOkrService {
+    constructor(config, tokenProvider) {
+        this.httpClient = axios.create({
+            baseURL: config.services.uris.okrservice || config.services.uris.general || undefined,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -14,10 +12,8 @@ class OkrService {
     }
 
     getObjectives(subjectId, dataHandler, errHandler) {
-        //const token = this.tokenService.getToken();
         let subjPath = subjectId ? `/subjects/${subjectId}` : '/me';
         this.httpClient
-            //.headers('Authorization', `Bearer ${token}`)
             .get(`${subjPath}/objectives`)
             .then(resp => dataHandler(resp.data))
             .catch(err => errHandler(err));
@@ -40,7 +36,6 @@ class OkrService {
     }
 
     deleteObjective(subjectId, objectiveId, successHandler, errHandler) {
-        const token = this.tokenService.getToken();
         this.httpClient
             //.delete(`/subjects/${subjectId}/objectives/${objectiveId}`)
             .delete(`/objectives/${objectiveId}`)
@@ -62,6 +57,3 @@ class OkrService {
             .catch(err => errHandler(err));
     }
 }
-
-// Single instance pattern
-export default new OkrService(authSvc, axios);
