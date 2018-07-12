@@ -24,11 +24,10 @@
 </template>
 
 <script>
-    import SearchIcon from './Icons/SearchIcon'
-    import InputForm from './InputForm'
-    import OrgTree from './OrgTree'
-    import OKR from './OKR'
-
+    import InputForm from './../components/InputForm'
+    import OrgTree from './../components/OrgTree'
+    import OKR from './../components/OKR'
+    import SearchIcon from './../components/Icons/SearchIcon'
 
     export default {
         components: {SearchIcon, InputForm, OrgTree, OKR},
@@ -43,9 +42,6 @@
 
         mounted() {
             this.$store.dispatch('GET_CURRENT_USER');
-            this.$store.dispatch('GET_ORGTREE');
-            this.$store.dispatch('GET_OBJECTIVES');
-            this.$store.dispatch('GET_AUDIT_LOGS');
         }
     }
 </script>

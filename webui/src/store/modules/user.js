@@ -1,4 +1,13 @@
-import subjectSvc from './../../services/subjectservice';
+import auth from './auth';
+import GraphSubjectService from './../../services/graphsubjectservice';
+
+let subjectSvc = new GraphSubjectService(
+    window.AppConfig, (done) => {
+        // first parameter takes an error if you can't get an access token
+        let token = auth.getters.GET_TOKEN();
+        // TODO: trick
+        done(null, token);
+    });
 
 export default {
     state: {
@@ -22,9 +31,9 @@ export default {
         CURRENT_USER_COMPLETE(state, payload) {
             state.me = payload;
             // by default an user wants to see her org tree
-            state.interestingSubject = payload;
+            //state.interestingSubject = payload;       // FOR DEMO
             // by default an user wants to see her objectives
-            state.selectedSubject = payload;
+            //state.selectedSubject = payload;
         },
 
         CURRENT_USER_FAILED(state, payload) {
@@ -39,13 +48,17 @@ export default {
             state.error = payload;
         },
 
+        INTERESTING_SUBJECT(state, payload) {
+            state.interestingSubject = payload;
+        },
+
         SELECTED_SUBJECT(state, payload) {
             state.selectedSubject = payload;
         }
     },
 
     // getters: {
-    //     SELECTED_SUBJECT(state) {
+    //     GET_SELECTED_SUBJECT(state) {
     //         return state.selectedSubject;
     //     }
     // },
@@ -53,10 +66,15 @@ export default {
     actions: {
         // Gets current authentificated user
         GET_CURRENT_USER(context) {
-            subjectSvc.getCurrentUser(
-                data => context.commit('CURRENT_USER_COMPLETE', data),
-                err => context.commit('CURRENT_USER_FAILED', err)
-            );
+            // Get user basic information from the token
+            let user = auth.getters.GET_USER();
+            context.commit('CURRENT_USER_COMPLETE', {
+                id: user.profile.oid,
+                name: user.userName,
+                displayName: `${user.profile.given_name} ${user.profile.family_name}`
+            });
+
+            context.dispatch('SET_INTERESTING_SUBJECT', user);
         },
 
         // Searches subjects using text search
@@ -65,15 +83,14 @@ export default {
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {
-            // store.interestingSubject = subject;
-            // GET_ORGTREE for subject
-            // SET_SELECTED_SUBJECT as subject
-            // GET_OBJECTIVES
+            context.commit('INTERESTING_SUBJECT', subject);
+            context.dispatch('GET_ORGTREE');
+            context.dispatch('SET_SELECTED_SUBJECT', subject);
         },
 
-        SET_SELECTED_SUBJECT({commit, dispatch}, subject) {
-            commit('SELECTED_SUBJECT', subject);
-            dispatch('GET_OBJECTIVES');
+        SET_SELECTED_SUBJECT(context, subject) {
+            context.commit('SELECTED_SUBJECT', subject);
+            context.dispatch('GET_OBJECTIVES');
         },
 
         // Gets OrgTree for an interesting subject
@@ -81,7 +98,7 @@ export default {
             subjectSvc.getSubjectOrgTree(
                 context.state.interestingSubject.id,
                 data => context.commit('ORGTREE_COMPLETE', data),
-                err => context.commit('ORGTREE_FAILED', err)
+                err => console.log(err)
             );
         }
     }
