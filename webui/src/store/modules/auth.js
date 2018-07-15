@@ -27,7 +27,7 @@ export default {
                 authContext.handleWindowCallback();
             }
             else {
-                var user = authContext.getCachedUser();
+                let user = authContext.getCachedUser();
                 if (user && window.parent === window && !window.opener) {
                     let resource = window.AppConfig.auth.graphResource;
                     authContext.acquireToken(resource, (errorDesc, token, error) => {
