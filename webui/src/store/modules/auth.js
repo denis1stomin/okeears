@@ -49,6 +49,7 @@ export default {
         },
 
         LOGOUT() {
+            console.log('Signing out...');
             authContext.logOut();
         }
     }

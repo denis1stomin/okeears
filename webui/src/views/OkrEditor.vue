@@ -3,7 +3,8 @@
         <header class="header">
             <h2 class="title">OKR Portal</h2>
 
-            <span class="user-name">{{user.name}}</span>
+            <span class="user-name" @click="signOut">Sign Out</span>
+            <span class="user-name" >{{user.name}}</span>
         </header>
 
         <div class="menu">
@@ -28,6 +29,7 @@
     import OrgTree from './../components/OrgTree'
     import OKR from './../components/OKR'
     import SearchIcon from './../components/Icons/SearchIcon'
+    import auth from '../store/modules/auth'
 
     export default {
         components: {SearchIcon, InputForm, OrgTree, OKR},
@@ -37,6 +39,12 @@
                 get() {
                     return this.$store.state.user.me;
                 }
+            }
+        },
+
+        methods: {
+            signOut() {
+                auth.actions.LOGOUT();
             }
         },
 
