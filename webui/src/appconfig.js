@@ -11,7 +11,7 @@ window.AppConfig = {
     },
 
     auth: {
-        clientId: '6f9caa6b-b5cf-467d-a326-f25cb0aca8f2',
+        clientId: '6f9caa6b-b5cf-467d-a326-f25cb0aca8f2'
         //loginResource: 'application id endpoint',
         //cacheLocation: 'localStorage',
         //redirectUri: 'https://okr.idioma.club/signin',
@@ -20,7 +20,5 @@ window.AppConfig = {
         //    'https://graph.microsoft.com/v1.0/users',
         //    'https://graph.microsoft.com/v1.0/onenote'
         //]
-        //
-        graphResource: 'https://graph.microsoft.com'
     }
 };
