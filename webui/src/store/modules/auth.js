@@ -25,7 +25,7 @@ export default {
 
         // Acquires access token and then makes an action with the token
         WITH_TOKEN(actionFunc, tokenResource) {
-            var user = authContext.getCachedUser();
+            const user = authContext.getCachedUser();
             if (user && window.parent === window && !window.opener) {
                 authContext.acquireToken(tokenResource, (errorDesc, token, error) => {
                     if (error) {

@@ -57,8 +57,8 @@ export default {
         // Gets current authentificated user
         GET_CURRENT_USER(context) {
             // Get user basic information from the token
-            let rawUser = auth.getters.GET_USER();
-            let user = {
+            const rawUser = auth.getters.GET_USER();
+            const user = {
                 id: rawUser.profile.oid,
                 name: rawUser.userName
             };
@@ -94,7 +94,7 @@ export default {
                     data => context.commit('ORGTREE_COMPLETE', data),
                     err => console.log(err)
                 );
-            }, subjectSvc.ACCESS_TOKEN_RESOURCE);
+            }, subjectSvc.accessTokenResource());
         }
     }
 }

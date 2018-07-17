@@ -1,11 +1,10 @@
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
+const AccessTokenResource = 'https://graph.microsoft.com';
 
 export default class GraphSubjectService {
     constructor() {
-        this.ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
-
         this.getManagersRecursively = function aliasName(managersChain, userResource, tokenProvider, dataHandler, errHandler) {
-            let graphClient = MicrosoftGraph.Client.init({
+            const graphClient = MicrosoftGraph.Client.init({
                 authProvider: tokenProvider
             });
 
@@ -17,7 +16,7 @@ export default class GraphSubjectService {
                     if (body) {
                         managersChain.unshift(body);
     
-                        let nextUserResource = `/users/${body.id}`;
+                        const nextUserResource = `/users/${body.id}`;
                         aliasName(managersChain, nextUserResource, tokenProvider, dataHandler, errHandler);
                     }
                     else {
@@ -30,7 +29,7 @@ export default class GraphSubjectService {
         };
 
         this.getUser = (userResource, tokenProvider, dataHandler, errHandler) => {
-            let graphClient = MicrosoftGraph.Client.init({
+            const graphClient = MicrosoftGraph.Client.init({
                 authProvider: tokenProvider
             });
     
@@ -41,6 +40,10 @@ export default class GraphSubjectService {
                 .then(dataHandler)
                 .catch(errHandler);
         };
+    }
+
+    accessTokenResource() {
+        return AccessTokenResource;
     }
 
     getCurrentUser(tokenProvider, dataHandler, errHandler) {
