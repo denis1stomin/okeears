@@ -3,8 +3,10 @@
         <header class="header">
             <h2 class="title">OKR Portal</h2>
 
-            <span class="user-name" @click="logOut">Sign Out</span>
-            <span class="user-name" >{{user.name}}</span>
+            <div class="header-nav-item">
+                <span class="user-name">{{user.name}}</span>
+                <span class="log-out" @click="logOut"><LogoutIcon/></span>
+            </div>
         </header>
 
         <div class="menu">
@@ -29,9 +31,10 @@
     import OrgTree from './../components/OrgTree'
     import OKR from './../components/OKR'
     import SearchIcon from './../components/Icons/SearchIcon'
+    import LogoutIcon from './../components/Icons/LogoutIcon'
 
     export default {
-        components: {SearchIcon, InputForm, OrgTree, OKR},
+        components: {LogoutIcon, SearchIcon, InputForm, OrgTree, OKR},
 
         computed: {
             user: {
