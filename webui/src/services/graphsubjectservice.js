@@ -23,6 +23,8 @@ export default class GraphSubjectService {
                         dataHandler(managersChain);
                     }
                 })
+                // NOTE: Temporarily errHandler function is not used to avoid 403 error code.
+                // Instead we use dataHandler to return at least what we have.
                 .catch(/*errHandler*/ (err) => {
                     dataHandler(managersChain);
                 });
@@ -42,20 +44,26 @@ export default class GraphSubjectService {
         };
     }
 
+    /// Returns MS Graph resource which is needed to acquire an access token for this service
     accessTokenResource() {
         return AccessTokenResource;
     }
 
+    /// Requests current logged in user information
     getCurrentUser(tokenProvider, dataHandler, errHandler) {
         this.getUser('/me', tokenProvider, dataHandler, errHandler);
     }
 
+    /// Requests user information by its AAD Id field
     getUserById(subjectId, tokenProvider, dataHandler, errHandler) {
         this.getUser(`/users/${subjectId}`, tokenProvider, dataHandler, errHandler);
     }
 
+    /// Requests organizational structure for an user
     getSubjectOrgTree(subjectId, tokenProvider, dataHandler, errHandler) {
+        // First get user information
         this.getUserById(subjectId, tokenProvider, (user) => {
+            // Then retrieve managers chain
             this.getManagersRecursively([user], `/users/${subjectId}`, tokenProvider, dataHandler, errHandler);
         }, errHandler);
     }
