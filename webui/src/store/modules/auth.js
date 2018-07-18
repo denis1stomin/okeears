@@ -6,8 +6,8 @@ const authContext = new AuthenticationContext(window.AppConfig.auth);
 export default {
 
     getters: {
-        IS_AUTHENTICATED() {
-            return this.GET_USER();
+        IS_AUTHENTICATED(state, getters) {
+            return !!getters.GET_USER;
         },
 
         GET_USER() {
