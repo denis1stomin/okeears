@@ -100,8 +100,7 @@ export default class GraphSubjectService {
             .api(`/users`)
             .version('beta')
             .select(PEOPLE_SEARCH_SELECT)
-            // TODO : find something like 'contains' method instead of 'startsWith'
-            .filter(`startswith(displayName,'${textQuery}')`)
+            .filter(`startswith(displayName,'${textQuery}') or startswith(givenName,'${textQuery}') or startswith(surname,'${textQuery}') or startswith(userPrincipalName,'${textQuery}') or startswith(mail,'${textQuery}')`)
             .top(7)
             .get()
             .then((body) => {
