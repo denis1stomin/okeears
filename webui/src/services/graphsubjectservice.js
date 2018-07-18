@@ -83,7 +83,7 @@ export default class GraphSubjectService {
             .api('/me/people')
             .version('beta')
             .select(PEOPLE_SEARCH_SELECT)
-            .top(10)
+            .top(7)
             .get()
             .then((body) => {
                 dataHandler(body.value);
@@ -102,9 +102,11 @@ export default class GraphSubjectService {
             .select(PEOPLE_SEARCH_SELECT)
             // TODO : find something like 'contains' method instead of 'startsWith'
             .filter(`startswith(displayName,'${textQuery}')`)
-            .top(10)
+            .top(7)
             .get()
-            .then(dataHandler)
+            .then((body) => {
+                dataHandler(body.value);
+            })
             .catch(errHandler);
     }
 }

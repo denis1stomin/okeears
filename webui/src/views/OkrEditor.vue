@@ -10,7 +10,8 @@
         </header>
 
         <div class="menu">
-            <InputForm placeholder="Find people">
+            <InputForm placeholder="Find people"
+                       :action="searchSubjects">
                 <SearchIcon/>
             </InputForm>
             <div class="suggested-subjects-list">
