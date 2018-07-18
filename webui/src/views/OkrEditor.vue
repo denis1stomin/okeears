@@ -10,9 +10,12 @@
         </header>
 
         <div class="menu">
-            <InputForm placeholder="Find teammates">
+            <InputForm placeholder="Find people">
                 <SearchIcon/>
             </InputForm>
+            <div class="suggested-subjects-list">
+                <span v-for="item in suggestedSubjects">{{item.displayName}}</span>
+            </div>
             <OrgTree/>
         </div>
 
@@ -41,17 +44,28 @@
                 get() {
                     return this.$store.state.user.me;
                 }
+            },
+
+            suggestedSubjects: {
+                get() {
+                    return this.$store.state.user.suggestedSubjectsList;
+                }
             }
         },
 
         methods: {
             logOut() {
                 this.$store.dispatch('LOGOUT');
+            },
+
+            searchSubjects(query) {
+                this.$store.dispatch('SEARCH_SUBJECTS', query);
             }
         },
 
         mounted() {
             this.$store.dispatch('GET_CURRENT_USER');
+            this.$store.dispatch('GET_RELEVANT_SUBJECTS');
         }
     }
 </script>
