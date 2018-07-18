@@ -1,5 +1,7 @@
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
+const ORGTREE_USER_SELECT = 'id,displayName,jobTitle,officeLocation';
+const PEOPLE_SEARCH_SELECT = 'id,displayName';
 
 export default class GraphSubjectService {
     constructor() {
@@ -10,7 +12,7 @@ export default class GraphSubjectService {
 
             graphClient
                 .api(`${userResource}/manager`)
-                //.select("displayName")
+                .select(ORGTREE_USER_SELECT)
                 .get()
                 .then((body) => {
                     if (body) {
@@ -37,7 +39,7 @@ export default class GraphSubjectService {
     
             graphClient
                 .api(userResource)
-                //.select("displayName")
+                .select(ORGTREE_USER_SELECT)
                 .get()
                 .then(dataHandler)
                 .catch(errHandler);
@@ -71,4 +73,36 @@ export default class GraphSubjectService {
     // TODO
     // hasDirectReports() { }
     // getDirectReports() { }
+
+    getCurrentUserRelevantPeople(tokenProvider, dataHandler, errHandler) {
+        const graphClient = MicrosoftGraph.Client.init({
+            authProvider: tokenProvider
+        });
+
+        graphClient
+            .api('/me/people')
+            .version('beta')
+            .select(PEOPLE_SEARCH_SELECT)
+            .top(10)
+            .get()
+            .then(dataHandler)
+            .catch(errHandler);
+    }
+
+    findPeople(textQuery, tokenProvider, dataHandler, errHandler) {
+        const graphClient = MicrosoftGraph.Client.init({
+            authProvider: tokenProvider
+        });
+
+        graphClient
+            .api(`/users`)
+            .version('beta')
+            .select(PEOPLE_SEARCH_SELECT)
+            // TODO : find something like 'contains' method instead of 'startsWith'
+            .filter(`startswith(displayName,'${textQuery}')`)
+            .top(10)
+            .get()
+            .then(dataHandler)
+            .catch(errHandler);
+    }
 }
