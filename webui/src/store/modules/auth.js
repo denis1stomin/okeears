@@ -6,17 +6,12 @@ const authContext = new AuthenticationContext(window.AppConfig.auth);
 export default {
 
     getters: {
-        IS_AUTHENTICATED() {
-            return this.GET_USER();
+        IS_AUTHENTICATED(state, getters) {
+            return !!getters.GET_USER;
         },
 
         GET_USER() {
             return authContext.getCachedUser();
-        },
-
-        GET_TOKEN() {
-            let resource = window.AppConfig.auth.graphResource;
-            return authContext.getCachedToken(resource);
         }
     },
 
@@ -26,25 +21,28 @@ export default {
             if (authContext.isCallback(window.location.hash)) {
                 authContext.handleWindowCallback();
             }
+        },
+
+        // Acquires access token and then makes an action with the token
+        WITH_TOKEN(actionFunc, tokenResource) {
+            const user = authContext.getCachedUser();
+            if (user && window.parent === window && !window.opener) {
+                authContext.acquireToken(tokenResource, (errorDesc, token, error) => {
+                    if (error) {
+                        console.log(error, errorDesc);
+                        authContext.acquireTokenRedirect(tokenResource, null, null);
+                    }
+                    else {
+                        actionFunc(token);
+                    }
+                });
+            }
             else {
-                let user = authContext.getCachedUser();
-                if (user && window.parent === window && !window.opener) {
-                    let resource = window.AppConfig.auth.graphResource;
-                    authContext.acquireToken(resource, (errorDesc, token, error) => {
-                        if (error) {
-                            console.log(error, errorDesc);
-                            authContext.acquireTokenRedirect(resource, null, null);
-                        }
-                        else {
-                            console.log('got access token');
-                        }
-                    });
-                }
+                throw 'Do not have ID token yet';
             }
         },
 
         LOGIN() {
-            console.log('starting auth flow..');
             authContext.login();
         },
 

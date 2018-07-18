@@ -1,13 +1,7 @@
 import auth from './auth';
 import GraphSubjectService from './../../services/graphsubjectservice';
 
-let subjectSvc = new GraphSubjectService(
-    window.AppConfig, (done) => {
-        // first parameter takes an error if you can't get an access token
-        let token = auth.getters.GET_TOKEN();
-        // TODO: trick
-        done(null, token);
-    });
+let subjectSvc = new GraphSubjectService();
 
 export default {
     state: {
@@ -30,10 +24,6 @@ export default {
     mutations: {
         CURRENT_USER_COMPLETE(state, payload) {
             state.me = payload;
-            // by default an user wants to see her org tree
-            //state.interestingSubject = payload;       // FOR DEMO
-            // by default an user wants to see her objectives
-            //state.selectedSubject = payload;
         },
 
         CURRENT_USER_FAILED(state, payload) {
@@ -67,13 +57,13 @@ export default {
         // Gets current authentificated user
         GET_CURRENT_USER(context) {
             // Get user basic information from the token
-            let user = auth.getters.GET_USER();
-            context.commit('CURRENT_USER_COMPLETE', {
-                id: user.profile.oid,
-                name: user.userName,
-                displayName: `${user.profile.given_name} ${user.profile.family_name}`
-            });
+            const rawUser = auth.getters.GET_USER();
+            const user = {
+                id: rawUser.profile.oid,
+                name: rawUser.userName
+            };
 
+            context.commit('CURRENT_USER_COMPLETE', user);
             context.dispatch('SET_INTERESTING_SUBJECT', user);
         },
 
@@ -95,11 +85,16 @@ export default {
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
-            subjectSvc.getSubjectOrgTree(
-                context.state.interestingSubject.id,
-                data => context.commit('ORGTREE_COMPLETE', data),
-                err => console.log(err)
-            );
+            auth.actions.WITH_TOKEN((token) => {
+                subjectSvc.getSubjectOrgTree(
+                    context.state.interestingSubject.id,
+                    (done) => {
+                        done(null, token);
+                    },
+                    data => context.commit('ORGTREE_COMPLETE', data),
+                    err => console.log(err)
+                );
+            }, subjectSvc.accessTokenResource());
         }
     }
 }
