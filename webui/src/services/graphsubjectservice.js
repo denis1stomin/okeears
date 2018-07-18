@@ -1,5 +1,5 @@
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
-const AccessTokenResource = 'https://graph.microsoft.com';
+const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
 export default class GraphSubjectService {
     constructor() {
@@ -46,7 +46,7 @@ export default class GraphSubjectService {
 
     /// Returns MS Graph resource which is needed to acquire an access token for this service
     accessTokenResource() {
-        return AccessTokenResource;
+        return ACCESS_TOKEN_RESOURCE;
     }
 
     /// Requests current logged in user information
