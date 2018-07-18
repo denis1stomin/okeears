@@ -36,9 +36,24 @@ h4, h3, h2, h1 {
       font-size: 28px;
     }
 
-    .user-name {
+    .header-nav-item {
       float: right;
       margin: 20px 30px;
+
+      .log-out {
+        margin-left: 15px;
+        cursor: pointer;
+
+        .icon-logout {
+          width: 20px;
+          vertical-align: top;
+          fill: white;
+          transition: all 0.3s ease-out;
+          &:hover {
+            transform: scale(1.1) rotate(180deg);
+          }
+        }
+      }
     }
   }
 
