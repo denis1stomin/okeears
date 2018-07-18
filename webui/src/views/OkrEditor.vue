@@ -14,7 +14,7 @@
                 <SearchIcon/>
             </InputForm>
             <div class="suggested-subjects-list">
-                <span v-for="item in suggestedSubjects">{{item.displayName}}</span>
+                <div v-for="item in suggestedSubjects">{{item.displayName}}</div>
             </div>
             <OrgTree/>
         </div>

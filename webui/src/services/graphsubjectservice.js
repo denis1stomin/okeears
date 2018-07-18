@@ -85,7 +85,9 @@ export default class GraphSubjectService {
             .select(PEOPLE_SEARCH_SELECT)
             .top(10)
             .get()
-            .then(dataHandler)
+            .then((body) => {
+                dataHandler(body.value);
+            })
             .catch(errHandler);
     }
 
