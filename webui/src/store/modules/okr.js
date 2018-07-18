@@ -1,4 +1,4 @@
-import OkrService from './../../services/devokrservice';
+import OkrService from './../../services/okrservice';
 import user from './user'
 
 let okrSvc = new OkrService(window.AppConfig, null);
