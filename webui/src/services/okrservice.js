@@ -1,15 +1,34 @@
 import axios from 'axios/index';
 import auth from '../store/modules/auth';
+
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
+
+const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
+const PAGE_TITLE = 'Objectives_FY2018';
+const PAGE_TEMPLATE = 
+    `<html>
+        <head>
+            <title>${PAGE_TITLE}</title>
+        </head>
+        <body>
+            <div>
+                <ul>
+                    <li><p>Placeholder</p>/li>
+                </ul>
+            </div>
+        </body>
+    </html>`;
 
 export default class OkrService {
     constructor(config, tokenProvider) {
+
+        this.pageId = null;
         this.graphClient = MicrosoftGraph.Client.init({
-            debugLogging: true,
+            // debugLogging: true,
             authProvider: (done) => {
                 auth.actions.WITH_TOKEN((token) => {
                     done(null, token);
-                }, 'https://graph.microsoft.com');
+                }, ACCESS_TOKEN_RESOURCE);
             }
         });
 
@@ -23,28 +42,63 @@ export default class OkrService {
     }
 
     getObjectives(subjectId, dataHandler, errHandler) {
-        // let subjPath = subjectId ? `/subjects/${subjectId}` : '/me';
-        
-        let subjPath = '/me';
+        this.ensureObjectivesPageIsCreated((pageId) => {
+            // let subjPath = subjectId ? `/subjects/${subjectId}` : '/me';
+            let subjPath = '/me';
+            this.graphClient
+                .api(`${subjPath}/onenote/pages/${pageId}/content`)
+                .responseType('text')
+                .query({"includeIDs":"true"})
+                .get()
+                .then((body) => {
+                    let htmlDoc = new DOMParser().parseFromString(body, "text/html");
+                    
+                    let htmlCollection = htmlDoc.getElementsByTagName('li');
+                    let nodes = Array.prototype.slice.call( htmlCollection );
+                    let objectives = nodes.map((each) => {
+                        let objective = {
+                            id: each.getAttribute('id'),
+                            statement: each.innerText
+                        };
+                        return objective;
+                    });
+                    
+                    dataHandler(objectives);
+                })
+                .catch(errHandler);
+        }, errHandler);
+    }
+
+    createObjectivesPage(dataHandler, errHandler) {
         this.graphClient
-            .api(`${subjPath}/onenote/pages/1-732f7d64da614802bb5e17341fd4300e!8-597f81c9-9fac-4a01-937b-24649a2761a3/content`)
-            .responseType('text')
-            .get()
+            .api('me/onenote/pages')
+            .header("content-type", "text/html")
+            .post(PAGE_TEMPLATE)
             .then((body) => {
-                let htmlDoc = new DOMParser().parseFromString(body, "text/html");
-                
-                let htmlCollection = htmlDoc.getElementsByTagName('p');
-                let nodes = Array.prototype.slice.call( htmlCollection );
-                let objectives = nodes.map((each) => {
-                    return {
-                        id: 'uknown yet',
-                        statement: each.innerText
-                    };
-                });
-                
-                dataHandler(objectives);
+                this.pageId = body.id;
+                dataHandler(this.pageId);
             })
             .catch(errHandler);
+    }
+
+    ensureObjectivesPageIsCreated(dataHandler, errHandler) {
+        if(this.pageId) {
+            dataHandler(this.pageId);
+        }
+
+        this.graphClient
+            .api('me/onenote/pages')
+            .filter(`title eq '${PAGE_TITLE}'`)
+            .select('id')
+            .get((err, body) => {
+                if(body.value.length > 0) {
+                    this.pageId = body.value[0].id;
+                    dataHandler(this.pageId);
+                }
+                else {
+                    this.createObjectivesPage(dataHandler, errHandler);
+                }
+            });
     }
 
     createObjective(subjectId, objective, dataHandler, errHandler) {
