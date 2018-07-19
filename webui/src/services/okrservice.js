@@ -13,7 +13,8 @@ const PAGE_TEMPLATE =
         <body>
             <div>
                 <ul>
-                    <li><p>Placeholder</p>/li>
+                    <li><p>Placeholder one</p></li>
+                    <li><p>Placeholder two</p></li>
                 </ul>
             </div>
         </body>
