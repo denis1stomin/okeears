@@ -13,7 +13,7 @@ const PAGE_TEMPLATE =
         <body>
             <div>
                 <ul data-id="${OBJECTIVES_LIST_ID}">
-                    <li>Test</li>
+                    <li>My first objective</li>
                 </ul>
             </div>
         </body>
@@ -31,8 +31,8 @@ export default class OkrService {
         });
     }
 
-    getObjectives(subjectId, dataHandler, errHandler) {
-        this.ensureObjectivesPageIsCreated((pageId) => {
+    getPageContent(subjectId, dataHandler, errHandler) {
+        this.ensurePageIsCreated((pageId) => {
             //let subjPath = subjectId ? `/users/${subjectId}` : '/me';
             let subjPath = '/me';
             this.graphClient
@@ -41,25 +41,30 @@ export default class OkrService {
                 .query({"includeIDs":"true"})
                 .get()
                 .then((body) => {
-                    let htmlDoc = new DOMParser().parseFromString(body, "text/html");
-                    
-                    let listItemsNodes = htmlDoc.getElementsByTagName('li');
-                    let nodes = Array.prototype.slice.call( listItemsNodes );
-                    let objectives = nodes.map((each) => {
-                        let objective = {
-                            id: each.getAttribute('data-id'),
-                            statement: each.innerText
-                        };
-                        return objective;
-                    });
-                    
-                    dataHandler(objectives);
+                    let document = new DOMParser().parseFromString(body, "text/html");
+                    dataHandler(document);
                 })
                 .catch(errHandler);
         }, errHandler);
     }
 
-    createObjectivesPage(dataHandler, errHandler) {
+    getObjectives(subjectId, dataHandler, errHandler) {
+        this.getPageContent(subjectId, (document) => {
+            let listItemsNodes = document.getElementsByTagName('li');
+            let nodes = Array.prototype.slice.call( listItemsNodes );
+            let objectives = nodes.map((each) => {
+                let objective = {
+                    id: each.getAttribute('data-id'),
+                    statement: each.innerText
+                };
+                return objective;
+            });
+            
+            dataHandler(objectives);
+        }, errHandler);
+    }
+
+    createPage(dataHandler, errHandler) {
         this.graphClient
             .api('me/onenote/pages')
             .header("content-type", "text/html")
@@ -71,7 +76,7 @@ export default class OkrService {
             .catch(errHandler);
     }
 
-    ensureObjectivesPageIsCreated(dataHandler, errHandler) {
+    ensurePageIsCreated(dataHandler, errHandler) {
         if(this.pageId) {
             dataHandler(this.pageId);
         }
@@ -87,19 +92,20 @@ export default class OkrService {
                     dataHandler(this.pageId);
                 }
                 else {
-                    this.createObjectivesPage(dataHandler, errHandler);
+                    this.createPage(dataHandler, errHandler);
                 }
             })
             .catch(errHandler);
     }
 
     createObjective(subjectId, objective, dataHandler, errHandler) {
-        // Generate unique id
+        // Very simple unique id generator
         objective.id = Math.random().toString(36).substr(2, 9);
         let body = [
             {
               'target': `#${OBJECTIVES_LIST_ID}`,
               'action': 'append',
+              // TODO: Escape HTML in objective's statement
               'content': `<li data-id="${objective.id}">${objective.statement}</li>`
             }];
         this.graphClient
@@ -110,55 +116,41 @@ export default class OkrService {
     }
 
     changeObjective(subjectId, objective, dataHandler, errHandler) {
-        // objective.subjectId = subjectId;    // temp
         let objectiveId = objective.id;
-        this.graphClient
-            .api(`me/onenote/pages/${this.pageId}/content`)
-            .responseType('text')
-            .query({"includeIDs":"true"})
-            .get()
-            .then((body) => {
-                let htmlDoc = new DOMParser().parseFromString(body, "text/html");
-                let listNodeId = htmlDoc.querySelector(`li[data-id="${objectiveId}"]`).getAttribute('id');
+        this.getPageContent(subjectId, (document) => {
+            let listNodeId = document.querySelector(`li[data-id="${objectiveId}"]`).getAttribute('id');
 
-                let patchBody = [
-                    {
-                    'target': `${listNodeId}`,
-                    'action': 'replace',
-                    'content': `<li data-id="${objective.id}">${objective.statement}</li>`
-                    }];
-                this.graphClient
-                    .api(`me/onenote/pages/${this.pageId}/content`)
-                    .patch(patchBody)
-                    .then(dataHandler)
-                    .catch(errHandler); 
-            })
-            .catch(errHandler);
+            let patchBody = [
+                {
+                'target': `${listNodeId}`,
+                'action': 'replace',
+                // TODO: Escape HTML in objective's statement
+                'content': `<li data-id="${objectiveId}">${objective.statement}</li>`
+                }];
+            this.graphClient
+                .api(`me/onenote/pages/${this.pageId}/content`)
+                .patch(patchBody)
+                .then(dataHandler)
+                .catch(errHandler); 
+        }, errHandler);
     }
 
     deleteObjective(subjectId, objectiveId, successHandler, errHandler) {
-        this.graphClient
-            .api(`me/onenote/pages/${this.pageId}/content`)
-            .responseType('text')
-            .query({"includeIDs":"true"})
-            .get()
-            .then((body) => {
-                let htmlDoc = new DOMParser().parseFromString(body, "text/html");
-                let listNodeId = htmlDoc.querySelector(`li[data-id="${objectiveId}"]`).getAttribute('id');
+        this.getPageContent(subjectId, (document) => {
+            let listNodeId = document.querySelector(`li[data-id="${objectiveId}"]`).getAttribute('id');
 
-                let patchBody = [
-                    {
-                    'target': `${listNodeId}`,
-                    'action': 'replace',
-                    'content':'<li></li>'
-                    }];
-                this.graphClient
-                    .api(`me/onenote/pages/${this.pageId}/content`)
-                    .patch(patchBody)
-                    .then(successHandler)
-                    .catch(errHandler); 
-            })
-            .catch(errHandler);
+            let patchBody = [
+                {
+                'target': `${listNodeId}`,
+                'action': 'replace',
+                'content':'<li></li>'
+                }];
+            this.graphClient
+                .api(`me/onenote/pages/${this.pageId}/content`)
+                .patch(patchBody)
+                .then(successHandler)
+                .catch(errHandler); 
+        }, errHandler);
     }
 
     getObjectiveKeyResults(subjectId, objectiveId, dataHandler, errHandler) {
