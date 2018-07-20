@@ -28,10 +28,6 @@ export default {
         CAN_CHANGE_OKR(state) {
             return state.selectedSubject.id === state.me.id;
         }
-
-        //GET_SELECTED_SUBJECT(state) {
-        //    return state.selectedSubject;
-        //}
     },
 
     mutations: {
