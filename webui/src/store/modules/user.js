@@ -17,33 +17,40 @@ export default {
         // selected subject (a single item from current org tree)
         selectedSubject: {},
 
+        // list of subjects which could be interesting to current user
+        suggestedSubjectsList: [],
+
         // last error
         error: ''
     },
 
     mutations: {
-        CURRENT_USER_COMPLETE(state, payload) {
-            state.me = payload;
+        CURRENT_USER_COMPLETE(state, value) {
+            state.me = value;
         },
 
-        CURRENT_USER_FAILED(state, payload) {
-            state.error = payload;
+        CURRENT_USER_FAILED(state, value) {
+            state.error = value;
         },
 
-        ORGTREE_COMPLETE(state, payload) {
-            state.orgtree = payload;
+        ORGTREE_COMPLETE(state, value) {
+            state.orgtree = value;
         },
 
-        ORGTREE_FAILED(state, payload) {
-            state.error = payload;
+        ORGTREE_FAILED(state, value) {
+            state.error = value;
         },
 
-        INTERESTING_SUBJECT(state, payload) {
-            state.interestingSubject = payload;
+        SUGGESTED_SUBJECTS_LIST(state, value) {
+            state.suggestedSubjectsList = value;
         },
 
-        SELECTED_SUBJECT(state, payload) {
-            state.selectedSubject = payload;
+        INTERESTING_SUBJECT(state, value) {
+            state.interestingSubject = value;
+        },
+
+        SELECTED_SUBJECT(state, value) {
+            state.selectedSubject = value;
         }
     },
 
@@ -67,9 +74,31 @@ export default {
             context.dispatch('SET_INTERESTING_SUBJECT', user);
         },
 
+        // Gets list of relevant subjects to current user
+        GET_RELEVANT_SUBJECTS(context) {
+            auth.actions.WITH_TOKEN((token) => {
+                subjectSvc.getCurrentUserRelevantPeople(
+                    (done) => {
+                        done(null, token);
+                    },
+                    data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
+                    err => console.log(err)
+                );
+            }, subjectSvc.accessTokenResource());
+        },
+
         // Searches subjects using text search
         SEARCH_SUBJECTS(context, searchQuery) {
-            // TODO: make search query and show most 5-10 found names
+            auth.actions.WITH_TOKEN((token) => {
+                subjectSvc.findPeople(
+                    searchQuery,
+                    (done) => {
+                        done(null, token);
+                    },
+                    data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
+                    err => console.log(err)
+                );
+            }, subjectSvc.accessTokenResource());
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {
