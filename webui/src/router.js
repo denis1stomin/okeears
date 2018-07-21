@@ -2,19 +2,20 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import OkrEditor from './views/OkrEditor.vue'
 import Signin from './views/Signin.vue'
-import store from './store'
+
+import AuthSvc from './services/authservice'
 
 Vue.use(Router);
 
 const checkAuth = (to, from, next) => {
-    store.dispatch('HANDLE_CURRENT_LOCATION');
+    AuthSvc.handleCurrentWindowLocation();
 
-    if (store.getters.IS_AUTHENTICATED) {
+    if (AuthSvc.isAuthenticated()) {
         next();
         return;
     }
 
-    store.dispatch('LOGIN');
+    AuthSvc.login();
 };
 
 const router = new Router({
