@@ -12,9 +12,6 @@ const PAGE_TEMPLATE =
         </head>
         <body>
             <div>
-                <ul data-id="${OBJECTIVES_LIST_ID}">
-                    <li data-id="foobar">My first objective</li>
-                </ul>
             </div>
         </body>
     </html>`;
@@ -51,20 +48,38 @@ export default class OkrService {
     }
 
     createObjective(subjectId, objective, dataHandler, errHandler) {
+        
         // Very simple unique id generator
         objective.id = Math.random().toString(36).substr(2, 9);
-        let patchBody = [
-            {
-              'target': `#${OBJECTIVES_LIST_ID}`,
-              'action': 'append',
-              // TODO: Escape HTML in objective's statement
-              'content': `<li data-id="${objective.id}">${objective.statement}</li>`
-            }];
-        this.graphClient
-            .api(this.getSubjectPageContentUrl(subjectId))
-            .patch(patchBody)
-            .then((body) => dataHandler(objective))
-            .catch(errHandler);        
+        
+        // TODO: Escape HTML in objective's statement
+        let statement = objective.statement;
+
+        this.getPageContent(subjectId, (document) => {
+
+            // If undefined - this is the first objective, 
+            // need to add both ul and li tags
+            let objectivesNode = document.querySelector(`ul[data-id="${OBJECTIVES_LIST_ID}"]`);
+            
+            let patchBody = objectivesNode ? 
+                [{
+                      'target': `#${OBJECTIVES_LIST_ID}`,
+                      'action': 'append',
+                      'content': `<li data-id="${objective.id}">${statement}</li>`
+                }] : 
+                [{
+                    // In OneNote body means the first div on page
+                    'target': `body`,
+                    'action': 'append',
+                    'content': `<ul data-id="${OBJECTIVES_LIST_ID}"><li data-id="${objective.id}">${statement}</li></ul>`
+                }];
+                    
+            this.graphClient
+                .api(this.getSubjectPageContentUrl(subjectId))
+                .patch(patchBody)
+                .then((body) => dataHandler(objective))
+                .catch(errHandler);
+        }, errHandler);
     }
 
     changeObjective(subjectId, objective, dataHandler, errHandler) {
