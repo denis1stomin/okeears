@@ -6,11 +6,15 @@ let okrSvc = new OkrService(window.AppConfig, null);
 export default {
     state: {
         objectives: [],
-
+        targetObjective: {},
         error: ''
     },
 
     mutations: {
+        CHANGE_TARGET_OBJECTIVE(state, objective) {
+            state.targetObjective = objective
+        },
+
         OBJECTIVES_COMPLETE(state, payload) {
             state.objectives = payload;
         },
@@ -27,6 +31,17 @@ export default {
             state.error = payload;
         },
 
+        EDIT_OBJECTIVE(state, objective) {
+            let idx = state.objectives.findIndex((x) => x.id === objective.id);
+            if (idx > -1) {
+                state.objectives[idx].statement = objective.statement;
+            }
+        },
+
+        EDIT_OBJECTIVE_FAILED(state, payload) {
+            state.error = payload;
+        },
+
         DELETE_OBJECTIVE(state, objective) {
             let objectives = state.objectives;
             objectives.splice(objectives.indexOf(objective), 1);
@@ -34,15 +49,27 @@ export default {
 
         DELETE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
+        },
+
+        CREATE_KEYRESULT(state, keyresult) {
+            let objectives = state.objectives;
+            let objective = state.targetObjective;
+
+            if(!objective.keyresults) {
+                objective.keyresults = [];
+            }
+
+            objective.keyresults.push(keyresult);
+            objectives[objectives.indexOf(objective)].keyresults = objective.keyresults;
+            state.objectives = objectives;
+        },
+
+        CREATE_KEYRESULT_FAILED(state, payload) {
+            state.error = payload;
         }
     },
 
     actions: {
-
-        // COMMENT : здесь где-то либо через watch либо через EventBus надо
-        //           добавить подписку на изменение user.state.selectedSubject.
-        //           По изменению будем вызывать action GET_OBJECTIVES()
-
         GET_OBJECTIVES({commit}) {
             okrSvc.getObjectives(
                 user.state.selectedSubject.id,
@@ -77,17 +104,14 @@ export default {
 
         EDIT_OBJECTIVE({state, commit}, objective) {
             // update in local objectives list
-            let idx = state.objectives.findIndex((x) => x.id === objective.id);
-            if (idx > -1) {
-                state.objectives[idx].statement = objective.statement;
-            }
+            commit('EDIT_OBJECTIVE', objective);
 
             // send request to change the objective
             okrSvc.changeObjective(
                 user.state.selectedSubject.id,
                 objective,
                 data => { /* successfully updated */ },
-                err => commit('DELETE_OBJECTIVE_FAILED', err)
+                err => commit('EDIT_OBJECTIVE_FAILED', err)
             )
         },
 
@@ -105,6 +129,20 @@ export default {
                 data => { /* successfully deleted */ },
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
+        },
+
+        CREATE_KEYRESULT({state, commit}, keyresult) {
+            // update in local objectives list
+            // TODO: update after a successful upload
+            commit('CREATE_KEYRESULT', keyresult);
+
+            // send request to change the objective
+            okrSvc.changeObjective(
+                user.state.selectedSubject.id,
+                state.targetObjective,
+                data => { /* successfully created */ },
+                err => {commit('CREATE_KEYRESULT_FAILED', err)}
+            );
         }
     }
 }
