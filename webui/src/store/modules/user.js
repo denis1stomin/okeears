@@ -1,7 +1,7 @@
-import auth from './auth';
-import GraphSubjectService from './../../services/graphsubjectservice';
+import AuthSvc from './../../services/authservice'
+import GraphSubjectService from './../../services/graphsubjectservice'
 
-let subjectSvc = new GraphSubjectService();
+const SubjectSvc = new GraphSubjectService();
 
 export default {
     state: {
@@ -22,6 +22,12 @@ export default {
 
         // last error
         error: ''
+    },
+
+    getters: {
+        CAN_CHANGE_OKR(state) {
+            return state.selectedSubject.id === state.me.id;
+        }
     },
 
     mutations: {
@@ -54,17 +60,11 @@ export default {
         }
     },
 
-    // getters: {
-    //     GET_SELECTED_SUBJECT(state) {
-    //         return state.selectedSubject;
-    //     }
-    // },
-
     actions: {
         // Gets current authentificated user
         GET_CURRENT_USER(context) {
             // Get user basic information from the token
-            const rawUser = auth.getters.GET_USER();
+            const rawUser = AuthSvc.getCurrentUser();
             const user = {
                 id: rawUser.profile.oid,
                 name: rawUser.userName
@@ -76,21 +76,21 @@ export default {
 
         // Gets list of relevant subjects to current user
         GET_RELEVANT_SUBJECTS(context) {
-            auth.actions.WITH_TOKEN((token) => {
-                subjectSvc.getCurrentUserRelevantPeople(
+            AuthSvc.withToken((token) => {
+                SubjectSvc.getCurrentUserRelevantPeople(
                     (done) => {
                         done(null, token);
                     },
                     data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
                     err => console.log(err)
                 );
-            }, subjectSvc.accessTokenResource());
+            }, SubjectSvc.accessTokenResource());
         },
 
         // Searches subjects using text search
         SEARCH_SUBJECTS(context, searchQuery) {
-            auth.actions.WITH_TOKEN((token) => {
-                subjectSvc.findPeople(
+            AuthSvc.withToken((token) => {
+                SubjectSvc.findPeople(
                     searchQuery,
                     (done) => {
                         done(null, token);
@@ -98,7 +98,7 @@ export default {
                     data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
                     err => console.log(err)
                 );
-            }, subjectSvc.accessTokenResource());
+            }, SubjectSvc.accessTokenResource());
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {
@@ -114,8 +114,8 @@ export default {
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
-            auth.actions.WITH_TOKEN((token) => {
-                subjectSvc.getSubjectOrgTree(
+            AuthSvc.withToken((token) => {
+                SubjectSvc.getSubjectOrgTree(
                     context.state.interestingSubject.id,
                     (done) => {
                         done(null, token);
@@ -123,7 +123,7 @@ export default {
                     data => context.commit('ORGTREE_COMPLETE', data),
                     err => console.log(err)
                 );
-            }, subjectSvc.accessTokenResource());
+            }, SubjectSvc.accessTokenResource());
         }
     }
 }
