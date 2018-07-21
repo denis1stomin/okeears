@@ -24,6 +24,12 @@ export default {
         error: ''
     },
 
+    getters: {
+        CAN_CHANGE_OKR(state) {
+            return state.selectedSubject.id === state.me.id;
+        }
+    },
+
     mutations: {
         CURRENT_USER_COMPLETE(state, value) {
             state.me = value;
@@ -53,12 +59,6 @@ export default {
             state.selectedSubject = value;
         }
     },
-
-    // getters: {
-    //     GET_SELECTED_SUBJECT(state) {
-    //         return state.selectedSubject;
-    //     }
-    // },
 
     actions: {
         // Gets current authentificated user
