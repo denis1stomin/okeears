@@ -1,11 +1,13 @@
 <template>
     <div class="okr">
         <div class="okr-editor">
-            <h3 class="title">Plan your objectives and key results</h3>
+            <h3 class="title" v-if="canChangeOkr">Plan your objectives and key results</h3>
+            <h3 class="title" v-else>Browse teammate's objectives and key results</h3>
 
             <InputForm ref="newObjForm"
                        placeholder="Let’s create ambitious objective"
-                       :action="addObjective">
+                       :action="addObjective"
+                       v-if="canChangeOkr">
                 <span class="input-icon" @click="addObjective($refs.newObjForm.value)">
                     <PlusIcon/>
                 </span>
@@ -45,8 +47,13 @@
             </div>
 
             <div class="empty-objectives" v-if="!objectives.length">
-                <span>There is no any objective yet. You can create first or suggest your teammate to do it</span>
-                <SendIcon/>
+                <span v-if="canChangeOkr">
+                    There is no any objective yet. Let's create a first one right now ^
+                </span>
+                <span v-else>
+                    There is no any objective yet. Let's send a friendly reminder to your teammate 
+                    <SendIcon/>
+                </span>
             </div>
 
         </div>
@@ -75,9 +82,16 @@
                     return this.$store.state.okr.objectives;
                 }
             },
+            
             error: {
                 get() {
                     return this.$store.state.okr.error;
+                }
+            },
+
+            canChangeOkr: {
+                get() {
+                    return this.$store.getters.CAN_CHANGE_OKR;
                 }
             }
         },
