@@ -6,12 +6,12 @@ let okrSvc = new OkrService(window.AppConfig, null);
 export default {
     state: {
         objectives: [],
-
         error: ''
     },
 
     mutations: {
         OBJECTIVES_COMPLETE(state, payload) {
+            state.error = null;
             state.objectives = payload;
         },
 
@@ -20,6 +20,7 @@ export default {
         },
 
         CREATE_OBJECTIVE(state, payload) {
+            state.error = null;
             state.objectives = payload;
         },
 
@@ -28,6 +29,7 @@ export default {
         },
 
         DELETE_OBJECTIVE(state, objective) {
+            state.error = null;
             let objectives = state.objectives;
             objectives.splice(objectives.indexOf(objective), 1);
         },
