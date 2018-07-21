@@ -13,7 +13,7 @@ const PAGE_TEMPLATE =
         <body>
             <div>
                 <ul data-id="${OBJECTIVES_LIST_ID}">
-                    <li>My first objective</li>
+                    <li data-id="foobar">My first objective</li>
                 </ul>
             </div>
         </body>
@@ -21,8 +21,12 @@ const PAGE_TEMPLATE =
 
 export default class OkrService {
     constructor(config, tokenProvider) {
-        this.pageId = null;
+        
+        // Stores mapping from user id to his objective's page id
+        this.pageIds = new Map();
+
         this.graphClient = MicrosoftGraph.Client.init({
+            debugLogging: true,
             authProvider: (done) => {
                 auth.actions.WITH_TOKEN((token) => {
                     done(null, token);
@@ -31,77 +35,24 @@ export default class OkrService {
         });
     }
 
-    getPageContent(subjectId, dataHandler, errHandler) {
-        this.ensurePageIsCreated((pageId) => {
-            //let subjPath = subjectId ? `/users/${subjectId}` : '/me';
-            let subjPath = '/me';
-            this.graphClient
-                .api(`${subjPath}/onenote/pages/${pageId}/content`)
-                .responseType('text')
-                .query({"includeIDs":"true"})
-                .get()
-                .then((body) => {
-                    let document = new DOMParser().parseFromString(body, "text/html");
-                    dataHandler(document);
-                })
-                .catch(errHandler);
-        }, errHandler);
-    }
-
     getObjectives(subjectId, dataHandler, errHandler) {
         this.getPageContent(subjectId, (document) => {
-            let listItemsNodes = document.getElementsByTagName('li');
-            let nodes = Array.prototype.slice.call( listItemsNodes );
+            let nodes = Array.from(document.querySelectorAll('li[data-id]'));
             let objectives = nodes.map((each) => {
-                let objective = {
+                return {
                     id: each.getAttribute('data-id'),
                     statement: each.innerText
                 };
-                return objective;
             });
             
             dataHandler(objectives);
         }, errHandler);
     }
 
-    createPage(dataHandler, errHandler) {
-        this.graphClient
-            .api('me/onenote/pages')
-            .header("content-type", "text/html")
-            .post(PAGE_TEMPLATE)
-            .then((body) => {
-                this.pageId = body.id;
-                dataHandler(this.pageId);
-            })
-            .catch(errHandler);
-    }
-
-    ensurePageIsCreated(dataHandler, errHandler) {
-        if(this.pageId) {
-            dataHandler(this.pageId);
-        }
-
-        this.graphClient
-            .api('me/onenote/pages')
-            .filter(`title eq '${PAGE_TITLE}'`)
-            .select('id')
-            .get()
-            .then((body) => {
-                if(body.value.length > 0) {
-                    this.pageId = body.value[0].id;
-                    dataHandler(this.pageId);
-                }
-                else {
-                    this.createPage(dataHandler, errHandler);
-                }
-            })
-            .catch(errHandler);
-    }
-
     createObjective(subjectId, objective, dataHandler, errHandler) {
         // Very simple unique id generator
         objective.id = Math.random().toString(36).substr(2, 9);
-        let body = [
+        let patchBody = [
             {
               'target': `#${OBJECTIVES_LIST_ID}`,
               'action': 'append',
@@ -109,8 +60,8 @@ export default class OkrService {
               'content': `<li data-id="${objective.id}">${objective.statement}</li>`
             }];
         this.graphClient
-            .api(`me/onenote/pages/${this.pageId}/content`)
-            .patch(body)
+            .api(this.getSubjectPageContentUrl(subjectId))
+            .patch(patchBody)
             .then((body) => dataHandler(objective))
             .catch(errHandler);        
     }
@@ -128,7 +79,7 @@ export default class OkrService {
                 'content': `<li data-id="${objectiveId}">${objective.statement}</li>`
                 }];
             this.graphClient
-                .api(`me/onenote/pages/${this.pageId}/content`)
+                .api(this.getSubjectPageContentUrl(subjectId))
                 .patch(patchBody)
                 .then(dataHandler)
                 .catch(errHandler); 
@@ -146,11 +97,87 @@ export default class OkrService {
                 'content':'<li></li>'
                 }];
             this.graphClient
-                .api(`me/onenote/pages/${this.pageId}/content`)
+                .api(this.getSubjectPageContentUrl(subjectId))
                 .patch(patchBody)
                 .then(successHandler)
                 .catch(errHandler); 
         }, errHandler);
+    }
+
+    createPage(subjectId, dataHandler, errHandler) {
+        this.graphClient
+            .api(`${this.getSubjectPrefix(subjectId)}/onenote/pages`)
+            .header("content-type", "text/html")
+            .post(PAGE_TEMPLATE)
+            .then((body) => {
+                let pageId = body.id;
+                this.setSubjectPageId(subjectId, pageId);
+                dataHandler(pageId);
+            })
+            .catch(errHandler);
+    }
+
+    ensurePageIsCreated(subjectId, dataHandler, errHandler) {
+        let pageId = this.getSubjectPageId(subjectId);
+        if(pageId) {
+            dataHandler(pageId);
+        }
+
+        this.graphClient
+            .api(`${this.getSubjectPrefix(subjectId)}/onenote/pages`)
+            // Searches for the page with specified title across all user's notebooks
+            .filter(`title eq '${PAGE_TITLE}'`)
+            .select('id')
+            .get()
+            .then((body) => {
+                if(body.value.length > 0) {
+                    let pageId = body.value[0].id;
+                    this.setSubjectPageId(subjectId, pageId);
+                    dataHandler(pageId);
+                }
+                else {
+                    // TODO: we should not try to create pages for another users
+                    this.createPage(subjectId, dataHandler, errHandler);
+                }
+            })
+            .catch(errHandler);
+    }
+
+    getPageContent(subjectId, dataHandler, errHandler) {
+        this.ensurePageIsCreated(subjectId, (pageId) => {
+            
+            this.graphClient
+                .api(this.getSubjectPageContentUrl(subjectId))
+                .responseType('text')
+                .query({"includeIDs":"true"})
+                .get()
+                .then((body) => {
+                    let document = new DOMParser().parseFromString(body, "text/html");
+                    dataHandler(document);
+                })
+                .catch(errHandler);
+        }, errHandler);
+    }
+
+    getSubjectPrefix(subjectId) {
+        // return subjectId ? `/users/${subjectId}` : '/me';
+        return `/users/${subjectId}`;
+    }
+
+    setSubjectPageId(subjectId, pageId) {
+        this.pageIds.set(subjectId, pageId);
+    }
+
+    getSubjectPageId(subjectId)
+    {
+        return this.pageIds.subjectId(key);
+    }
+
+    getSubjectPageContentUrl(subjectId)
+    {
+        let prefix = this.getSubjectPrefix(subjectId);
+        let pageId = this.getSubjectPageId(subjectId);
+        return `${prefix}/onenote/pages/${pageId}/content`;
     }
 
     getObjectiveKeyResults(subjectId, objectiveId, dataHandler, errHandler) {
