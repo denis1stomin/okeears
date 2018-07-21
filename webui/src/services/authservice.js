@@ -3,12 +3,12 @@ import AuthenticationContext from 'adal-angular'
 const AuthContext = new AuthenticationContext(window.AppConfig.auth);
 
 class AuthService {
-    isAuthenticated() {
-        return !!this.getCurrentUser;
-    }
-
     getCurrentUser() {
         return AuthContext.getCachedUser();
+    }
+
+    isAuthenticated() {
+        return this.getCurrentUser();
     }
 
     // Handles current window location parameters to check/parse token etc
