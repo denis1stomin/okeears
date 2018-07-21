@@ -6,15 +6,15 @@ const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 const PAGE_TITLE = 'Objectives_FY2018';
 const OBJECTIVES_LIST_ID = 'objectives';
 const PAGE_TEMPLATE = 
-    `<html>
-        <head>
-            <title>${PAGE_TITLE}</title>
-        </head>
-        <body>
-            <div>
-            </div>
-        </body>
-    </html>`;
+`<html>
+    <head>
+        <title>${PAGE_TITLE}</title>
+    </head>
+    <body>
+        <div>
+        </div>
+    </body>
+</html>`;
 
 export default class OkrService {
     constructor(config, tokenProvider) {
