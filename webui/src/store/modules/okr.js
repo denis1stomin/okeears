@@ -32,10 +32,15 @@ export default {
         },
 
         EDIT_OBJECTIVE(state, objective) {
-            let idx = state.objectives.findIndex((x) => x.id === objective.id);
-            if (idx > -1) {
-                state.objectives[idx].statement = objective.statement;
-            }
+            // let idx = state.objectives.findIndex((x) => x.id === objective.id);
+            // if (idx > -1) {
+            //     state.objectives[idx].statement = objective.statement;
+            // }
+            let objectives = state.objectives;
+            let obj = state.targetObjective;
+
+            objectives[objectives.indexOf(obj)].statement = objective.statement;
+            state.objectives = objectives;
         },
 
         EDIT_OBJECTIVE_FAILED(state, payload) {
@@ -109,7 +114,7 @@ export default {
             // send request to change the objective
             okrSvc.changeObjective(
                 user.state.selectedSubject.id,
-                objective,
+                state.targetObjective,
                 data => { /* successfully updated */ },
                 err => commit('EDIT_OBJECTIVE_FAILED', err)
             )

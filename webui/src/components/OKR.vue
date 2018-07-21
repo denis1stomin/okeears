@@ -18,7 +18,7 @@
                            placeholder=""
                            :action="editObjective"
                            :value="objective.statement"
-                           :objid="objective.id">
+                           :obj="objective">
                 </InputForm>
 
                 <KeyResults :objective="objective"/>
@@ -87,9 +87,9 @@
                 this.logChange(`Me created '${objStatement}'`);
             },
 
-            editObjective(objId, objStatement) {
+            editObjective(obj, objStatement) {
+                this.$store.commit('CHANGE_TARGET_OBJECTIVE', obj);
                 this.$store.dispatch('EDIT_OBJECTIVE', {
-                    id: objId,
                     statement: objStatement
                 });
 

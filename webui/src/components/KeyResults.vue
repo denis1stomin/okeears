@@ -2,7 +2,8 @@
     <div class="key-results" :objective="objective">
         <InputForm ref="newKRForm"
                    placeholder="Let’s create new key result"
-                   :action="addKeyResult">
+                   :action="addKeyResult"
+                   :obj="objective">
                 <span class="input-icon" @click="addKeyResult(objective, $refs.newKRForm.value)">
                     <PlusIcon/>
                 </span>
