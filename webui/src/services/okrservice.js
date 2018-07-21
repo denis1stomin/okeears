@@ -130,7 +130,7 @@ export default class OkrService {
     createPage(subjectId, dataHandler, errHandler) {
         this.graphClient
             .api(`${this.getSubjectPrefix(subjectId)}/onenote/pages`)
-            .header("content-type", "text/html")
+            .header("Content-Type", "application/xhtml+xml")
             .post(PAGE_TEMPLATE)
             .then((body) => {
                 let pageId = body.id;
