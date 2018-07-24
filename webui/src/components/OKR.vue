@@ -38,7 +38,7 @@
                 <div class="objective-icons">
                     <span @click="deleteObjective(objective.id)"><TrashIcon/></span>
                     <span><CopyIcon/></span>
-                    <span><SendIcon/></span>
+                    <span @click="sendChangeSuggestion(objective)"><SendIcon/></span>
                 </div>
             </div>
 
@@ -48,7 +48,7 @@
                 </span>
                 <span v-else>
                     There is no any objective yet. Let's send a friendly reminder to your teammate 
-                    <SendIcon/>
+                    <span @click="sendReminder()"><SendIcon/></span>
                 </span>
             </div>
         </div>
@@ -82,6 +82,12 @@
                 get() {
                     return this.$store.getters.CAN_CHANGE_OKR;
                 }
+            },
+
+            selectedSubject: {
+                get() {
+                    return this.$store.state.user.selectedSubject;
+                }
             }
         },
 
@@ -107,6 +113,24 @@
                 this.$store.dispatch('DELETE_OBJECTIVE', objId);
 
                 this.logChange(`Me deleted '${objId}'`);
+            },
+
+            sendChangeSuggestion(objective) {
+                const targetSubject = this.$store.state.user.selectedSubject;
+                window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?\
+subject=Objective: ${objective.statement}&\
+body=Hi ${targetSubject.givenName || ''}. 
+Please take a look at your objective '${objective.statement}'. 
+OKR Portal ${window.location}`;
+            },
+
+            sendReminder() {
+                const targetSubject = this.$store.state.user.selectedSubject;
+                window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?\
+subject=Please fill objectives&\
+body=Hi ${targetSubject.givenName || ''}. 
+Please fill objectives for the next period. 
+OKR Portal ${window.location}`;
             },
 
             logChange(description) {
