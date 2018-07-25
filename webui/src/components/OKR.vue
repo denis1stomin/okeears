@@ -37,7 +37,7 @@
 
                 <div class="objective-icons">
                     <span @click="deleteObjective(objective.id)"><TrashIcon/></span>
-                    <span><CopyIcon/></span>
+                    <span @click="copyObjective(objective)"><CopyIcon/></span>
                     <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
                 </div>
             </div>
@@ -101,6 +101,13 @@
                 });
 
                 this.logChange(`Me changed '${objStatement}'`);
+            },
+
+            copyObjective(objective) {
+                this.$store.dispatch('COPY_OBJECTIVE_TO_CURRENT_USER', {
+                    // TODO : add COPY only for the same user
+                    statement: objective.statement + ' COPY'
+                });
             },
 
             deleteObjective(objId) {
