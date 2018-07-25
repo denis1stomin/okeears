@@ -38,7 +38,7 @@
                 <div class="objective-icons">
                     <span @click="deleteObjective(objective.id)"><TrashIcon/></span>
                     <span @click="copyObjective(objective)"><CopyIcon/></span>
-                    <span><SendIcon/></span>
+                    <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
                 </div>
             </div>
 
@@ -48,7 +48,7 @@
                 </span>
                 <span v-else>
                     There is no any objective yet. Let's send a friendly reminder to your teammate 
-                    <SendIcon/>
+                    <span @click="sendReminder()"><SendIcon/></span>
                 </span>
             </div>
         </div>
@@ -114,6 +114,24 @@
                 this.$store.dispatch('DELETE_OBJECTIVE', objId);
 
                 this.logChange(`Me deleted '${objId}'`);
+            },
+
+            sendChangeSuggestion(objective) {
+                const targetSubject = this.$store.state.user.selectedSubject;
+                window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
+subject=Objective: ${objective.statement}&
+body=Hi ${targetSubject.givenName || ''}%2C%0A
+Please take a look at your objective '${objective.statement}' on <a href="${window.location}">OKR Portal</a>.`;
+            },
+
+            // TODO : check is it safe to invite user to window.location?
+
+            sendReminder() {
+                const targetSubject = this.$store.state.user.selectedSubject;
+                window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
+subject=Please fill objectives&
+body=Hi ${targetSubject.givenName || ''}%2C%0A
+Please fill objectives for the next period on <a href="${window.location}">OKR Portal</a>.`;
             },
 
             logChange(description) {
