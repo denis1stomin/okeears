@@ -8,9 +8,10 @@
                 <span class="org-tree-item-title">{{user.officeLocation}}</span>
                 <span class="org-tree-item-links">
                     View in
-                    <a class="org-tree-item-link" target="_blank" :href="user.delvelink">Delve</a>
-                    <a class="org-tree-item-link" target="_blank" :href="user.o365link">O365</a>
-                    <a class="org-tree-item-link" target="_blank" :href="user.aadlink">Portal</a>
+                    <a class="org-tree-item-link" target="_blank" rel="noopener noreferrer" 
+                       :href="user.delvelink">Delve</a>
+                    <a class="org-tree-item-link" target="_blank" rel="noopener noreferrer" 
+                       :href="user.aadlink">Azure</a>
                 </span>
             </div>
         </div>
