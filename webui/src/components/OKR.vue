@@ -38,7 +38,7 @@
                 <div class="objective-icons">
                     <span @click="deleteObjective(objective.id)"><TrashIcon/></span>
                     <span><CopyIcon/></span>
-                    <span @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                    <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
                 </div>
             </div>
 
@@ -82,12 +82,6 @@
                 get() {
                     return this.$store.getters.CAN_CHANGE_OKR;
                 }
-            },
-
-            selectedSubject: {
-                get() {
-                    return this.$store.state.user.selectedSubject;
-                }
             }
         },
 
@@ -119,8 +113,8 @@
                 const targetSubject = this.$store.state.user.selectedSubject;
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?\
 subject=Objective: ${objective.statement}&\
-body=Hi ${targetSubject.givenName || ''}. 
-Please take a look at your objective '${objective.statement}'. 
+body=Hi ${targetSubject.givenName || ''}%2C%0A
+Please take a look at your objective '${objective.statement}'.%0A
 OKR Portal ${window.location}`;
             },
 
@@ -128,8 +122,8 @@ OKR Portal ${window.location}`;
                 const targetSubject = this.$store.state.user.selectedSubject;
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?\
 subject=Please fill objectives&\
-body=Hi ${targetSubject.givenName || ''}. 
-Please fill objectives for the next period. 
+body=Hi ${targetSubject.givenName || ''}%2C%0A
+Please fill objectives for the next period.%0A
 OKR Portal ${window.location}`;
             },
 
