@@ -70,7 +70,9 @@ export default {
             const rawUser = AuthSvc.getCurrentUser();
             const user = {
                 id: rawUser.profile.oid,
-                name: rawUser.userName
+                name: rawUser.userName,
+                givenName: rawUser.profile.given_name,
+                userPrincipalName: rawUser.profile.upn
             };
 
             context.commit('CURRENT_USER_COMPLETE', user);
