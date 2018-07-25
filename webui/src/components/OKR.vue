@@ -121,17 +121,17 @@
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
 subject=Objective: ${objective.statement}&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
-Please take a look at your objective '${objective.statement}'.%0A
-OKR Portal ${window.location}`;
+Please take a look at your objective '${objective.statement}' on <a href="${window.location}">OKR Portal</a>.`;
             },
+
+            // TODO : check is it safe to invite user to window.location?
 
             sendReminder() {
                 const targetSubject = this.$store.state.user.selectedSubject;
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
-Please fill objectives for the next period.%0A
-OKR Portal ${window.location}`;
+Please fill objectives for the next period on <a href="${window.location}">OKR Portal</a>.`;
             },
 
             logChange(description) {
