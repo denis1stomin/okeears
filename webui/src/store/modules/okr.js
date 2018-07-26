@@ -1,5 +1,4 @@
 import OkrService from './../../services/devokrservice'
-import AuthSvc from './../../services/authservice'
 import user from './user'
 
 let okrSvc = new OkrService(window.AppConfig, null);
@@ -135,10 +134,6 @@ export default {
                 data => { /* successfully deleted */ },
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
-        },
-
-        LOGOUT() {
-            AuthSvc.logout();
-        },
+        }
     }
 }
