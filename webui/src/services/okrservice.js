@@ -195,10 +195,13 @@ export default class OkrService {
                     })
                     .catch(errHandler);
             } else {
-                // TODO: We should not try to create pages for another users
-                // Assuming that newly created page body is not required, 
-                // so returning null here.
-                this.createPage(subjectId, () => { dataHandler(null); }, errHandler);
+                if(createPage) {
+                    // Assuming that newly created page body is not required, 
+                    // so returning null here.
+                    this.createPage(subjectId, () => { dataHandler(null); }, errHandler);
+                } else {
+                    dataHandler(null);
+                }
             }
         }, errHandler);
     }
