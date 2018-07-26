@@ -1,6 +1,9 @@
 import AuthSvc from './../../services/authservice'
 import GraphSubjectService from './../../services/graphsubjectservice'
 
+const DELVE_LINK_TPL = 'https://nam.delve.office.com/?u=';
+const AAD_LINK_TPL = 'https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/';
+
 const SubjectSvc = new GraphSubjectService();
 
 export default {
@@ -67,7 +70,9 @@ export default {
             const rawUser = AuthSvc.getCurrentUser();
             const user = {
                 id: rawUser.profile.oid,
-                name: rawUser.userName
+                name: rawUser.userName,
+                givenName: rawUser.profile.given_name,
+                userPrincipalName: rawUser.profile.upn
             };
 
             context.commit('CURRENT_USER_COMPLETE', user);
@@ -120,7 +125,13 @@ export default {
                     (done) => {
                         done(null, token);
                     },
-                    data => context.commit('ORGTREE_COMPLETE', data),
+                    data => {
+                        data.forEach(elem => {
+                            elem.delvelink = DELVE_LINK_TPL + elem.id;
+                            elem.aadlink = AAD_LINK_TPL + elem.id;
+                        });
+                        context.commit('ORGTREE_COMPLETE', data)
+                    },
                     err => console.log(err)
                 );
             }, SubjectSvc.accessTokenResource());
