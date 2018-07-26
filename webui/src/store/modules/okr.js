@@ -1,4 +1,5 @@
-import OkrService from './../../services/devokrservice';
+import OkrService from './../../services/devokrservice'
+import AuthSvc from './../../services/authservice'
 import user from './user'
 
 let okrSvc = new OkrService(window.AppConfig, null);
@@ -134,6 +135,12 @@ export default {
                 data => { /* successfully deleted */ },
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
-        }
+        },
+
+        // Actually this action is not related to OKRs, but
+        // we don't want to create special Vuex mmodule just for this action.
+        LOGOUT() {
+            AuthSvc.logout();
+        },
     }
 }
