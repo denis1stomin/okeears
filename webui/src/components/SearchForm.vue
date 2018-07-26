@@ -3,10 +3,10 @@
         <input type="text"
                v-model="text"
                placeholder="Find people"
-               @keyup.enter=""
+               @input="searchSubjects(text)"
                @focus="showSuggestedSubject"
                @blur="hideSuggestedSubject"/>
-        <div class="action-button">
+        <div class="action-button" @click="searchSubjects(text)">
             <SearchIcon/>
         </div>
 
@@ -37,11 +37,11 @@
         computed: {
             text: {
                 get() {
-                    return this.value;
+                    return this.$store.state.user.searchValue;
                 },
 
                 set(changed) {
-                    this.value = changed;
+                    this.$store.commit('CHANGE_SEARCH_VALUE', changed);
                 }
             },
 
@@ -61,7 +61,16 @@
                 this.suggestedSubjectShoved = false;
             },
 
+            searchSubjects(query) {
+                if (query.length) {
+                    this.$store.dispatch('SEARCH_SUBJECTS', query);
+                } else {
+                    this.$store.dispatch('GET_RELEVANT_SUBJECTS')
+                }
+            },
+
             selectInterestingSubject(item) {
+                this.$store.commit('CLEAN_SEARCH_VALUE');
                 this.$store.dispatch('SET_INTERESTING_SUBJECT', item);
             }
         }

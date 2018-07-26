@@ -50,11 +50,6 @@
         methods: {
             logOut() {
                 this.$store.dispatch('LOGOUT');
-            },
-
-            searchSubjects(query) {
-                console.log('search');
-                this.$store.dispatch('SEARCH_SUBJECTS', query);
             }
         },
 
