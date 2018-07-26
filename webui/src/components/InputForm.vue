@@ -7,7 +7,7 @@
                v-model="text"
                :id="name"
                :placeholder="placeholder"
-               :objid="objid"
+               :obj="obj"
                @keyup.enter="initAction"/>
         <div class="action-button">
             <slot/>
@@ -19,7 +19,7 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'value', 'objid'],
+        props: ['name', 'placeholder', 'action', 'value', 'obj'],
 
         computed: {
             text: {
@@ -35,8 +35,8 @@
 
         methods: {
             initAction() {
-                if (this.objid)
-                    return this.action(this.objid, this.value);
+                if (this.obj)
+                    return this.action(this.obj, this.value);
                 else
                     return this.action(this.value);
             }
