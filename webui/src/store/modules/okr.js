@@ -77,6 +77,35 @@ export default {
             )
         },
 
+        COPY_OBJECTIVE_TO_CURRENT_USER({state, commit}, objective) {
+            // Need to update model only if copy own objective
+            if (user.state.me.id === user.state.selectedSubject.id) {
+                let changedList = state.objectives;
+                changedList.push(objective);
+                commit('OBJECTIVES_COMPLETE', changedList);
+            }
+
+            // send request to create objective copy
+            okrSvc.createObjective(
+                user.state.me.id,
+                objective,
+                data => {
+                    // Need to update model only if copy own objective
+                    if (user.state.me.id === user.state.selectedSubject.id) {
+                        // when objective is created new id is returned.
+                        // we need to update the id field
+                        let changedList = state.objectives;
+                        let idx = changedList.indexOf(objective);
+                        if (idx > -1) {
+                            changedList[idx].id = data.id;
+                            commit('OBJECTIVES_COMPLETE', changedList);
+                        }
+                    }
+                },
+                err => commit('CREATE_OBJECTIVE_FAILED', err)
+            )
+        },
+
         EDIT_OBJECTIVE({state, commit}, objective) {
             // update in local objectives list
             let idx = state.objectives.findIndex((x) => x.id === objective.id);
