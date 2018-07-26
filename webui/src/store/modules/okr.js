@@ -138,7 +138,7 @@ export default {
         },
 
         // Actually this action is not related to OKRs, but
-        // we don't want to create special Vuex mmodule just for this action.
+        // we don't want to create special Vuex module just for this action.
         LOGOUT() {
             AuthSvc.logout();
         },
