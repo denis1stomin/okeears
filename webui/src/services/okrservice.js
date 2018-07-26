@@ -3,7 +3,10 @@ import AuthSvc from './authservice'
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
-const PAGE_TITLE = 'Objectives_FY2018';
+const NOTEBOOK_NAME = 'Okeears'
+const SECTION_NAME = 'FY2018'
+const PAGE_TITLE = 'Objectives';
+
 const OBJECTIVES_LIST_ID = 'objectives';
 const PAGE_TEMPLATE = 
 `<html>
@@ -143,14 +146,29 @@ export default class OkrService {
 
     createPage(subjectId, dataHandler, errHandler) {
         this.graphClient
-            .api(`${this.getSubjectPrefix(subjectId)}/onenote/pages`)
-            .header("Content-Type", "application/xhtml+xml")
-            .post(PAGE_TEMPLATE)
+            .api(`${this.getSubjectPrefix(subjectId)}/onenote/notebooks`)
+            .post({ displayName: NOTEBOOK_NAME })
             .then((body) => {
-                let pageId = body.id;
-                this.setSubjectPageId(subjectId, pageId);
-                dataHandler(pageId);
+                let notebookId = body.id;
+                this.graphClient
+                    .api(`${this.getSubjectPrefix(subjectId)}/onenote/notebooks/${notebookId}/sections`)
+                    .post({ displayName: SECTION_NAME })
+                    .then((body) => {
+                        let sectionId = body.id;
+                        this.graphClient
+                            .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
+                            .header("Content-Type", "application/xhtml+xml")
+                            .post(PAGE_TEMPLATE)
+                            .then((body) => {
+                                let pageId = body.id;
+                                this.setSubjectPageId(subjectId, pageId);
+                                dataHandler(pageId);
+                            })
+                            .catch(errHandler);
+                    })
+                    .catch(errHandler);
             })
+            // TODO: Handle error code 20117 "An item with this name already exists in this location."
             .catch(errHandler);
     }
 
@@ -198,15 +216,19 @@ export default class OkrService {
             // Searches for the page with specified title across all user's notebooks
             .filter(`title eq '${PAGE_TITLE}'`)
             .select('id')
+            .expand('parentNotebook')
             .get()
             .then((body) => {
-                if(body.value.length > 0) {
-                    let pageId = body.value[0].id;
+                // Filter out pages from another notebooks, if any
+                let pages = body.value.filter(page => page.parentNotebook.displayName == NOTEBOOK_NAME);
+                if(pages.length == 1) {
+                    let pageId = pages[0].id;
                     this.setSubjectPageId(subjectId, pageId);
                     dataHandler(pageId);
-                }
-                else {
+                } else if(pages.length == 0) {
                     dataHandler(null);
+                } else {
+                    errHandler({ message: `More than one '${PAGE_TITLE}' page found.`});
                 }
             })
             .catch(errHandler);
