@@ -36,12 +36,12 @@ export default class OkrService {
     }
 
     getObjectives(subjectId, dataHandler, errHandler) {
-        this.getPageContent(subjectId, false, (document) => {
+        this.getPageContent(subjectId, (document) => {
             
             // There are no objectives created yet
             if(!document) {
                 return dataHandler([]);
-            };
+            }
 
             let nodes = Array.from(document.querySelectorAll('li[data-id]'));
             let objectives = nodes.map((each) => {
@@ -64,7 +64,7 @@ export default class OkrService {
         // TODO: Escape HTML in objective's statement
         let statement = objective.statement;
 
-        this.getPageContent(subjectId, true, (document) => {
+        this.getPageContent(subjectId, (document) => {
 
             // If undefined - this is the first objective, 
             // need to add both ul and li tags
@@ -96,7 +96,7 @@ export default class OkrService {
         // TODO: Escape HTML in objective's statement
         let statement = objective.statement;
 
-        this.getPageContent(subjectId, false, (document) => {
+        this.getPageContent(subjectId, (document) => {
 
             if(!document) {
                 return errHandler({message: "Cannot found Objective's OneNote page."});
@@ -121,10 +121,11 @@ export default class OkrService {
     }
 
     deleteObjective(subjectId, objectiveId, successHandler, errHandler) {
-        this.getPageContent(subjectId, false, (document) => {
+        this.getPageContent(subjectId, (document) => {
+
             if(!document) {
                 return errHandler({message: "Cannot found Objective's OneNote page."});
-            };
+            }
 
             let listNodeId = document.querySelector(`li[data-id="${objectiveId}"]`).getAttribute('id');
 
@@ -172,34 +173,31 @@ export default class OkrService {
             .catch(errHandler);
     }
 
-    getPageContent(subjectId, createPage, dataHandler, errHandler) {
-        let existingPageHandler = (dataHandler, errHandler) => {
-            this.graphClient
-                .api(this.getSubjectPageContentUrl(subjectId))
-                .responseType('text')
-                .query({"includeIDs":"true"})
-                .get()
-                .then((body) => {
-                    let document = new DOMParser().parseFromString(body, "text/html");
-                    dataHandler(document);
-                })
-                .catch(errHandler);
-        };
-
+    getPageContent(subjectId, dataHandler, errHandler) {
         this.searchForOneNotePage(subjectId, (pageId) => {
-            // Page id was got right now or taken from the cache
+            // Page ID is received from OneNote or taken from the cache
             if(pageId) {
-                existingPageHandler(dataHandler, errHandler);
+                this.graphClient
+                    .api(this.getSubjectPageContentUrl(subjectId))
+                    .responseType('document')
+                    .query({'includeIDs':'true'})
+                    .get()
+                    .then((body) => {
+                        if(ArrayBuffer.isView(body)) {
+                            // Chrome, Edge on Windows
+                            let document = new DOMParser().parseFromString(body, 'text/html');
+                            dataHandler(document);   
+                        } else {
+                            // Chrome on Mac, probably something else
+                            dataHandler(body);   
+                        }
+                    })
+                    .catch(errHandler);
             } else {
-                if(createPage) {
-                    // TODO: We should not try to create pages for another users
-                    this.createPage(subjectId, () => {
-                        existingPageHandler(dataHandler, errHandler);
-                    }, errHandler);
-                } else {
-                    // No objective's page found - that's fine
-                    dataHandler(null);
-                }
+                // TODO: We should not try to create pages for another users
+                // Assuming that newly created page body is not required, 
+                // so returning null here.
+                this.createPage(subjectId, () => { dataHandler(null); }, errHandler);
             }
         }, errHandler);
     }
