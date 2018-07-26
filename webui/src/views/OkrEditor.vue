@@ -36,6 +36,8 @@
     import OKR from './../components/OKR'
     import SearchIcon from './../components/Icons/SearchIcon'
     import LogoutIcon from './../components/Icons/LogoutIcon'
+    
+    import AuthSvc from './../services/authservice'
 
     export default {
         components: {LogoutIcon, SearchIcon, InputForm, OrgTree, OKR},
@@ -56,7 +58,7 @@
 
         methods: {
             logOut() {
-                this.$store.dispatch('LOGOUT');
+                AuthSvc.logout();
             },
 
             searchSubjects(query) {
