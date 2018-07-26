@@ -3,10 +3,9 @@
         <input type="text"
                v-model="text"
                placeholder="Find people"
-               @input="searchSubjects(text)"
                @focus="showSuggestedSubject"
                @blur="hideSuggestedSubject"/>
-        <div class="action-button" @click="searchSubjects(text)">
+        <div class="action-button" @click="searchSubjects">
             <SearchIcon/>
         </div>
 
@@ -41,7 +40,7 @@
                 },
 
                 set(changed) {
-                    this.$store.commit('CHANGE_SEARCH_VALUE', changed);
+                    this.$store.dispatch('SEARCH_SUBJECTS', changed);
                 }
             },
 
@@ -61,12 +60,8 @@
                 this.suggestedSubjectShoved = false;
             },
 
-            searchSubjects(query) {
-                if (query.length) {
-                    this.$store.dispatch('SEARCH_SUBJECTS', query);
-                } else {
-                    this.$store.dispatch('GET_RELEVANT_SUBJECTS')
-                }
+            searchSubjects() {
+                // TODO: Do something on Enter or button click?
             },
 
             selectInterestingSubject(item) {

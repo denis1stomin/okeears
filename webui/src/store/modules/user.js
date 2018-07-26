@@ -104,17 +104,24 @@ export default {
         },
 
         // Searches subjects using text search
+        // Updates relevant people if search query is empty
         SEARCH_SUBJECTS(context, searchQuery) {
-            AuthSvc.withToken((token) => {
-                SubjectSvc.findPeople(
-                    searchQuery,
-                    (done) => {
-                        done(null, token);
-                    },
-                    data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
-                    err => console.log(err)
-                );
-            }, SubjectSvc.accessTokenResource());
+            context.commit('CHANGE_SEARCH_VALUE', searchQuery);
+
+            if(searchQuery.length) {
+                AuthSvc.withToken((token) => {
+                    SubjectSvc.findPeople(
+                        searchQuery,
+                        (done) => {
+                            done(null, token);
+                        },
+                        data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
+                        err => console.log(err)
+                    );
+                }, SubjectSvc.accessTokenResource());
+            } else {
+                context.dispatch('GET_RELEVANT_SUBJECTS');
+            }
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {

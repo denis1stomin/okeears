@@ -33,12 +33,6 @@
     export default {
         components: {LogoutIcon, SearchForm, OrgTree, OKR},
 
-        data() {
-            return {
-                showSuggestedSubject: false
-            }
-        },
-
         computed: {
             user: {
                 get() {
