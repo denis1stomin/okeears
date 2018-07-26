@@ -35,8 +35,9 @@ export default class OkrService {
         });
     }
 
-    getObjectives(subjectId, dataHandler, errHandler) {
-        this.getPageContent(subjectId, (document) => {
+    getObjectives(subjectId, userId, dataHandler, errHandler) {
+        let allowPageCreation = subjectId == userId;
+        this.getPageContent(subjectId, allowPageCreation, (document) => {
             
             // There are no objectives created yet
             if(!document) {
@@ -64,7 +65,7 @@ export default class OkrService {
         // TODO: Escape HTML in objective's statement
         let statement = objective.statement;
 
-        this.getPageContent(subjectId, (document) => {
+        this.getPageContent(subjectId, true, (document) => {
 
             // If undefined - this is the first objective, 
             // need to add both ul and li tags
@@ -96,7 +97,7 @@ export default class OkrService {
         // TODO: Escape HTML in objective's statement
         let statement = objective.statement;
 
-        this.getPageContent(subjectId, (document) => {
+        this.getPageContent(subjectId, false, (document) => {
 
             if(!document) {
                 return errHandler({message: "Cannot found Objective's OneNote page."});
@@ -121,7 +122,7 @@ export default class OkrService {
     }
 
     deleteObjective(subjectId, objectiveId, successHandler, errHandler) {
-        this.getPageContent(subjectId, (document) => {
+        this.getPageContent(subjectId, false, (document) => {
 
             if(!document) {
                 return errHandler({message: "Cannot found Objective's OneNote page."});
@@ -173,7 +174,7 @@ export default class OkrService {
             .catch(errHandler);
     }
 
-    getPageContent(subjectId, dataHandler, errHandler) {
+    getPageContent(subjectId, createPage, dataHandler, errHandler) {
         this.searchForOneNotePage(subjectId, (pageId) => {
             // Page ID is received from OneNote or taken from the cache
             if(pageId) {
