@@ -13,6 +13,10 @@
                 </span>
             </InputForm>
 
+            <div class="error" v-if="error">
+                <span>{{error.message}}</span>
+            </div>
+
             <div class="objectives" v-if="objectives.length" v-for="objective in objectives">
                 <InputForm placeholder=""
                            :action="editObjective"
@@ -51,6 +55,7 @@
                     <span @click="sendReminder()"><SendIcon/></span>
                 </span>
             </div>
+
         </div>
 
         <ChangeLog/>
@@ -75,6 +80,12 @@
             objectives: {
                 get() {
                     return this.$store.state.okr.objectives;
+                }
+            },
+            
+            error: {
+                get() {
+                    return this.$store.state.okr.error;
                 }
             },
 

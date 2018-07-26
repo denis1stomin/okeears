@@ -1,4 +1,4 @@
-import OkrService from './../../services/devokrservice';
+import OkrService from './../../services/okrservice';
 import user from './user'
 
 let okrSvc = new OkrService(window.AppConfig, null);
@@ -6,12 +6,12 @@ let okrSvc = new OkrService(window.AppConfig, null);
 export default {
     state: {
         objectives: [],
-
         error: ''
     },
 
     mutations: {
         OBJECTIVES_COMPLETE(state, payload) {
+            state.error = null;
             state.objectives = payload;
         },
 
@@ -20,6 +20,7 @@ export default {
         },
 
         CREATE_OBJECTIVE(state, payload) {
+            state.error = null;
             state.objectives = payload;
         },
 
@@ -28,6 +29,7 @@ export default {
         },
 
         DELETE_OBJECTIVE(state, objective) {
+            state.error = null;
             let objectives = state.objectives;
             objectives.splice(objectives.indexOf(objective), 1);
         },
@@ -46,6 +48,7 @@ export default {
         GET_OBJECTIVES({commit}) {
             okrSvc.getObjectives(
                 user.state.selectedSubject.id,
+                user.state.me.id,
                 data => commit('OBJECTIVES_COMPLETE', data),
                 err => commit('OBJECTIVES_FAILED', err)
             );
