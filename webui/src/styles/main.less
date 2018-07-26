@@ -64,7 +64,6 @@ h4, h3, h2, h1 {
     box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, .5);
 
     .input-form {
-      margin-bottom: 30px;
       border-color: #7d7abc;
       &:focus-within {
         border-color: #ffe347;
@@ -72,8 +71,21 @@ h4, h3, h2, h1 {
     }
 
     .suggested-subjects-list {
-      color: white;
-      margin: 20px;
+      padding: 10px;
+      line-height: 1.5;
+      border: 1px solid #7c79bc;
+      border-radius: 0 0 5px 5px;
+      background: #fff;
+      box-shadow: 2px 2px 5px rgba(0,0,0,.5);
+
+      .suggested-subjects-item {
+        font-size: 14px;
+        color: #6457A6;
+        cursor: pointer;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 

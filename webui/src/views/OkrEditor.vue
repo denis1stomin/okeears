@@ -15,7 +15,7 @@
                 <SearchIcon/>
             </InputForm>
             <div class="suggested-subjects-list">
-                <div v-for="item in suggestedSubjects">{{item.displayName}}</div>
+                <div v-for="item in suggestedSubjects" class="suggested-subjects-item">{{item.displayName}}</div>
             </div>
             <OrgTree/>
         </div>
@@ -40,6 +40,12 @@
     export default {
         components: {LogoutIcon, SearchIcon, InputForm, OrgTree, OKR},
 
+        data() {
+            return {
+                showSuggestedSubject: false
+            }
+        },
+
         computed: {
             user: {
                 get() {
@@ -60,6 +66,7 @@
             },
 
             searchSubjects(query) {
+                console.log('search');
                 this.$store.dispatch('SEARCH_SUBJECTS', query);
             }
         },
