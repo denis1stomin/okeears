@@ -10,13 +10,7 @@
         </header>
 
         <div class="menu">
-            <InputForm placeholder="Find people"
-                       :action="searchSubjects">
-                <SearchIcon/>
-            </InputForm>
-            <div class="suggested-subjects-list">
-                <div v-for="item in suggestedSubjects" class="suggested-subjects-item">{{item.displayName}}</div>
-            </div>
+            <SearchForm/>
             <OrgTree/>
         </div>
 
@@ -31,14 +25,13 @@
 </template>
 
 <script>
-    import InputForm from './../components/InputForm'
+    import SearchForm from './../components/SearchForm'
     import OrgTree from './../components/OrgTree'
     import OKR from './../components/OKR'
-    import SearchIcon from './../components/Icons/SearchIcon'
     import LogoutIcon from './../components/Icons/LogoutIcon'
 
     export default {
-        components: {LogoutIcon, SearchIcon, InputForm, OrgTree, OKR},
+        components: {LogoutIcon, SearchForm, OrgTree, OKR},
 
         data() {
             return {
@@ -50,12 +43,6 @@
             user: {
                 get() {
                     return this.$store.state.user.me;
-                }
-            },
-
-            suggestedSubjects: {
-                get() {
-                    return this.$store.state.user.suggestedSubjectsList;
                 }
             }
         },
