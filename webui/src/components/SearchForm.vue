@@ -12,7 +12,9 @@
 
         <transition name="fade">
             <div class="suggested-subjects-list" v-show="suggestedSubjectShoved">
-                <div v-for="item in suggestedSubjects" class="suggested-subjects-item">{{item.displayName}}</div>
+                <div v-for="item in suggestedSubjects"
+                     class="suggested-subjects-item"
+                     @click="selectInterestingSubject(item)">{{item.displayName}}</div>
             </div>
         </transition>
     </div>
@@ -57,6 +59,10 @@
 
             hideSuggestedSubject() {
                 this.suggestedSubjectShoved = false;
+            },
+
+            selectInterestingSubject(item) {
+                this.$store.dispatch('SET_INTERESTING_SUBJECT', item);
             }
         }
     }

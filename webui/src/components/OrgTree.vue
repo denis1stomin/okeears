@@ -1,7 +1,7 @@
 <template>
     <div class="org-tree">
         <div class="org-tree-item" :class="{'org-tree-item-selected': user.id === selectedSubject.id}"
-             v-for="user in orgtree" @click="selectInterestingSubject(user)">
+             v-for="user in orgtree" @click="selectSelectedSubject(user)">
             <div class="org-tree-item-header org-tree-item-name">{{user.displayName}}</div>
             <div class="org-tree-item-body">
                 <span class="org-tree-item-title">{{user.jobTitle}}</span>
@@ -37,7 +37,7 @@
         },
 
         methods: {
-            selectInterestingSubject(user) {
+            selectSelectedSubject(user) {
                 this.$store.dispatch('SET_SELECTED_SUBJECT', user);
             }
         }
