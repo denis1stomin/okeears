@@ -112,4 +112,18 @@ or startswith(mail,'${textQuery}')`)
             })
             .catch(errHandler);
     }
+
+    getUserPhoto(subjectId, tokenProvider, dataHandler, errHandler) {
+        const graphClient = MicrosoftGraph.Client.init({
+            authProvider: tokenProvider
+        });
+
+        graphClient
+            .api(`/users/${subjectId}/photo/$value`)
+            .responseType('blob')
+            .version('beta')
+            .get()
+            .then(dataHandler)
+            .catch(errHandler);
+    }    
 }

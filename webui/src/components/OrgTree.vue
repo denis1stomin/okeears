@@ -4,6 +4,7 @@
              v-for="user in orgtree" @click="selectInterestingSubject(user)">
             <div class="org-tree-item-header org-tree-item-name">{{user.displayName}}</div>
             <div class="org-tree-item-body">
+                <img class="org-tree-item-photo" :src="user.photo"/>
                 <span class="org-tree-item-title">{{user.jobTitle}}</span>
                 <span class="org-tree-item-title">{{user.officeLocation}}</span>
                 <span class="org-tree-item-links">

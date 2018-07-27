@@ -20,7 +20,7 @@ const PAGE_TEMPLATE =
 </html>`;
 
 export default class OkrService {
-    constructor(config, tokenProvider) {
+    constructor() {
         
         // Stores mapping from user id to his objective's page id
         this.pageIds = new Map();
