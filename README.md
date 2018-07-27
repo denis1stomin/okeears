@@ -1,10 +1,16 @@
-# OKR (Objectives and Key Results) Portal
+# Okeears - objectives and key results solution
 
-TODO: Add good general description here
-Microsoft Azure AD authentication, Graph API, OneDrive API etc
+Microsoft Office 365 highly integrated web application.
 
+## Security
+
+Microsoft Azure AD authentication (MFA is supported).
+Graph API/Azure AD API are used to retrieve organizational structure data.
+Your data is stored in your OneDrive account using OneNote API.
+GDPR compliant :) since OneNote is used as backend solution.
+Okeears is hosted in Azure.
 
 ## Useful links
 
-OpenAPI (aka Swagger) specification
-https://app.swaggerhub.com/apis/denis1stomin/OKRPortal/
+https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-scenarios
+https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-howitworks
