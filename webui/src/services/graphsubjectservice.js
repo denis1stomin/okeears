@@ -2,6 +2,7 @@ import AuthSvc from './authservice'
 
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 
+// ?api-version=1.6
 //const ORGTREE_ACCESS_TOKEN_RESOURCE = 'https://graph.windows.net';
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
@@ -19,6 +20,7 @@ export default class GraphSubjectService {
             }
         });
 
+        // Private method is defined in the constructor
         this.getManagersRecursively = function aliasName(managersChain, userResource, dataHandler, errHandler) {
             this.graphClient
                 .api(`${userResource}/manager`)
@@ -42,6 +44,7 @@ export default class GraphSubjectService {
                 });
         };
 
+        // Private method is defined in the constructor
         this.getUser = (userResource, dataHandler, errHandler) => {
             this.graphClient
                 .api(userResource)
@@ -106,17 +109,13 @@ or startswith(mail,'${textQuery}')`)
             .catch(errHandler);
     }
 
-    getUserPhoto(subjectId, tokenProvider, dataHandler, errHandler) {
-        const graphClient = MicrosoftGraph.Client.init({
-            authProvider: tokenProvider
-        });
-
-        graphClient
+    getUserPhoto(subjectId, dataHandler, errHandler) {
+        this.graphClient
             .api(`/users/${subjectId}/photo/$value`)
             .responseType('blob')
             .version('beta')
             .get()
             .then(dataHandler)
             .catch(errHandler);
-    }    
+    }
 }
