@@ -1,16 +1,26 @@
+import AuthSvc from './authservice'
+
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
+
+//const ORGTREE_ACCESS_TOKEN_RESOURCE = 'https://graph.windows.net';
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
+
 const ORGTREE_USER_SELECT = 'id,displayName,jobTitle,officeLocation,givenName,mail,userPrincipalName';
 const PEOPLE_SEARCH_SELECT = 'id,displayName';
 
 export default class GraphSubjectService {
     constructor() {
-        this.getManagersRecursively = function aliasName(managersChain, userResource, tokenProvider, dataHandler, errHandler) {
-            const graphClient = MicrosoftGraph.Client.init({
-                authProvider: tokenProvider
-            });
+        this.graphClient = MicrosoftGraph.Client.init({
+            // debugLogging: true,
+            authProvider: (done) => {
+                AuthSvc.withToken((token) => {
+                    done(null, token);
+                }, ACCESS_TOKEN_RESOURCE);
+            }
+        });
 
-            graphClient
+        this.getManagersRecursively = function aliasName(managersChain, userResource, dataHandler, errHandler) {
+            this.graphClient
                 .api(`${userResource}/manager`)
                 .select(ORGTREE_USER_SELECT)
                 .get()
@@ -19,7 +29,7 @@ export default class GraphSubjectService {
                         managersChain.unshift(body);
     
                         const nextUserResource = `/users/${body.id}`;
-                        aliasName(managersChain, nextUserResource, tokenProvider, dataHandler, errHandler);
+                        aliasName(managersChain, nextUserResource, dataHandler, errHandler);
                     }
                     else {
                         dataHandler(managersChain);
@@ -32,12 +42,8 @@ export default class GraphSubjectService {
                 });
         };
 
-        this.getUser = (userResource, tokenProvider, dataHandler, errHandler) => {
-            const graphClient = MicrosoftGraph.Client.init({
-                authProvider: tokenProvider
-            });
-    
-            graphClient
+        this.getUser = (userResource, dataHandler, errHandler) => {
+            this.graphClient
                 .api(userResource)
                 .select(ORGTREE_USER_SELECT)
                 .get()
@@ -46,27 +52,22 @@ export default class GraphSubjectService {
         };
     }
 
-    /// Returns MS Graph resource which is needed to acquire an access token for this service
-    accessTokenResource() {
-        return ACCESS_TOKEN_RESOURCE;
-    }
-
     /// Requests current logged in user information
-    getCurrentUser(tokenProvider, dataHandler, errHandler) {
-        this.getUser('/me', tokenProvider, dataHandler, errHandler);
+    getCurrentUser(dataHandler, errHandler) {
+        this.getUser('/me', dataHandler, errHandler);
     }
 
     /// Requests user information by its AAD Id field
-    getUserById(subjectId, tokenProvider, dataHandler, errHandler) {
-        this.getUser(`/users/${subjectId}`, tokenProvider, dataHandler, errHandler);
+    getUserById(subjectId, dataHandler, errHandler) {
+        this.getUser(`/users/${subjectId}`, dataHandler, errHandler);
     }
 
     /// Requests organizational structure for an user
-    getSubjectOrgTree(subjectId, tokenProvider, dataHandler, errHandler) {
+    getSubjectOrgTree(subjectId, dataHandler, errHandler) {
         // First get user information
-        this.getUserById(subjectId, tokenProvider, (user) => {
+        this.getUserById(subjectId, (user) => {
             // Then retrieve managers chain
-            this.getManagersRecursively([user], `/users/${subjectId}`, tokenProvider, dataHandler, errHandler);
+            this.getManagersRecursively([user], `/users/${subjectId}`, dataHandler, errHandler);
         }, errHandler);
     }
 
@@ -74,12 +75,8 @@ export default class GraphSubjectService {
     // hasDirectReports() { }
     // getDirectReports() { }
 
-    getCurrentUserRelevantPeople(tokenProvider, dataHandler, errHandler) {
-        const graphClient = MicrosoftGraph.Client.init({
-            authProvider: tokenProvider
-        });
-
-        graphClient
+    getCurrentUserRelevantPeople(dataHandler, errHandler) {
+        this.graphClient
             .api('/me/people')
             .version('beta')
             .select(PEOPLE_SEARCH_SELECT)
@@ -91,12 +88,8 @@ export default class GraphSubjectService {
             .catch(errHandler);
     }
 
-    findPeople(textQuery, tokenProvider, dataHandler, errHandler) {
-        const graphClient = MicrosoftGraph.Client.init({
-            authProvider: tokenProvider
-        });
-
-        graphClient
+    findPeople(textQuery, dataHandler, errHandler) {
+        this.graphClient
             .api(`/users`)
             .version('beta')
             .select(PEOPLE_SEARCH_SELECT)

@@ -81,29 +81,19 @@ export default {
 
         // Gets list of relevant subjects to current user
         GET_RELEVANT_SUBJECTS(context) {
-            AuthSvc.withToken((token) => {
-                SubjectSvc.getCurrentUserRelevantPeople(
-                    (done) => {
-                        done(null, token);
-                    },
-                    data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
-                    err => console.log(err)
-                );
-            }, SubjectSvc.accessTokenResource());
+            SubjectSvc.getCurrentUserRelevantPeople(
+                data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
+                err => console.log(err)
+            );
         },
 
         // Searches subjects using text search
         SEARCH_SUBJECTS(context, searchQuery) {
-            AuthSvc.withToken((token) => {
-                SubjectSvc.findPeople(
-                    searchQuery,
-                    (done) => {
-                        done(null, token);
-                    },
-                    data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
-                    err => console.log(err)
-                );
-            }, SubjectSvc.accessTokenResource());
+            SubjectSvc.findPeople(
+                searchQuery,
+                data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
+                err => console.log(err)
+            );
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {
@@ -119,22 +109,17 @@ export default {
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
-            AuthSvc.withToken((token) => {
-                SubjectSvc.getSubjectOrgTree(
-                    context.state.interestingSubject.id,
-                    (done) => {
-                        done(null, token);
-                    },
-                    data => {
-                        data.forEach(elem => {
-                            elem.delvelink = DELVE_LINK_TPL + elem.id;
-                            elem.aadlink = AAD_LINK_TPL + elem.id;
-                        });
-                        context.commit('ORGTREE_COMPLETE', data)
-                    },
-                    err => console.log(err)
-                );
-            }, SubjectSvc.accessTokenResource());
+            SubjectSvc.getSubjectOrgTree(
+                context.state.interestingSubject.id,
+                data => {
+                    data.forEach(elem => {
+                        elem.delvelink = DELVE_LINK_TPL + elem.id;
+                        elem.aadlink = AAD_LINK_TPL + elem.id;
+                    });
+                    context.commit('ORGTREE_COMPLETE', data)
+                },
+                err => console.log(err)
+            );
         }
     }
 }
