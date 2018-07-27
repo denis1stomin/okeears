@@ -12,6 +12,8 @@
         <div class="menu">
             <SearchForm/>
 
+            <div class="menu-user" @click="selectInterestingSubject(user.name)">{{user.name}}</div>
+
             <OrgTree/>
 
             <div class="suggested-subjects-list">
