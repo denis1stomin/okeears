@@ -11,7 +11,16 @@
 
         <div class="menu">
             <SearchForm/>
+
             <OrgTree/>
+
+            <div class="suggested-subjects-list">
+                <div class="suggested-subjects-title">Humans</div>
+                <div class="suggested-subjects-item"
+                     v-for="item in suggestedSubjects"
+                     @click="selectInterestingSubject(item)">{{item.displayName}}
+                </div>
+            </div>
         </div>
 
         <div class="content">
@@ -33,16 +42,16 @@
     export default {
         components: {LogoutIcon, SearchForm, OrgTree, OKR},
 
-        data() {
-            return {
-                showSuggestedSubject: false
-            }
-        },
-
         computed: {
             user: {
                 get() {
                     return this.$store.state.user.me;
+                }
+            },
+
+            suggestedSubjects: {
+                get() {
+                    return this.$store.state.user.suggestedSubjectsList;
                 }
             }
         },
@@ -50,6 +59,10 @@
         methods: {
             logOut() {
                 this.$store.dispatch('LOGOUT');
+            },
+
+            selectInterestingSubject(item) {
+                this.$store.dispatch('SET_INTERESTING_SUBJECT', item);
             }
         },
 

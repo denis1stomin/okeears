@@ -4,17 +4,17 @@
                v-model="text"
                placeholder="Find people"
                @input="searchSubjects(text)"
-               @focus="showSuggestedSubject"
-               @blur="hideSuggestedSubject"/>
+               @blur="hideSearchedSubject"/>
         <div class="action-button" @click="searchSubjects(text)">
             <SearchIcon/>
         </div>
 
         <transition name="fade">
-            <div class="suggested-subjects-list" v-show="suggestedSubjectShoved">
-                <div v-for="item in suggestedSubjects"
+            <div class="suggested-subjects-list" v-show="searchedSubjectShoved">
+                <div v-for="item in searchedSubjects"
                      class="suggested-subjects-item"
-                     @click="selectInterestingSubject(item)">{{item.displayName}}</div>
+                     @click="selectInterestingSubject(item)">{{item.displayName}}
+                </div>
             </div>
         </transition>
     </div>
@@ -30,7 +30,7 @@
 
         data() {
             return {
-                suggestedSubjectShoved: false,
+                searchedSubjectShoved: false,
             }
         },
 
@@ -45,28 +45,28 @@
                 }
             },
 
-            suggestedSubjects: {
+            searchedSubjects: {
                 get() {
-                    return this.$store.state.user.suggestedSubjectsList;
+                    return this.$store.state.user.searchedSubjectsList;
                 }
             }
         },
 
         methods: {
-            showSuggestedSubject() {
-                this.suggestedSubjectShoved = true;
+            showSearchedSubject(query) {
+                console.log(query);
+                if (query) {
+                    this.searchedSubjectShoved = true;
+                }
             },
 
-            hideSuggestedSubject() {
-                this.suggestedSubjectShoved = false;
+            hideSearchedSubject() {
+                this.searchedSubjectShoved = false;
             },
 
             searchSubjects(query) {
-                if (query.length) {
-                    this.$store.dispatch('SEARCH_SUBJECTS', query);
-                } else {
-                    this.$store.dispatch('GET_RELEVANT_SUBJECTS')
-                }
+                this.$store.dispatch('SEARCH_SUBJECTS', query);
+                this.searchedSubjectShoved = true;
             },
 
             selectInterestingSubject(item) {
@@ -80,6 +80,15 @@
 <style scoped lang="less">
     .input-search {
         position: relative;
+
+        .action-button {
+            &:hover {
+                color: #ccc;
+                fill: #ccc;
+                stroke: #ccc;
+                cursor: default;
+            }
+        }
 
         .suggested-subjects-list {
             position: absolute;
