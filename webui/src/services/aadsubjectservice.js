@@ -14,27 +14,52 @@ export default class AadSubjectService {
         });
 
         // Private method is defined in the constructor
-        this.getManagersRecursively = function aliasName(managersChain, userResource, dataHandler, errHandler) {
-            this.graphClient
-                .api(`${userResource}/manager`)
-                .select(ORGTREE_USER_SELECT)
-                .get()
-                .then((body) => {
-                    if (body) {
-                        managersChain.unshift(body);
-    
-                        const nextUserResource = `/users/${body.id}`;
-                        aliasName(managersChain, nextUserResource, dataHandler, errHandler);
-                    }
-                    else {
-                        dataHandler(managersChain);
-                    }
-                })
-                // NOTE: Temporarily errHandler function is not used to avoid 403 error code.
-                // Instead we use dataHandler to return at least what we have.
-                .catch(/*errHandler*/ (err) => {
-                    dataHandler(managersChain);
-                });
+        this.getAdditionalParams = (token) => {
+            return {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                params: {
+                    'api-version': '1.6'
+                }
+            };
+        };
+
+        // Private method is defined in the constructor
+        this.getManagersRecursively = function aliasName(httpClient, managersChain, userResource, dataHandler, errHandler) {
+            AuthSvc.withToken(
+                token => {
+                    // Unfortunately AAD API does not support $select parameter
+                    //      to minimize the request content.
+                    httpClient
+                        .get(`${userResource}/manager`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            },
+                            params: {
+                                'api-version': '1.6'
+                            }
+                        })
+                        .then(resp => {
+                            const body = resp.data;
+                            if (body) {
+                                managersChain.unshift(body);
+            
+                                const nextUserResource = `/users/${body.objectId}`;
+                                aliasName(httpClient, managersChain, nextUserResource, dataHandler, errHandler);
+                            }
+                            else {
+                                dataHandler(managersChain);
+                            }
+                        })
+                        // NOTE: Temporarily errHandler function is not used to avoid 403 error code.
+                        // Instead we use dataHandler to return at least what we have.
+                        .catch(/*errHandler*/ (err) => {
+                            dataHandler(managersChain);
+                        });
+                },
+                ACCESS_TOKEN_RESOURCE
+            );
         };
 
         // Private method is defined in the constructor
@@ -44,14 +69,7 @@ export default class AadSubjectService {
                     // Unfortunately AAD API does not support $select parameter
                     //      to minimize the request content.
                     this.httpClient
-                        .get(userResource, {
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            },
-                            params: {
-                                'api-version': '1.6'
-                            }
-                        })
+                        .get(userResource, this.getAdditionalParams(token))
                         .then(resp => dataHandler(resp.data))
                         .catch(err => errHandler(err));
                 },
@@ -75,7 +93,7 @@ export default class AadSubjectService {
         // First get user information
         this.getUserById(subjectId, (user) => {
             // Then retrieve managers chain
-            this.getManagersRecursively([user], `/users/${subjectId}`, dataHandler, errHandler);
+            this.getManagersRecursively(this.httpClient, [user], `/users/${subjectId}`, dataHandler, errHandler);
         }, errHandler);
     }
 

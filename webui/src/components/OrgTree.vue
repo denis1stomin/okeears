@@ -6,7 +6,7 @@
             <div class="org-tree-item-body">
                 <img class="org-tree-item-photo" :src="user.photo"/>
                 <span class="org-tree-item-title">{{user.jobTitle}}</span>
-                <span class="org-tree-item-title">{{user.officeLocation}}</span>
+                <span class="org-tree-item-title">{{user.physicalDeliveryOfficeName || user.officeLocation}}</span>
                 <span class="org-tree-item-links">
                     View in
                     <a class="org-tree-item-link" target="_blank" rel="noopener noreferrer" 
