@@ -2,8 +2,6 @@ import AuthSvc from './authservice'
 
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 
-// ?api-version=1.6
-//const ORGTREE_ACCESS_TOKEN_RESOURCE = 'https://graph.windows.net';
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
 const ORGTREE_USER_SELECT = 'id,displayName,jobTitle,officeLocation,givenName,mail,userPrincipalName';
@@ -37,7 +35,7 @@ export default class GraphSubjectService {
                         dataHandler(managersChain);
                     }
                 })
-                // NOTE: Temporarily errHandler function is not used to avoid 403 error code.
+                // NOTE: Temporarily errHandler function is ignored to avoid 403 error code.
                 // Instead we use dataHandler to return at least what we have.
                 .catch(/*errHandler*/ (err) => {
                     dataHandler(managersChain);
@@ -73,10 +71,6 @@ export default class GraphSubjectService {
             this.getManagersRecursively([user], `/users/${subjectId}`, dataHandler, errHandler);
         }, errHandler);
     }
-
-    // TODO
-    // hasDirectReports() { }
-    // getDirectReports() { }
 
     getCurrentUserRelevantPeople(dataHandler, errHandler) {
         this.graphClient
