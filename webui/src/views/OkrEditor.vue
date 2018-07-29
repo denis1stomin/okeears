@@ -12,7 +12,7 @@
         <div class="menu">
             <SearchForm/>
 
-            <div class="menu-user" @click="selectInterestingSubject(user.name)">{{user.name}}</div>
+            <div class="menu-user" @click="selectInterestingSubject(user)">{{user.name}}</div>
 
             <OrgTree/>
         </div>
@@ -50,6 +50,10 @@
             logOut() {
                 this.$store.dispatch('LOGOUT');
                 AuthSvc.logout();
+            },
+
+            selectInterestingSubject(item) {
+                this.$store.dispatch('SET_INTERESTING_SUBJECT', item);
             }
         },
 
