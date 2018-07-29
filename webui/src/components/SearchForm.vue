@@ -4,17 +4,17 @@
                v-model="text"
                placeholder="Find people"
                @input="searchSubjects(text)"
-               @blur="hideSearchedSubject"/>
+               @focus="showSuggestedSubject"
+               @blur="hideSuggestedSubject"/>
         <div class="action-button" @click="searchSubjects(text)">
             <SearchIcon/>
         </div>
 
         <transition name="fade">
-            <div class="suggested-subjects-list" v-show="searchedSubjectShoved">
-                <div v-for="item in searchedSubjects"
+            <div class="suggested-subjects-list" v-show="suggestedSubjectShoved">
+                <div v-for="item in suggestedSubjects"
                      class="suggested-subjects-item"
-                     @click="selectInterestingSubject(item)">{{item.displayName}}
-                </div>
+                     @click="selectInterestingSubject(item)">{{item.displayName}}</div>
             </div>
         </transition>
     </div>
@@ -30,7 +30,7 @@
 
         data() {
             return {
-                searchedSubjectShoved: false,
+                suggestedSubjectShoved: false,
             }
         },
 
@@ -45,28 +45,28 @@
                 }
             },
 
-            searchedSubjects: {
+            suggestedSubjects: {
                 get() {
-                    return this.$store.state.user.searchedSubjectsList;
+                    return this.$store.state.user.suggestedSubjectsList;
                 }
             }
         },
 
         methods: {
-            showSearchedSubject(query) {
-                console.log(query);
-                if (query) {
-                    this.searchedSubjectShoved = true;
-                }
+            showSuggestedSubject() {
+                this.suggestedSubjectShoved = true;
             },
 
-            hideSearchedSubject() {
-                this.searchedSubjectShoved = false;
+            hideSuggestedSubject() {
+                this.suggestedSubjectShoved = false;
             },
 
             searchSubjects(query) {
-                this.$store.dispatch('SEARCH_SUBJECTS', query);
-                this.searchedSubjectShoved = true;
+                if (query.length) {
+                    this.$store.dispatch('SEARCH_SUBJECTS', query);
+                } else {
+                    this.$store.dispatch('GET_RELEVANT_SUBJECTS')
+                }
             },
 
             selectInterestingSubject(item) {

@@ -23,9 +23,6 @@ export default {
         // list of subjects which could be interesting to current user
         suggestedSubjectsList: [],
 
-        // list of searched subjects
-        searchedSubjectsList: [],
-
         // init search value
         searchValue: '',
 
@@ -66,10 +63,6 @@ export default {
 
         SUGGESTED_SUBJECTS_LIST(state, value) {
             state.suggestedSubjectsList = value;
-        },
-
-        SEARCHED_SUBJECTS_LIST(state, value) {
-            state.searchedSubjectsList = value;
         },
 
         INTERESTING_SUBJECT(state, value) {
@@ -118,7 +111,7 @@ export default {
                     (done) => {
                         done(null, token);
                     },
-                    data => context.commit('SEARCHED_SUBJECTS_LIST', data),
+                    data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
                     err => console.log(err)
                 );
             }, SubjectSvc.accessTokenResource());
