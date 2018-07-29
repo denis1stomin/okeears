@@ -10,7 +10,7 @@
         </div>
 
         <transition name="fade">
-            <div class="suggested-subjects-list" v-show="suggestedSubjectShoved">
+            <div class="suggested-subjects-list" v-show="suggestedSubjectShowed">
                 <div v-for="item in suggestedSubjects"
                      class="suggested-subjects-item"
                      @click="selectInterestingSubject(item)">{{item.displayName}}</div>
@@ -30,7 +30,7 @@
 
         data() {
             return {
-                suggestedSubjectShoved: false,
+                suggestedSubjectShowed: false,
             }
         },
 
@@ -54,11 +54,11 @@
 
         methods: {
             showSuggestedSubject() {
-                this.suggestedSubjectShoved = true;
+                this.suggestedSubjectShowed = true;
             },
 
             hideSuggestedSubject() {
-                this.suggestedSubjectShoved = false;
+                this.suggestedSubjectShowed = false;
             },
 
             selectInterestingSubject(item) {
