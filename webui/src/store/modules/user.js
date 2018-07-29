@@ -138,6 +138,7 @@ export default {
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
+            let errorHandler = error => console.log(error);
             AuthSvc.withToken((token) => {
                 SubjectSvc.getSubjectOrgTree(
                     context.state.interestingSubject.id,
@@ -148,11 +149,19 @@ export default {
                         data.forEach(elem => {
                             elem.delvelink = DELVE_LINK_TPL + elem.id;
                             elem.aadlink = AAD_LINK_TPL + elem.id;
+                            elem.photo = null;
+
+                            SubjectSvc.getUserPhoto(elem.id, (done) => { done(null, token);}, data => {
+                                // Optimization: convert to base64 here and not in the OrgTree component
+                                // to have ready-to-use values cached in the user object
+                                var base64 = Buffer.from(data).toString('base64');
+                                elem.photo = 'data:image/jpeg;base64,' + base64;
+                            }, errorHandler);
+    
                         });
+                        
                         context.commit('ORGTREE_COMPLETE', data)
-                    },
-                    err => console.log(err)
-                );
+                    }, errorHandler);
             }, SubjectSvc.accessTokenResource());
         }
     }
