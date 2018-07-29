@@ -189,7 +189,7 @@ export default class OkrService {
                 "read"
             ]
         };
-        let url = `me/drive/root:/Notebooks/${NOTEBOOK_NAME}:/`;
+        let url = `me/drive/root:/Notebooks/${NOTEBOOK_NAME}:/invite`;
         this.graphClient
             .api(url)
             .post(body)
