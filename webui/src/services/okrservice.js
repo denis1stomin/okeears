@@ -164,10 +164,7 @@ export default class OkrService {
                             .then((body) => {
                                 let pageId = body.id;
                                 this.setSubjectPageId(subjectId, pageId);
-                                
-                                console.log('Schedule sharing...');
-                                let that = this;
-                                setTimeout(function() {that.shareNotebook(errHandler)}, 30000);
+                                that.shareNotebook(errHandler);
 
                                 dataHandler(pageId);
                             })
@@ -180,7 +177,6 @@ export default class OkrService {
     }
 
     shareNotebook(errHandler) {
-        console.log('Sharing!');
         let body = {
             "recipients": [
                 {
@@ -193,14 +189,14 @@ export default class OkrService {
                 "read"
             ]
         };
-        let url = `me/drive/root:/Notebooks/${NOTEBOOK_NAME}:/invite`;
+        let url = `me/drive/root:/Notebooks/${NOTEBOOK_NAME}:/`;
         this.graphClient
             .api(url)
             .post(body)
             .then(data => {
-                console.log(data);
+                // console.log(data);
             })
-            .catch(error => {console.log(error)}); 
+            .catch(errHandler); 
     }
 
     getPageContent(subjectId, createPage, dataHandler, errHandler) {
