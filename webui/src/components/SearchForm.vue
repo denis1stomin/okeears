@@ -5,7 +5,7 @@
                placeholder="Find people"
                @focus="showSuggestedSubject"
                @blur="hideSuggestedSubject"/>
-        <div class="action-button" @click="searchSubjects">
+        <div class="action-button">
             <SearchIcon/>
         </div>
 
@@ -14,6 +14,7 @@
                 <div v-for="item in suggestedSubjects"
                      class="suggested-subjects-item"
                      @click="selectInterestingSubject(item)">{{item.displayName}}</div>
+                <div class="suggested-subjects-no-items" v-if="!suggestedSubjects.length">No matches</div>
             </div>
         </transition>
     </div>
@@ -60,13 +61,10 @@
                 this.suggestedSubjectShoved = false;
             },
 
-            searchSubjects() {
-                // TODO: Do something on Enter or button click?
-            },
-
             selectInterestingSubject(item) {
                 this.$store.commit('CLEAN_SEARCH_VALUE');
                 this.$store.dispatch('SET_INTERESTING_SUBJECT', item);
+                this.$store.dispatch('SEARCH_SUBJECTS', '');
             }
         }
     }
@@ -91,6 +89,12 @@
             right: 0;
             left: 0;
             z-index: 1;
+
+            .suggested-subjects-no-items {
+                font-size: 14px;
+                color: #727272;
+                font-style: italic;
+            }
         }
     }
 
