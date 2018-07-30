@@ -2,7 +2,7 @@
     <div class="okr">
         <div class="okr-editor">
             <h3 class="title" v-if="canChangeOkr">Plan your objectives and key results</h3>
-            <h3 class="title" v-else>Browse teammate's objectives and key results</h3>
+            <h3 class="title" v-else>Browse {{selectedSubject.displayName}} objectives and key results</h3>
 
             <InputForm ref="newObjForm"
                        placeholder="Let’s create ambitious objective"
@@ -86,6 +86,12 @@
             error: {
                 get() {
                     return this.$store.state.okr.error;
+                }
+            },
+
+            selectedSubject: {
+                get() {
+                    return this.$store.state.user.selectedSubject;
                 }
             },
 

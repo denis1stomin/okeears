@@ -10,13 +10,10 @@
         </header>
 
         <div class="menu">
-            <InputForm placeholder="Find people"
-                       :action="searchSubjects">
-                <SearchIcon/>
-            </InputForm>
-            <div class="suggested-subjects-list">
-                <div v-for="item in suggestedSubjects">{{item.displayName}}</div>
-            </div>
+            <SearchForm/>
+
+            <div class="menu-user" @click="selectInterestingSubject(user)">{{user.name}}</div>
+
             <OrgTree/>
         </div>
 
@@ -31,38 +28,32 @@
 </template>
 
 <script>
-    import InputForm from './../components/InputForm'
+    import SearchForm from './../components/SearchForm'
     import OrgTree from './../components/OrgTree'
     import OKR from './../components/OKR'
-    import SearchIcon from './../components/Icons/SearchIcon'
     import LogoutIcon from './../components/Icons/LogoutIcon'
     
     import AuthSvc from './../services/authservice'
 
     export default {
-        components: {LogoutIcon, SearchIcon, InputForm, OrgTree, OKR},
+        components: {LogoutIcon, SearchForm, OrgTree, OKR},
 
         computed: {
             user: {
                 get() {
                     return this.$store.state.user.me;
                 }
-            },
-
-            suggestedSubjects: {
-                get() {
-                    return this.$store.state.user.suggestedSubjectsList;
-                }
             }
         },
 
         methods: {
             logOut() {
+                this.$store.dispatch('LOGOUT');
                 AuthSvc.logout();
             },
 
-            searchSubjects(query) {
-                this.$store.dispatch('SEARCH_SUBJECTS', query);
+            selectInterestingSubject(item) {
+                this.$store.dispatch('SET_INTERESTING_SUBJECT', item);
             }
         },
 
