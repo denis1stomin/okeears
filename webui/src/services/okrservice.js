@@ -26,7 +26,7 @@ export default class OkrService {
         this.pageIds = new Map();
 
         this.graphClient = MicrosoftGraph.Client.init({
-            debugLogging: true,
+            //debugLogging: true,
             authProvider: (done) => {
                 AuthSvc.withToken((token) => {
                     done(null, token);
@@ -164,7 +164,7 @@ export default class OkrService {
                             .then((body) => {
                                 let pageId = body.id;
                                 this.setSubjectPageId(subjectId, pageId);
-                                that.shareNotebook(errHandler);
+                                this.shareNotebook(errHandler);
 
                                 dataHandler(pageId);
                             })
