@@ -1,7 +1,7 @@
 {
-  "name": "okr-portal-webui",
-  "version": "0.1.0",
-  "description": "",
+  "name": "okeears-webui",
+  "version": "0.5.0",
+  "description": "Okeears is OKR (objectives and key results) web application.",
   "main": "src/index.html",
   "scripts": {
     "build": "parcel build src/index.html --public-url ./",
