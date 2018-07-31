@@ -25,6 +25,9 @@ export default {
         // list of subjects which could be interesting to current user
         suggestedSubjectsList: [],
 
+        // init search value
+        searchValue: '',
+
         // last error
         error: ''
     },
@@ -36,6 +39,14 @@ export default {
     },
 
     mutations: {
+        CHANGE_SEARCH_VALUE(state, value) {
+            state.searchValue = value;
+        },
+
+        CLEAN_SEARCH_VALUE(state) {
+            state.searchValue = '';
+        },
+
         CURRENT_USER_COMPLETE(state, value) {
             state.me = value;
         },
