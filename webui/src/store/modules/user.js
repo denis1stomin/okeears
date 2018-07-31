@@ -155,8 +155,11 @@ export default {
                                 // Optimization: convert to base64 here and not in the OrgTree component
                                 // to have ready-to-use values cached in the user object
                                 if(data) {
-                                    let base64 = btoa(String.fromCharCode.apply(null, data));
-                                    elem.photo = 'data:image/jpeg;base64,' + base64;
+                                    let reader = new FileReader();
+                                    reader.readAsDataURL(data);
+                                    reader.onloadend = function() {
+                                        elem.photo = reader.result;
+                                    }
                                 } else {
                                     elem.photo = null;
                                 }
