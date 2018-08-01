@@ -1,10 +1,10 @@
-import AuthSvc from './authservice'
+import AuthSvc from './authservice';
 
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
-const NOTEBOOK_NAME = 'Okeears'
-const SECTION_NAME = 'FY2018'
+const NOTEBOOK_NAME = 'Okeears';
+const SECTION_NAME = 'FY2018';
 const PAGE_TITLE = 'Objectives';
 
 const OBJECTIVES_LIST_ID = 'objectives';
@@ -49,7 +49,8 @@ export default class OkrService {
                 return {
                     id: each.getAttribute('data-id'),
                     // TODO: Probably this contains KRs text too - will see
-                    statement: each.innerText
+                    statement: each.innerText,
+                    keyresults: []
                 };
             });
             
