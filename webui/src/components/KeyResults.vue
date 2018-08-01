@@ -9,7 +9,12 @@
                 </span>
         </InputForm>
         <div class="key-result" v-for="keyresult in objective.keyresults">
-            <span>{{keyresult.statement}}</span>
+            <InputForm placeholder=""
+                       :action="editKeyresult"
+                       :value="keyresult.statement"
+                       :obj="objective"
+                       :kr="keyresult">
+            </InputForm>
             <span @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
         </div>
     </div>
@@ -33,6 +38,14 @@
                 this.$store.dispatch('CREATE_KEYRESULT', {
                     statement: krStatement
                 })
+            },
+
+            editKeyresult(objective, krStatement, keyresult) {
+                this.$store.commit('CHANGE_TARGET_OBJECTIVE', objective);
+                this.$store.dispatch('EDIT_KEYRESULT', {
+                    keyresult: keyresult,
+                    statement: krStatement
+                });
             },
 
             deleteKeyresult(objective, keyresult) {

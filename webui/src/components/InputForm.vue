@@ -8,6 +8,7 @@
                :id="name"
                :placeholder="placeholder"
                :obj="obj"
+               :kr="kr"
                @keyup.enter="initAction"/>
         <div class="action-button">
             <slot/>
@@ -19,7 +20,7 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'value', 'obj'],
+        props: ['name', 'placeholder', 'action', 'value', 'obj', 'kr'],
 
         computed: {
             text: {
@@ -36,7 +37,7 @@
         methods: {
             initAction() {
                 if (this.obj)
-                    return this.action(this.obj, this.value);
+                    return this.action(this.obj, this.value, this.kr);
                 else
                     return this.action(this.value);
             }
