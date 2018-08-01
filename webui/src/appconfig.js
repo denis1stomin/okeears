@@ -11,7 +11,9 @@ window.AppConfig = {
     },
 
     auth: {
-        clientId: '6f9caa6b-b5cf-467d-a326-f25cb0aca8f2'
+        clientId: '6f9caa6b-b5cf-467d-a326-f25cb0aca8f2',
+        //extraQueryParameter: 'prompt=consent',
+        //clientId: '8cc8306e-25d6-4540-b3a8-c858f923de4b',
         //loginResource: 'application id endpoint',
         //cacheLocation: 'localStorage',
         //redirectUri: 'https://okr.idioma.club/signin',
