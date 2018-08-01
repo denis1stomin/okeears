@@ -124,6 +124,13 @@ or startswith(mail,'${textQuery}')`)
             .version('beta')
             .get()
             .then(dataHandler)
-            .catch(errHandler);
+            .catch(error => {
+                // Graph returns 404 if user does not have photo
+                if(error.statusCode == 404) {
+                    dataHandler(null);
+                } else {
+                    errHandler(error);
+                }
+            });
     }    
 }

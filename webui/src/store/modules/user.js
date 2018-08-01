@@ -152,10 +152,17 @@ export default {
                             elem.photo = null;
 
                             SubjectSvc.getUserPhoto(elem.id, (done) => { done(null, token);}, data => {
-                                // Optimization: convert to base64 here and not in the OrgTree component
-                                // to have ready-to-use values cached in the user object
-                                var base64 = Buffer.from(data).toString('base64');
-                                elem.photo = 'data:image/jpeg;base64,' + base64;
+                                if(data) {
+                                    let reader = new FileReader();
+                                    reader.onloadend = () => {
+                                        elem.photo = reader.result;
+                                    };
+                                    // data is Blob on Mac/Chrome and Uint8Array on Windows/Chrome
+                                    data = data instanceof Blob ? data : new Blob([data]);
+                                    reader.readAsDataURL(data);
+                                } else {
+                                    elem.photo = null;
+                                }
                             }, errorHandler);
     
                         });
