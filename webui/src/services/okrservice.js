@@ -26,7 +26,7 @@ export default class OkrService {
         this.pageIds = new Map();
 
         this.graphClient = MicrosoftGraph.Client.init({
-            // debugLogging: true,
+            //debugLogging: true,
             authProvider: (done) => {
                 AuthSvc.withToken((token) => {
                     done(null, token);
@@ -148,22 +148,24 @@ export default class OkrService {
 
     createPage(subjectId, dataHandler, errHandler) {
         this.graphClient
-            .api(`${this.getSubjectPrefix(subjectId)}/onenote/notebooks`)
+            .api('me/onenote/notebooks')
             .post({ displayName: NOTEBOOK_NAME })
             .then((body) => {
                 let notebookId = body.id;
                 this.graphClient
-                    .api(`${this.getSubjectPrefix(subjectId)}/onenote/notebooks/${notebookId}/sections`)
+                    .api(`me/onenote/notebooks/${notebookId}/sections`)
                     .post({ displayName: SECTION_NAME })
                     .then((body) => {
                         let sectionId = body.id;
                         this.graphClient
-                            .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
+                            .api(`me/onenote/sections/${sectionId}/pages`)
                             .header("Content-Type", "application/xhtml+xml")
                             .post(PAGE_TEMPLATE)
                             .then((body) => {
                                 let pageId = body.id;
                                 this.setSubjectPageId(subjectId, pageId);
+                                this.shareNotebook(errHandler);
+
                                 dataHandler(pageId);
                             })
                             .catch(errHandler);
@@ -172,6 +174,29 @@ export default class OkrService {
             })
             // TODO: Handle error code 20117 "An item with this name already exists in this location."
             .catch(errHandler);
+    }
+
+    shareNotebook(errHandler) {
+        let body = {
+            "recipients": [
+                {
+                    "alias": "Everyone except external users"
+                }
+            ],
+            "requireSignIn": true,
+            "sendInvitation": false,
+            "roles": [ 
+                "read"
+            ]
+        };
+        let url = `me/drive/root:/Notebooks/${NOTEBOOK_NAME}:/invite`;
+        this.graphClient
+            .api(url)
+            .post(body)
+            .then(data => {
+                // console.log(data);
+            })
+            .catch(errHandler); 
     }
 
     getPageContent(subjectId, createPage, dataHandler, errHandler) {
@@ -237,7 +262,6 @@ export default class OkrService {
     }
 
     getSubjectPrefix(subjectId) {
-        // return subjectId ? `/users/${subjectId}` : '/me';
         return `/users/${subjectId}`;
     }
 
