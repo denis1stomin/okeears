@@ -1,7 +1,8 @@
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 const ORGTREE_USER_SELECT = 'id,displayName,jobTitle,officeLocation,givenName,mail,userPrincipalName';
-const PEOPLE_SEARCH_SELECT = 'id,displayName,mail';
+const PEOPLE_SEARCH_SELECT = 'id,displayName,mail,userPrincipalName';
+const RELEVANT_PEOPLE_SELECT = 'id,displayName,emailAddresses,userPrincipalName';
 
 export default class GraphSubjectService {
     constructor() {
@@ -82,11 +83,17 @@ export default class GraphSubjectService {
         graphClient
             .api('/me/people')
             .version('beta')
-            .select(PEOPLE_SEARCH_SELECT)
+            .select(RELEVANT_PEOPLE_SELECT)
             .top(7)
             .get()
             .then((body) => {
-                dataHandler(body.value);
+                const people = body.value;
+                people.forEach(person => {
+                    if (person.emailAddresses.length)
+                        person.mail = person.emailAddresses[0].address;
+                });
+
+                dataHandler(people);
             })
             .catch(errHandler);
     }
