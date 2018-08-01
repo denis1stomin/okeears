@@ -14,8 +14,8 @@
                        :value="keyresult.statement"
                        :obj="objective"
                        :kr="keyresult">
+                <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
-            <span @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
         </div>
     </div>
 </template>
