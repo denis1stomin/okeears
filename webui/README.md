@@ -1,4 +1,4 @@
-# OKRPortal Web UI
+# Okeears Web UI
 
 ## Build UI
 
@@ -13,5 +13,5 @@
 
 ## Host locally using nginx container
 
-* sudo docker run --name okrportal-nginx -v <path to repo>/webui/dist:/usr/share/nginx/html:ro -p 8080:80 -d nginx
+* sudo docker run --name okeears-nginx -v <path to repo>/webui/dist:/usr/share/nginx/html:ro -p 8080:80 -d nginx
 * curl "http://localhost:8080"

@@ -10,7 +10,7 @@
         </div>
 
         <transition name="fade">
-            <div class="suggested-subjects-list" v-show="suggestedSubjectShowed">
+            <div class="suggested-subjects-list" v-show="suggestedSubjectsAreVisible">
                 <div v-for="item in suggestedSubjects"
                      class="suggested-subjects-item"
                      @click="selectInterestingSubject(item)">{{item.displayName}}</div>
@@ -30,17 +30,18 @@
 
         data() {
             return {
-                suggestedSubjectShowed: false,
+                suggestedSubjectsAreVisible: false,
             }
         },
 
         computed: {
             text: {
                 get() {
-                    return this.$store.state.user.searchValue;
+                    return this.$store.state.user.searchQuery;
                 },
 
                 set(changed) {
+                    // TODO : we do not change state.user.searchQuery here?
                     this.$store.dispatch('SEARCH_SUBJECTS', changed);
                 }
             },
@@ -54,16 +55,16 @@
 
         methods: {
             showSuggestedSubject() {
-                this.suggestedSubjectShowed = true;
+                this.suggestedSubjectsAreVisible = true;
             },
 
             hideSuggestedSubject() {
-                this.suggestedSubjectShowed = false;
+                this.suggestedSubjectsAreVisible = false;
             },
 
             selectInterestingSubject(item) {
-                this.$store.commit('CLEAN_SEARCH_VALUE');
                 this.$store.dispatch('SET_INTERESTING_SUBJECT', item);
+                // TODO : do not need this extra request when selecting a subject
                 this.$store.dispatch('SEARCH_SUBJECTS', '');
             }
         }

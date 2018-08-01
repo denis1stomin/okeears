@@ -40,7 +40,7 @@
                 </div>
 
                 <div class="objective-icons">
-                    <span @click="deleteObjective(objective.id)"><TrashIcon/></span>
+                    <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
                     <span @click="copyObjective(objective)"><CopyIcon/></span>
                     <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
                 </div>

@@ -23,8 +23,8 @@ export default {
         // list of subjects which could be interesting to current user
         suggestedSubjectsList: [],
 
-        // init search value
-        searchValue: '',
+        // query is used to search interesting people
+        searchQuery: '',
 
         // last error
         error: ''
@@ -37,12 +37,8 @@ export default {
     },
 
     mutations: {
-        CHANGE_SEARCH_VALUE(state, value) {
-            state.searchValue = value;
-        },
-
-        CLEAN_SEARCH_VALUE(state) {
-            state.searchValue = '';
+        CHANGE_SEARCH_QUERY(state, value) {
+            state.searchQuery = value;
         },
 
         CURRENT_USER_COMPLETE(state, value) {
@@ -104,12 +100,11 @@ export default {
         },
 
         // Searches subjects using text search
-        // Updates relevant people if search query is empty
+        // Returns relevant people list if the search query is empty
         SEARCH_SUBJECTS({state, commit, dispatch}, searchQuery) {
-            console.log('val', state.searchValue.length);
-            commit('CHANGE_SEARCH_VALUE', searchQuery);
+            commit('CHANGE_SEARCH_QUERY', searchQuery);
 
-            if(state.searchValue.length) {
+            if(state.searchQuery.length) {
                 AuthSvc.withToken((token) => {
                     SubjectSvc.findPeople(
                         searchQuery,
