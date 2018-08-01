@@ -40,11 +40,6 @@ export default {
     },
 
     actions: {
-
-        // COMMENT : здесь где-то либо через watch либо через EventBus надо
-        //           добавить подписку на изменение user.state.selectedSubject.
-        //           По изменению будем вызывать action GET_OBJECTIVES()
-
         GET_OBJECTIVES({commit}) {
             okrSvc.getObjectives(
                 user.state.selectedSubject.id,
