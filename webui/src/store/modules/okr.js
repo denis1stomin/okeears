@@ -1,7 +1,7 @@
-import OkrService from './../../services/devokrservice';
+import OkrService from './../../services/okrservice';
 import user from './user'
 
-let okrSvc = new OkrService(window.AppConfig, null);
+let okrSvc = new OkrService();
 
 export default {
     state: {
@@ -16,6 +16,7 @@ export default {
         },
 
         OBJECTIVES_COMPLETE(state, payload) {
+            state.error = null;
             state.objectives = payload;
         },
 
@@ -24,6 +25,7 @@ export default {
         },
 
         CREATE_OBJECTIVE(state, payload) {
+            state.error = null;
             state.objectives = payload;
         },
 
@@ -44,6 +46,7 @@ export default {
         },
 
         DELETE_OBJECTIVE(state, payload) {
+            state.error = null;
             let objectives = state.objectives;
 
             objectives.splice(objectives.indexOf(payload), 1);
@@ -87,6 +90,7 @@ export default {
         GET_OBJECTIVES({commit}) {
             okrSvc.getObjectives(
                 user.state.selectedSubject.id,
+                user.state.me.id,
                 data => commit('OBJECTIVES_COMPLETE', data),
                 err => commit('OBJECTIVES_FAILED', err)
             );
@@ -110,6 +114,35 @@ export default {
                     if (idx > -1) {
                         changedList[idx].id = data.id;
                         commit('OBJECTIVES_COMPLETE', changedList);
+                    }
+                },
+                err => commit('CREATE_OBJECTIVE_FAILED', err)
+            )
+        },
+
+        COPY_OBJECTIVE_TO_CURRENT_USER({state, commit}, objective) {
+            // Need to update model only if copy own objective
+            if (user.state.me.id === user.state.selectedSubject.id) {
+                let changedList = state.objectives;
+                changedList.push(objective);
+                commit('OBJECTIVES_COMPLETE', changedList);
+            }
+
+            // send request to create objective copy
+            okrSvc.createObjective(
+                user.state.me.id,
+                objective,
+                data => {
+                    // Need to update model only if copy own objective
+                    if (user.state.me.id === user.state.selectedSubject.id) {
+                        // when objective is created new id is returned.
+                        // we need to update the id field
+                        let changedList = state.objectives;
+                        let idx = changedList.indexOf(objective);
+                        if (idx > -1) {
+                            changedList[idx].id = data.id;
+                            commit('OBJECTIVES_COMPLETE', changedList);
+                        }
                     }
                 },
                 err => commit('CREATE_OBJECTIVE_FAILED', err)

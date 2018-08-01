@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "node"
+before_install:
+  - cd webui
+install:
+  - npm ci
+script:
+  - npm run build
+cache:
+  directories:
+    - "node_modules"
+    - "$HOME/.npm"
+branches:
+  only:
+  - master

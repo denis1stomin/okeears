@@ -1,6 +1,0 @@
-{
-    "/me": "/subjects/592fcca2-f7a8-4633-ba34-8dabcf7b5953",
-    "/me/orgtree": "/subjects/592fcca2-f7a8-4633-ba34-8dabcf7b5953/orgtrees",
-    "/me/objectives": "/subjects/592fcca2-f7a8-4633-ba34-8dabcf7b5953/objectives",
-    "/subjects/:subjectId/orgtree": "/subjects/:subjectId/orgtrees"
-}

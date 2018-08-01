@@ -1,6 +1,9 @@
 import AuthSvc from './../../services/authservice'
 import GraphSubjectService from './../../services/graphsubjectservice'
 
+const DELVE_LINK_TPL = 'https://nam.delve.office.com/?u=';
+const AAD_LINK_TPL = 'https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/';
+
 const SubjectSvc = new GraphSubjectService();
 
 export default {
@@ -20,6 +23,9 @@ export default {
         // list of subjects which could be interesting to current user
         suggestedSubjectsList: [],
 
+        // query is used to search interesting people
+        searchQuery: '',
+
         // last error
         error: ''
     },
@@ -31,6 +37,10 @@ export default {
     },
 
     mutations: {
+        CHANGE_SEARCH_QUERY(state, value) {
+            state.searchQuery = value;
+        },
+
         CURRENT_USER_COMPLETE(state, value) {
             state.me = value;
         },
@@ -67,7 +77,9 @@ export default {
             const rawUser = AuthSvc.getCurrentUser();
             const user = {
                 id: rawUser.profile.oid,
-                name: rawUser.userName
+                name: rawUser.userName,
+                givenName: rawUser.profile.given_name,
+                userPrincipalName: rawUser.profile.upn
             };
 
             context.commit('CURRENT_USER_COMPLETE', user);
@@ -88,17 +100,24 @@ export default {
         },
 
         // Searches subjects using text search
-        SEARCH_SUBJECTS(context, searchQuery) {
-            AuthSvc.withToken((token) => {
-                SubjectSvc.findPeople(
-                    searchQuery,
-                    (done) => {
-                        done(null, token);
-                    },
-                    data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
-                    err => console.log(err)
-                );
-            }, SubjectSvc.accessTokenResource());
+        // Returns relevant people list if the search query is empty
+        SEARCH_SUBJECTS({state, commit, dispatch}, searchQuery) {
+            commit('CHANGE_SEARCH_QUERY', searchQuery);
+
+            if(state.searchQuery.length) {
+                AuthSvc.withToken((token) => {
+                    SubjectSvc.findPeople(
+                        searchQuery,
+                        (done) => {
+                            done(null, token);
+                        },
+                        data => commit('SUGGESTED_SUBJECTS_LIST', data),
+                        err => console.log(err)
+                    );
+                }, SubjectSvc.accessTokenResource());
+            } else {
+                dispatch('GET_RELEVANT_SUBJECTS');
+            }
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {
@@ -114,15 +133,37 @@ export default {
 
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
+            let errorHandler = error => console.log(error);
             AuthSvc.withToken((token) => {
                 SubjectSvc.getSubjectOrgTree(
                     context.state.interestingSubject.id,
                     (done) => {
                         done(null, token);
                     },
-                    data => context.commit('ORGTREE_COMPLETE', data),
-                    err => console.log(err)
-                );
+                    data => {
+                        data.forEach(elem => {
+                            elem.delvelink = DELVE_LINK_TPL + elem.id;
+                            elem.aadlink = AAD_LINK_TPL + elem.id;
+                            elem.photo = null;
+
+                            SubjectSvc.getUserPhoto(elem.id, (done) => { done(null, token);}, data => {
+                                if(data) {
+                                    let reader = new FileReader();
+                                    reader.onloadend = () => {
+                                        elem.photo = reader.result;
+                                    };
+                                    // data is Blob on Mac/Chrome and Uint8Array on Windows/Chrome
+                                    data = data instanceof Blob ? data : new Blob([data]);
+                                    reader.readAsDataURL(data);
+                                } else {
+                                    elem.photo = null;
+                                }
+                            }, errorHandler);
+    
+                        });
+                        
+                        context.commit('ORGTREE_COMPLETE', data)
+                    }, errorHandler);
             }, SubjectSvc.accessTokenResource());
         }
     }
