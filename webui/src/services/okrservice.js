@@ -141,11 +141,18 @@ export default class OkrService {
                 keyResultsContent = `<ul>${itemsContent}</ul>`;
             }
 
+            // New content we want to save
             const content = `<li data-id="${objectiveId}"><p>${statement}</p>${keyResultsContent}</li>`;
-            const existingKeyResultsNode = objectiveNode.querySelector('ul');
             
+            // This is absolutely crazy OneNore behavior :(
+            // It seems it does not support replacing the whole node (ul, li etc.) with the new content.
+            // Instead it copies old content outside the target node, and only then replaces node's content.
+            // So we need to remove (replace with empty nodes) all the existing content recursively, and then add new content.
             let patchBody = [];
+
+            const existingKeyResultsNode = objectiveNode.querySelector('ul');
             if(existingKeyResultsNode) {
+                // Remove existing key results nodes, if any
                 const existingKeyResultNodes = existingKeyResultsNode.querySelectorAll('li');
                 Array.from(existingKeyResultNodes).forEach(each => {
                     patchBody.push(
@@ -156,6 +163,7 @@ export default class OkrService {
                         });
                 });
 
+                // Remove existing key result list node
                 patchBody.push(
                 {
                     'target': `${existingKeyResultsNode.getAttribute('id')}`,
