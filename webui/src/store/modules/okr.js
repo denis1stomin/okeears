@@ -28,15 +28,70 @@ export default {
             state.error = payload;
         },
 
-        DELETE_OBJECTIVE(state, objective) {
+        EDIT_OBJECTIVE(state, payload) {
+            let objectives = state.objectives;
+            let obj = payload.objective;
+
+            objectives[objectives.indexOf(obj)].statement = payload.statement;
+            state.objectives = objectives;
+        },
+
+        EDIT_OBJECTIVE_FAILED(state, payload) {
+            state.error = payload;
+        },
+
+        DELETE_OBJECTIVE(state, payload) {
             state.error = null;
             let objectives = state.objectives;
-            objectives.splice(objectives.indexOf(objective), 1);
+
+            objectives.splice(objectives.indexOf(payload), 1);
         },
 
         DELETE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
-        }
+        },
+
+        CREATE_KEYRESULT(state, payload) {
+            let objectives = state.objectives;
+            let objective = payload.objective;
+            if(!objective.keyresults) {
+                objective.keyresults = [];
+            }
+
+            objective.keyresults.push(payload.keyresult);
+            objectives[objectives.indexOf(objective)].keyresults = objective.keyresults;
+            state.objectives = objectives;
+        },
+
+        CREATE_KEYRESULT_FAILED(state, payload) {
+            state.error = payload;
+        },
+
+        EDIT_KEYRESULT(state, payload) {
+            let objectives = state.objectives;
+            let targetObjective = payload.objective;
+            let objective = objectives.indexOf(targetObjective);
+            let keyresult = targetObjective.keyresults.indexOf(payload.keyresult);
+
+            objectives[objective].keyresults[keyresult].statement = payload.krStatement;
+            state.objectives = objectives;
+        },
+
+        EDIT_KEYRESULT_FAILED(state, payload) {
+            state.error = payload;
+        },
+
+        DELETE_KEYRESULT(state, payload) {
+            let objectives = state.objectives;
+            let objective = payload.objective;
+            let keyresults = objectives[objectives.indexOf(objective)].keyresults;
+
+            keyresults.splice(keyresults.indexOf(payload.keyresult), 1);
+        },
+
+        DELETE_KEYRESULT_FAILED(state, payload) {
+            state.error = payload;
+        },
     },
 
     actions: {
@@ -102,19 +157,16 @@ export default {
             )
         },
 
-        EDIT_OBJECTIVE({state, commit}, objective) {
+        EDIT_OBJECTIVE({state, commit}, data) {
             // update in local objectives list
-            let idx = state.objectives.findIndex((x) => x.id === objective.id);
-            if (idx > -1) {
-                state.objectives[idx].statement = objective.statement;
-            }
+            commit('EDIT_OBJECTIVE', data);
 
             // send request to change the objective
             okrSvc.changeObjective(
                 user.state.selectedSubject.id,
-                objective,
+                data.objective,
                 data => { /* successfully updated */ },
-                err => commit('DELETE_OBJECTIVE_FAILED', err)
+                err => commit('EDIT_OBJECTIVE_FAILED', err)
             )
         },
 
@@ -132,6 +184,48 @@ export default {
                 data => { /* successfully deleted */ },
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
-        }
+        },
+
+        CREATE_KEYRESULT({state, commit}, data) {
+            // update in local objectives list
+            // TODO: update after a successful upload
+            commit('CREATE_KEYRESULT', data);
+
+            // send request to change the objective
+            okrSvc.changeObjective(
+                user.state.selectedSubject.id,
+                data.objective,
+                data => { /* successfully created */ },
+                err => {commit('CREATE_KEYRESULT_FAILED', err)}
+            );
+        },
+
+        EDIT_KEYRESULT({state, commit}, data) {
+            // update in local objectives list
+            // TODO: update after a successful upload
+            commit('EDIT_KEYRESULT', data);
+
+            // send request to change the objective
+            okrSvc.changeObjective(
+                user.state.selectedSubject.id,
+                data.objective,
+                data => { /* successfully created */ },
+                err => {commit('EDIT_KEYRESULT_FAILED', err)}
+            );
+        },
+
+        DELETE_KEYRESULT({state, commit}, data) {
+            // update in local objectives list
+            // TODO: update after a successful upload
+            commit('DELETE_KEYRESULT', data);
+
+            // send request to change the objective
+            okrSvc.changeObjective(
+                user.state.selectedSubject.id,
+                data.objective,
+                data => { /* successfully created */ },
+                err => {commit('DELETE_KEYRESULT_FAILED', err)}
+            );
+        },
     }
 }
