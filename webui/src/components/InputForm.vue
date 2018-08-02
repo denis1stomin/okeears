@@ -3,12 +3,14 @@
          :action="action"
          :value="value">
         <label :for="name"></label>
-        <input type="text"
-               v-model="text"
-               :id="name"
-               :placeholder="placeholder"
-               :objid="objid"
-               @keyup.enter="initAction"/>
+        <textarea type="text"
+                  v-autosize="text"
+                  v-model="text"
+                  :id="name"
+                  :placeholder="placeholder"
+                  :obj="obj"
+                  :kr="kr"
+                  @keyup.enter="initAction"/>
         <div class="action-button">
             <slot/>
         </div>
@@ -19,7 +21,7 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'value', 'objid'],
+        props: ['name', 'placeholder', 'action', 'value', 'obj', 'kr'],
 
         computed: {
             text: {
@@ -35,8 +37,8 @@
 
         methods: {
             initAction() {
-                if (this.objid)
-                    return this.action(this.objid, this.value);
+                if (this.obj)
+                    return this.action(this.obj, this.value, this.kr);
                 else
                     return this.action(this.value);
             }
