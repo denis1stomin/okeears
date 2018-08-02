@@ -18,22 +18,14 @@
             </div>
 
             <div class="objectives" v-if="objectives.length" v-for="objective in objectives">
-                <InputForm placeholder=""
+                <InputForm class="objective-title"
+                           placeholder=""
                            :action="editObjective"
                            :value="objective.statement"
-                           :objid="objective.id">
+                           :obj="objective">
                 </InputForm>
 
-                <div class="key-results">
-                    <div class="key-result" v-if="objective.keyresults.length"
-                         v-for="keyresult in objective.keyresults">
-                        <span>{{keyresult.statement}}</span>
-                    </div>
-
-                    <div class="empty-key-results" v-if="!objective.keyresults">
-                        Key result I want to achieve
-                    </div>
-                </div>
+                <KeyResults :objective="objective"/>
 
                 <div class="objective-like-icon" @click="objective.like = !objective.like">
                     <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
@@ -70,11 +62,12 @@
     import PlusIcon from './Icons/PlusIcon'
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
+    import KeyResults from './KeyResults'
 
     export default {
-        name: 'OKR',
+        name: 'Objectives',
 
-        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog},
+        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults},
 
         computed: {
             objectives: {
@@ -111,9 +104,9 @@
                 this.logChange(`Me created '${objStatement}'`);
             },
 
-            editObjective(objId, objStatement) {
+            editObjective(obj, objStatement) {
                 this.$store.dispatch('EDIT_OBJECTIVE', {
-                    id: objId,
+                    objective: obj,
                     statement: objStatement
                 });
 
