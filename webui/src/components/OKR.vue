@@ -105,8 +105,8 @@
             },
 
             editObjective(obj, objStatement) {
-                this.$store.commit('CHANGE_TARGET_OBJECTIVE', obj);
                 this.$store.dispatch('EDIT_OBJECTIVE', {
+                    objective: obj,
                     statement: objStatement
                 });
 
