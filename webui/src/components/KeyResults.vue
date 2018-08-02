@@ -34,23 +34,27 @@
 
         methods: {
             addKeyresult(objective, krStatement) {
-                this.$store.commit('CHANGE_TARGET_OBJECTIVE', objective);
                 this.$store.dispatch('CREATE_KEYRESULT', {
-                    statement: krStatement
+                    objective: objective,
+                    keyresult: {
+                        statement: krStatement
+                    }
                 })
             },
 
             editKeyresult(objective, krStatement, keyresult) {
-                this.$store.commit('CHANGE_TARGET_OBJECTIVE', objective);
                 this.$store.dispatch('EDIT_KEYRESULT', {
+                    objective: objective,
                     keyresult: keyresult,
-                    statement: krStatement
+                    krStatement: krStatement
                 });
             },
 
             deleteKeyresult(objective, keyresult) {
-                this.$store.commit('CHANGE_TARGET_OBJECTIVE', objective);
-                this.$store.dispatch('DELETE_KEYRESULT', keyresult)
+                this.$store.dispatch('DELETE_KEYRESULT', {
+                    objective: objective,
+                    keyresult: keyresult
+                })
             }
         }
     }
