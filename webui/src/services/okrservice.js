@@ -144,7 +144,7 @@ export default class OkrService {
             // New content we want to save
             const content = `<li data-id="${objectiveId}"><p>${statement}</p>${keyResultsContent}</li>`;
             
-            // This is absolutely crazy OneNore behavior :(
+            // This is absolutely crazy OneNote behavior :(
             // It seems it does not support replacing the whole node (ul, li etc.) with the new content.
             // Instead it copies old content outside the target node, and only then replaces node's content.
             // So we need to remove (replace with empty nodes) all the existing content recursively, and then add new content.
