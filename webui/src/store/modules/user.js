@@ -1,12 +1,10 @@
 import AuthSvc from './../../services/authservice'
 import GraphSubjectService from './../../services/graphsubjectservice'
-import AadSubjectService from './../../services/aadsubjectservice'
 
 const DELVE_LINK_TPL = 'https://nam.delve.office.com/?u=';
 const AAD_LINK_TPL = 'https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/';
 
-const PeopleSvc = new GraphSubjectService();
-const SubjectSvc = new AadSubjectService(AuthSvc.getCurrentUser().profile.tid);
+const SubjectSvc = new GraphSubjectService();
 
 export default {
     state: {
@@ -94,7 +92,7 @@ export default {
 
         // Gets list of relevant subjects to current user
         GET_RELEVANT_SUBJECTS(context) {
-            PeopleSvc.getCurrentUserRelevantPeople(
+            SubjectSvc.getCurrentUserRelevantPeople(
                 data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
                 err => console.log(err)
             );
@@ -102,7 +100,7 @@ export default {
 
         // Searches subjects using text search
         SEARCH_SUBJECTS(context, searchQuery) {
-            PeopleSvc.findPeople(
+            SubjectSvc.findPeople(
                 searchQuery,
                 data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
                 err => console.log(err)
@@ -131,12 +129,12 @@ export default {
                         elem.aadlink = AAD_LINK_TPL + elem.id;
                         elem.photo = null;
 
-                        //PeopleSvc.getUserPhoto(elem.id, data => {
-                        //    // Optimization: convert to base64 here and not in the OrgTree component
-                        //    // to have ready-to-use values cached in the user object
-                        //    var base64 = Buffer.from(data).toString('base64');
-                        //    elem.photo = 'data:image/jpeg;base64,' + base64;
-                        //}, errorHandler);
+                        SubjectSvc.getUserPhoto(elem.id, data => {
+                            // Optimization: convert to base64 here and not in the OrgTree component
+                            // to have ready-to-use values cached in the user object
+                            var base64 = Buffer.from(data).toString('base64');
+                            elem.photo = 'data:image/jpeg;base64,' + base64;
+                        }, errorHandler);
 
                     });
                     
