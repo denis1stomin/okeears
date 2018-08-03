@@ -23,8 +23,8 @@ export default {
         // list of subjects which could be interesting to current user
         suggestedSubjectsList: [],
 
-        // init search value
-        searchValue: '',
+        // query is used to search interesting people
+        searchQuery: '',
 
         // last error
         error: ''
@@ -37,12 +37,8 @@ export default {
     },
 
     mutations: {
-        CHANGE_SEARCH_VALUE(state, value) {
-            state.searchValue = value;
-        },
-
-        CLEAN_SEARCH_VALUE(state) {
-            state.searchValue = '';
+        CHANGE_SEARCH_QUERY(state, value) {
+            state.searchQuery = value;
         },
 
         CURRENT_USER_COMPLETE(state, value) {
@@ -99,12 +95,19 @@ export default {
         },
 
         // Searches subjects using text search
-        SEARCH_SUBJECTS(context, searchQuery) {
-            SubjectSvc.findPeople(
-                searchQuery,
-                data => context.commit('SUGGESTED_SUBJECTS_LIST', data),
-                err => console.log(err)
-            );
+        // Returns relevant people list if the search query is empty
+        SEARCH_SUBJECTS({state, commit, dispatch}, searchQuery) {
+            commit('CHANGE_SEARCH_QUERY', searchQuery);
+
+            if (state.searchQuery.length) {
+                SubjectSvc.findPeople(
+                    searchQuery,
+                    data => commit('SUGGESTED_SUBJECTS_LIST', data),
+                    err => console.log(err)
+                );
+            } else {
+                dispatch('GET_RELEVANT_SUBJECTS');
+            }
         },
 
         SET_INTERESTING_SUBJECT(context, subject) {
@@ -130,14 +133,21 @@ export default {
                         elem.photo = null;
 
                         SubjectSvc.getUserPhoto(elem.id, data => {
-                            // Optimization: convert to base64 here and not in the OrgTree component
-                            // to have ready-to-use values cached in the user object
-                            var base64 = Buffer.from(data).toString('base64');
-                            elem.photo = 'data:image/jpeg;base64,' + base64;
+                            if (data) {
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                    elem.photo = reader.result;
+                                };
+                                // data is Blob on Mac/Chrome and Uint8Array on Windows/Chrome
+                                data = data instanceof Blob ? data : new Blob([data]);
+                                reader.readAsDataURL(data);
+                            }
+                            else {
+                                elem.photo = null;
+                            }
                         }, errorHandler);
-
                     });
-                    
+
                     context.commit('ORGTREE_COMPLETE', data);
                 }, errorHandler);
         }

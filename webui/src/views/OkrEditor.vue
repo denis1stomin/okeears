@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <header class="header">
-            <h2 class="title">OKR Portal</h2>
+            <h2 class="title">Okeears</h2>
 
             <div class="header-nav-item">
                 <span class="user-name">{{user.name}}</span>

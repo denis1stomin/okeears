@@ -35,11 +35,11 @@ export default class DevOkrService {
             .catch(err => errHandler(err));
     }
 
-    deleteObjective(subjectId, objectiveId, successHandler, errHandler) {
+    deleteObjective(subjectId, objectiveId, dataHandler, errHandler) {
         this.httpClient
             //.delete(`/subjects/${subjectId}/objectives/${objectiveId}`)
             .delete(`/objectives/${objectiveId}`)
-            .then(resp => successHandler(resp))
+            .then(resp => dataHandler(resp))
             .catch(err => errHandler(err));
     }
 
