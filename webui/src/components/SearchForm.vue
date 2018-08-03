@@ -74,6 +74,7 @@
 <style scoped lang="less">
     .input-search {
         position: relative;
+        margin: 30px;
 
         .action-button {
             &:hover {
