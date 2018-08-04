@@ -5,48 +5,23 @@
 
   .org-tree-item {
     margin-bottom: 10px;
-    background: #fff;
-    border: 1px solid #ffe347;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
     cursor: pointer;
     transition: transform 0.3s ease-out;
     &:hover,
     &.org-tree-item-selected {
-      transform: scale(1.05);
+      background: white;
     }
 
-    .org-tree-item-header {
-      padding: 5px 10px;
-      background: #ffe347;
+    .org-tree-item-job {
+      margin-bottom: 5px;
     }
-
-    .org-tree-item-body {
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      font-size: 14px;
-
-      .org-tree-item-title {
-        margin-bottom: 5px;
-      }
-
-      .org-tree-item-photo {
-        width: 30px;
-        height: 30px;
-      }
-
-      .org-tree-item-links {
-        color: #757575;
-
-        .org-tree-item-link {
-          color: #6457A6;
-          text-decoration: none;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
+    .org-tree-item-photo {
+      width: 30px;
+      height: 30px;
     }
   }
 }

@@ -4,7 +4,7 @@
             <h2 class="title">Okeears</h2>
 
             <div class="header-nav-item">
-                <span class="user-name">{{user.name}}</span>
+                <span class="user-name">{{authenticatedUser.displayName}}</span>
                 <span class="log-out" @click="logOut"><LogoutIcon/></span>
             </div>
         </header>
@@ -12,7 +12,7 @@
         <div class="menu">
             <SearchForm/>
 
-            <div class="menu-user" @click="selectInterestingSubject(user)">{{user.name}}</div>
+            <div class="menu-user" @click="selectInterestingSubject(user)">{{user.displayName}}</div>
 
             <OrgTree/>
         </div>
@@ -39,6 +39,12 @@
         components: {LogoutIcon, SearchForm, OrgTree, OKR},
 
         computed: {
+            authenticatedUser: {
+                get() {
+                    return this.$store.getters.GET_AUTHENTICATED_USER;
+                }
+            },
+
             user: {
                 get() {
                     return this.$store.state.user.me;
