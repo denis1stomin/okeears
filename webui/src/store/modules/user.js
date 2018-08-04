@@ -85,18 +85,13 @@ export default {
     actions: {
         // Gets current user information
         GET_CURRENT_USER(context) {
-            AuthSvc.withToken((token) => {
-                SubjectSvc.getCurrentUser(
-                    (done) => {
-                        done(null, token);
-                    },
-                    user => {
-                        context.commit('CURRENT_USER_COMPLETE', user);
-                        context.dispatch('SET_INTERESTING_SUBJECT', user);
-                    },
-                    err => console.log(err)
-                );
-            }, SubjectSvc.accessTokenResource());
+            SubjectSvc.getCurrentUser(
+                user => {
+                    context.commit('CURRENT_USER_COMPLETE', user);
+                    context.dispatch('SET_INTERESTING_SUBJECT', user);
+                },
+                err => console.log(err)
+            );
         },
 
         // Gets list of relevant subjects to current user
