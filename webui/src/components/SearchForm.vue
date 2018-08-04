@@ -72,15 +72,17 @@
 </script>
 
 <style scoped lang="less">
+    @import "../styles/variables";
+
     .input-search {
         position: relative;
         margin: 30px;
 
         .action-button {
             &:hover {
-                color: #ccc;
-                fill: #ccc;
-                stroke: #ccc;
+                color: @grey;
+                fill: @grey;
+                stroke: @grey;
                 cursor: default;
             }
         }
@@ -94,7 +96,7 @@
 
             .suggested-subjects-no-items {
                 font-size: 14px;
-                color: #727272;
+                color: @grey;
                 font-style: italic;
             }
         }
