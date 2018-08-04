@@ -1,8 +1,7 @@
 <template>
     <div class="okr">
         <div class="okr-editor">
-            <h3 class="title" v-if="canChangeOkr">Plan your objectives and key results</h3>
-            <h3 class="title" v-else>Browse {{selectedSubject.displayName}} objectives and key results</h3>
+            <UserCard/>
 
             <InputForm ref="newObjForm"
                        placeholder="Let’s create ambitious objective"
@@ -63,11 +62,12 @@
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
     import KeyResults from './KeyResults'
+    import UserCard from './UserCard'
 
     export default {
         name: 'Objectives',
 
-        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults},
+        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults, UserCard},
 
         computed: {
             objectives: {
