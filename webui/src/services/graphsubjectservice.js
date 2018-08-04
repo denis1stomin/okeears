@@ -1,17 +1,27 @@
+import AuthSvc from './authservice'
+
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
+
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
+
 const ORGTREE_USER_SELECT = 'id,displayName,jobTitle,officeLocation,givenName,mail,userPrincipalName';
 const PEOPLE_SEARCH_SELECT = 'id,displayName,mail,userPrincipalName';
 const RELEVANT_PEOPLE_SELECT = 'id,displayName,emailAddresses,userPrincipalName';
 
 export default class GraphSubjectService {
     constructor() {
-        this.getManagersRecursively = function aliasName(managersChain, userResource, tokenProvider, dataHandler, errHandler) {
-            const graphClient = MicrosoftGraph.Client.init({
-                authProvider: tokenProvider
-            });
+        this.graphClient = MicrosoftGraph.Client.init({
+            // debugLogging: true,
+            authProvider: (done) => {
+                AuthSvc.withToken((token) => {
+                    done(null, token);
+                }, ACCESS_TOKEN_RESOURCE);
+            }
+        });
 
-            graphClient
+        // Private method is defined in the constructor
+        this.getManagersRecursively = function aliasName(managersChain, userResource, dataHandler, errHandler) {
+            this.graphClient
                 .api(`${userResource}/manager`)
                 .select(ORGTREE_USER_SELECT)
                 .get()
@@ -20,25 +30,22 @@ export default class GraphSubjectService {
                         managersChain.unshift(body);
     
                         const nextUserResource = `/users/${body.id}`;
-                        aliasName(managersChain, nextUserResource, tokenProvider, dataHandler, errHandler);
+                        aliasName(managersChain, nextUserResource, dataHandler, errHandler);
                     }
                     else {
                         dataHandler(managersChain);
                     }
                 })
-                // NOTE: Temporarily errHandler function is not used to avoid 403 error code.
+                // NOTE: Temporarily errHandler function is ignored to avoid 403 error code.
                 // Instead we use dataHandler to return at least what we have.
                 .catch(/*errHandler*/ (err) => {
                     dataHandler(managersChain);
                 });
         };
 
-        this.getUser = (userResource, tokenProvider, dataHandler, errHandler) => {
-            const graphClient = MicrosoftGraph.Client.init({
-                authProvider: tokenProvider
-            });
-    
-            graphClient
+        // Private method is defined in the constructor
+        this.getUser = (userResource, dataHandler, errHandler) => {
+            this.graphClient
                 .api(userResource)
                 .select(ORGTREE_USER_SELECT)
                 .get()
@@ -47,40 +54,27 @@ export default class GraphSubjectService {
         };
     }
 
-    /// Returns MS Graph resource which is needed to acquire an access token for this service
-    accessTokenResource() {
-        return ACCESS_TOKEN_RESOURCE;
-    }
-
     /// Requests current logged in user information
-    getCurrentUser(tokenProvider, dataHandler, errHandler) {
-        this.getUser('/me', tokenProvider, dataHandler, errHandler);
+    getCurrentUser(dataHandler, errHandler) {
+        this.getUser('/me', dataHandler, errHandler);
     }
 
     /// Requests user information by its AAD Id field
-    getUserById(subjectId, tokenProvider, dataHandler, errHandler) {
-        this.getUser(`/users/${subjectId}`, tokenProvider, dataHandler, errHandler);
+    getUserById(subjectId, dataHandler, errHandler) {
+        this.getUser(`/users/${subjectId}`, dataHandler, errHandler);
     }
 
     /// Requests organizational structure for an user
-    getSubjectOrgTree(subjectId, tokenProvider, dataHandler, errHandler) {
+    getSubjectOrgTree(subjectId, dataHandler, errHandler) {
         // First get user information
-        this.getUserById(subjectId, tokenProvider, (user) => {
+        this.getUserById(subjectId, (user) => {
             // Then retrieve managers chain
-            this.getManagersRecursively([user], `/users/${subjectId}`, tokenProvider, dataHandler, errHandler);
+            this.getManagersRecursively([user], `/users/${subjectId}`, dataHandler, errHandler);
         }, errHandler);
     }
 
-    // TODO
-    // hasDirectReports() { }
-    // getDirectReports() { }
-
-    getCurrentUserRelevantPeople(tokenProvider, dataHandler, errHandler) {
-        const graphClient = MicrosoftGraph.Client.init({
-            authProvider: tokenProvider
-        });
-
-        graphClient
+    getCurrentUserRelevantPeople(dataHandler, errHandler) {
+        this.graphClient
             .api('/me/people')
             .version('beta')
             .select(RELEVANT_PEOPLE_SELECT)
@@ -98,12 +92,8 @@ export default class GraphSubjectService {
             .catch(errHandler);
     }
 
-    findPeople(textQuery, tokenProvider, dataHandler, errHandler) {
-        const graphClient = MicrosoftGraph.Client.init({
-            authProvider: tokenProvider
-        });
-
-        graphClient
+    findPeople(textQuery, dataHandler, errHandler) {
+        this.graphClient
             .api(`/users`)
             .version('beta')
             .select(PEOPLE_SEARCH_SELECT)
@@ -120,12 +110,8 @@ or startswith(mail,'${textQuery}')`)
             .catch(errHandler);
     }
 
-    getUserPhoto(subjectId, tokenProvider, dataHandler, errHandler) {
-        const graphClient = MicrosoftGraph.Client.init({
-            authProvider: tokenProvider
-        });
-
-        graphClient
+    getUserPhoto(subjectId, dataHandler, errHandler) {
+        this.graphClient
             .api(`/users/${subjectId}/photo/$value`)
             .responseType('blob')
             .version('beta')
@@ -139,5 +125,5 @@ or startswith(mail,'${textQuery}')`)
                     errHandler(error);
                 }
             });
-    }    
+    }
 }
