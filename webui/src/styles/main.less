@@ -8,7 +8,16 @@ body {
 }
 
 h4, h3, h2, h1 {
+  margin: 0;
   font-weight: 500;
+}
+
+a {
+  color: @lightblue;
+  text-decoration: none;
+  &:hover {
+    color: @purple;
+  }
 }
 
 .title {
@@ -23,9 +32,9 @@ h4, h3, h2, h1 {
 
 .container {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto auto 1fr;
   grid-template-rows: 60px 1fr 60px;
-  grid-template-areas: 'header header' 'menu content' 'footer footer';
+  grid-template-areas: 'header header header' 'menu user-card content' 'footer footer footer';
   min-height: 100vh;
 
   .header {
@@ -101,6 +110,11 @@ h4, h3, h2, h1 {
     }
   }
 
+  .user-card {
+    grid-area: user-card;
+    margin: 30px;
+  }
+
   .content {
     grid-area: content;
     padding: 30px;
@@ -118,5 +132,6 @@ h4, h3, h2, h1 {
 
 @import "./okr";
 @import "./orgtree";
+@import "./user-card";
 @import "./input-form";
 @import "./change-log";

@@ -1,8 +1,6 @@
 <template>
     <div class="okr">
         <div class="okr-editor">
-            <UserCard/>
-
             <InputForm ref="newObjForm"
                        placeholder="Let’s create ambitious objective"
                        :action="addObjective"
@@ -62,12 +60,11 @@
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
     import KeyResults from './KeyResults'
-    import UserCard from './UserCard'
 
     export default {
         name: 'Objectives',
 
-        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults, UserCard},
+        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults},
 
         computed: {
             objectives: {
