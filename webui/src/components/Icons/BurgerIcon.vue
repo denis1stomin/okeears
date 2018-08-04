@@ -21,7 +21,7 @@
 
     line {
         fill: none;
-        stroke: #ffe347;
+        stroke: #c88684;
         stroke-width: 2;
         stroke-linecap: round;
         stroke-miterlimit: 10;

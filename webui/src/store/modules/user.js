@@ -33,6 +33,18 @@ export default {
     getters: {
         CAN_CHANGE_OKR(state) {
             return state.selectedSubject.id === state.me.id;
+        },
+
+        GET_AUTHENTICATED_USER() {
+            // Get user basic information from the token
+            const rawUser = AuthSvc.getCurrentUser();
+            const user = {
+                id: rawUser.profile.oid,
+                displayName: rawUser.userName,
+                userPrincipalName: rawUser.profile.upn
+            };
+
+            return user;
         }
     },
 
@@ -71,19 +83,20 @@ export default {
     },
 
     actions: {
-        // Gets current authentificated user
+        // Gets current user information
         GET_CURRENT_USER(context) {
-            // Get user basic information from the token
-            const rawUser = AuthSvc.getCurrentUser();
-            const user = {
-                id: rawUser.profile.oid,
-                name: rawUser.userName,
-                givenName: rawUser.profile.given_name,
-                userPrincipalName: rawUser.profile.upn
-            };
-
-            context.commit('CURRENT_USER_COMPLETE', user);
-            context.dispatch('SET_INTERESTING_SUBJECT', user);
+            AuthSvc.withToken((token) => {
+                SubjectSvc.getCurrentUser(
+                    (done) => {
+                        done(null, token);
+                    },
+                    user => {
+                        context.commit('CURRENT_USER_COMPLETE', user);
+                        context.dispatch('SET_INTERESTING_SUBJECT', user);
+                    },
+                    err => console.log(err)
+                );
+            }, SubjectSvc.accessTokenResource());
         },
 
         // Gets list of relevant subjects to current user
@@ -156,6 +169,7 @@ export default {
                                     data = data instanceof Blob ? data : new Blob([data]);
                                     reader.readAsDataURL(data);
                                 } else {
+                                    // TODO: use anonymous picture
                                     elem.photo = null;
                                 }
                             }, errorHandler);
