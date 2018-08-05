@@ -1,12 +1,12 @@
 .input-form {
   display: flex;
   padding: 5px;
-  background: #fff;
-  border: 1px solid #fff;
+  background: @white;
+  border: 1px solid @white;
   align-items: center;
   transition: all 0.3s ease-out;
   &:focus-within {
-    border-color: #c88684;
+    border-color: @rose;
   }
 
   textarea,
@@ -16,7 +16,7 @@
     height: 24px;
     padding: 0 5px;
     border: none;
-    background-color: #fff;
+    background-color: @white;
     font-size: inherit;
     font-family: inherit;
     resize: none;
@@ -32,15 +32,15 @@
     padding: 0;
     background: none;
     border: none;
-    color: #ccc;
-    fill: #ccc;
-    stroke: #ccc;
+    color: @grey;
+    fill: @grey;
+    stroke: @grey;
     cursor: pointer;
     transition: all 0.3s ease-out;
     &:hover {
-      color: #7d7abc;
-      fill: #7d7abc;
-      stroke: #7d7abc;
+      color: @purple;
+      fill: @purple;
+      stroke: @purple;
     }
   }
 }

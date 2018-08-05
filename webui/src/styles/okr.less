@@ -14,7 +14,7 @@
   .empty-objectives {
     margin: 30px 0;
     font-size: 18px;
-    color: #727272;
+    color: @grey;
 
     .icon {
       width: 21px;
@@ -27,7 +27,7 @@
       &:hover {
         filter: grayscale(0);
         transform: scale(1.1);
-        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        box-shadow: 1px 1px 3px @darkgrey;
       }
     }
   }
@@ -35,10 +35,10 @@
   .objectives {
     position: relative;
     margin: 10px 0;
-    background: #fff;
-    border: 1px solid #c88684;
+    background: @white;
+    border: 1px solid @rose;
     border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 2px 2px 5px @darkgrey;
     &:hover {
       .input-form .input-icon {
         visibility: visible;
@@ -46,19 +46,19 @@
     }
 
     .objective-title {
-      background: #c88684;
+      background: @rose;
       border: none;
-      border-bottom: 1px solid #c88684;
+      border-bottom: 1px solid @rose;
       border-radius: 5px 5px 0 0;
       box-shadow: none;
       transition: all 0.5s ease-out;
 
       textarea {
-        background: #c88684;
+        background: @rose;
         transition: all 0.5s ease-out;
-        border: 1px solid #c88684;
+        border: 1px solid @rose;
         &:focus {
-          border: 1px solid #7d7abc;
+          border: 1px solid @purple;
         }
       }
 
@@ -94,20 +94,18 @@
     top: 2px;
     left: -45px;
     padding: 3px;
-    border-radius: 50%;
     transition: all 0.5s ease-out;
     &:hover {
       transform: scale(1.1);
-      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     }
 
     .icon {
       width: 30px;
-      fill: #ccc;
+      fill: @grey;
       cursor: pointer;
       transition: all 0.5s ease-out;
       &.objective-like-icon-selected {
-        fill: #c88684;
+        fill: @rose;
       }
     }
   }
@@ -119,23 +117,11 @@
 
     .icon {
       width: 34px;
-      border-radius: 50%;
-      filter: grayscale(.8);
       cursor: pointer;
       transition: all 0.5s ease-out;
       &:hover {
-        filter: grayscale(0);
         transform: scale(1.1);
-        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
       }
     }
   }
- 
-  // TODO: Should be moved to some common place
-  .error {
-    margin-top: 10px;
-    color: #bb0000;
-    font-size: 13px;
-  }
 }
-

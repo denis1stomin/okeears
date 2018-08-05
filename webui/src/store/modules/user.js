@@ -132,32 +132,46 @@ export default {
         // Gets OrgTree for an interesting subject
         GET_ORGTREE(context) {
             const errorHandler = error => console.log(error);
+
             SubjectSvc.getSubjectOrgTree(
                 context.state.interestingSubject.id,
                 data => {
                     data.forEach(elem => {
-                        elem.delvelink = DELVE_LINK_TPL + elem.id;
-                        elem.aadlink = AAD_LINK_TPL + elem.id;
-                        elem.photo = null;
-
-                        SubjectSvc.getUserPhoto(elem.id, data => {
-                            if (data) {
-                                const reader = new FileReader();
-                                reader.onloadend = () => {
-                                    elem.photo = reader.result;
-                                };
-                                // data is Blob on Mac/Chrome and Uint8Array on Windows/Chrome
-                                data = data instanceof Blob ? data : new Blob([data]);
-                                reader.readAsDataURL(data);
-                            }
-                            else {
-                                elem.photo = null;
-                            }
-                        }, errorHandler);
+                        context.dispatch('ENRICH_SUBJECT', elem);
                     });
-
                     context.commit('ORGTREE_COMPLETE', data);
                 }, errorHandler);
+        },
+
+        ENRICH_SUBJECT({ commit, state }, subject) {
+            const errorHandler = error => console.log(error);
+
+            subject.delvelink = DELVE_LINK_TPL + subject.id;
+            subject.aadlink = AAD_LINK_TPL + subject.id;
+            subject.photo = null;
+
+            if(state.selectedSubject.id == subject.id) {
+                commit('SELECTED_SUBJECT', subject);
+            }
+
+            if(state.interestingSubject.id == subject.id) {
+                commit('INTERESTING_SUBJECT', subject);
+            }
+
+            SubjectSvc.getUserPhoto(subject.id, data => {
+                if (data) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        subject.photo = reader.result;
+                    };
+                    // data is Blob on Mac/Chrome and Uint8Array on Windows/Chrome
+                    data = data instanceof Blob ? data : new Blob([data]);
+                    reader.readAsDataURL(data);
+                }
+                else {
+                    subject.photo = null;
+                }
+            }, errorHandler);
         }
     }
 }

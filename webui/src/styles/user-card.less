@@ -1,4 +1,28 @@
 .user-card {
-    background: #cccccc;
-    border: 1px #c88684;
+  .user-card-img {
+    height: 6em;
+    width: 6em;
+    margin: .6em 0;
+
+    .user-card-photo {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      border-radius: 5px;
+    }
+
+    .user-card-no-photo {
+      fill: @grey;
+      color: @grey;
+    }
+  }
+
+  .user-card-details {
+    line-height: 1.5em;
+
+    .user-card-item-links {
+      color: @textgrey;
+      cursor: pointer;
+    }
+  }
 }
