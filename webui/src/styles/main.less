@@ -1,23 +1,40 @@
+@import "./variables";
+
 body {
   margin: 0;
   padding: 0;
   font-family: Oxygen, "Segoe UI", "Helvetica Neue", sans-serif;
-  color: #333;
+  color: @darkgrey;
 }
 
 h4, h3, h2, h1 {
+  margin: 0;
   font-weight: 500;
+}
+
+a {
+  color: @lightblue;
+  text-decoration: none;
+  &:hover {
+    color: @purple;
+  }
 }
 
 .title {
   margin: 0;
 }
 
+.error {
+  margin-top: 10px;
+  color: @red;
+  font-size: 13px;
+}
+
 .container {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto auto 1fr;
   grid-template-rows: 60px 1fr 60px;
-  grid-template-areas: 'header header' 'menu content' 'footer footer';
+  grid-template-areas: 'header header header' 'menu user-card content' 'footer footer footer';
   min-height: 100vh;
 
   .header {
@@ -27,12 +44,12 @@ h4, h3, h2, h1 {
     right: 0;
     z-index: 1;
     grid-area: header;
-    color: white;
-    background-color: #a13742;
+    color: @white;
+    background-color: @red;
 
     .title {
       display: inline-block;
-      margin: 15px 65px;
+      margin: 15px 30px;
       font-size: 30px;
       font-weight: bold;
     }
@@ -60,37 +77,42 @@ h4, h3, h2, h1 {
 
   .menu {
     grid-area: menu;
-    background: #cccccc;
+    background: @grey;
 
     .input-form {
-      border-color: #7d7abc;
+      border-color: @purple;
       &:focus-within {
-        border-color: #c88684;
+        border-color: @rose;
       }
     }
 
     .menu-user {
       margin: 10px;
-      color: white;
+      color: @white;
       cursor: pointer;
     }
 
     .suggested-subjects-list {
       padding: 10px;
       line-height: 1.5;
-      border: 1px solid #c88684;
+      border: 1px solid @rose;
       border-radius: 0 0 5px 5px;
-      background: #fff;
+      background: @white;
 
       .suggested-subjects-item {
         font-size: 14px;
-        color: #6457A6;
+        color: @purple;
         cursor: pointer;
         &:hover {
           text-decoration: underline;
         }
       }
     }
+  }
+
+  .user-card {
+    grid-area: user-card;
+    margin: 30px;
   }
 
   .content {
@@ -102,13 +124,14 @@ h4, h3, h2, h1 {
     grid-area: footer;
     height: 30px;
     padding: 15px;
-    border-top: 1px solid #333;
-    background: #333;
-    color: #fff;
+    border-top: 1px solid @darkgrey;
+    background: @darkgrey;
+    color: @white;
   }
 }
 
 @import "./okr";
 @import "./orgtree";
+@import "./user-card";
 @import "./input-form";
 @import "./change-log";
