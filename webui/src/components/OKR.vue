@@ -1,6 +1,7 @@
 <template>
     <div class="okr">
-        <div class="okr-editor">
+        <div class="loading-objectives-message" v-if="currentlyLoading">LOADING OBJECTIVES...</div>
+        <div class="okr-editor" v-else>
             <InputForm ref="newObjForm"
                        placeholder="Let’s create ambitious objective"
                        :action="addObjective"
@@ -70,6 +71,12 @@
             objectives: {
                 get() {
                     return this.$store.state.okr.objectives;
+                }
+            },
+
+            currentlyLoading: {
+                get() {
+                    return this.$store.state.okr.loading;
                 }
             },
             
