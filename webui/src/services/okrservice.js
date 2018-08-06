@@ -9,9 +9,6 @@ const SECTION_NAME = 'Objectives';
 export default class OkrService {
     constructor() {
         
-        // Stores mapping from user id to his objective's page id
-        this.pageIds = new Map();
-        
         // Stores mapping from user id to his notebook section with objectives-pages
         this.sectionIds = new Map();
 
