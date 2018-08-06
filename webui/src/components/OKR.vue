@@ -1,6 +1,6 @@
 <template>
     <div class="okr">
-        <div class="loading-objectives-waiter" v-if="!currentlyLoading">
+        <div class="loading-objectives-waiter" v-if="currentlyLoading">
             <Spinner/>
         </div>
         <div class="okr-editor" v-else>
