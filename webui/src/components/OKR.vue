@@ -1,6 +1,9 @@
 <template>
     <div class="okr">
-        <div class="loading-objectives-message" v-if="currentlyLoading">LOADING OBJECTIVES...</div>
+        <div class="loading-objectives-waiter" v-if="currentlyLoading">
+            <Spinner/>
+        </div>
+
         <div class="okr-editor" v-else>
             <InputForm class="create-objective-form"
                        ref="newObjForm"
@@ -42,15 +45,32 @@
             </div>
 
             <div class="empty-objectives" v-if="!objectives.length">
-                <span v-if="canChangeOkr">
-                    There is no any objective yet. Let's create a first one right now ^
-                </span>
-                <span v-else>
-                    There is no any objective yet. Let's send a friendly reminder to your teammate 
+                <div class="objectives" v-if="canChangeOkr">
+                    <div class="objective-item-header">
+                        <div class="objective-like-icon" @click="objective.like = !objective.like">
+                            <StarIcon class="objective-like-icon-selected"/>
+                        </div>
+
+                        <div class="objective-icons">
+                            <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
+                            <span @click="copyObjective(objective)"><CopyIcon/></span>
+                            <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                        </div>
+                    </div>
+
+                    <div class="objective-item-body">
+                        <InputForm class="objective-title"
+                                   placeholder=""
+                                   :value="landingObjective.statement" />
+
+                        <KeyResults :objective="landingObjective"/>
+                    </div>
+                </div>
+                <span v-if="!canChangeOkr">
+                    There is no any objective yet. You can send a friendly reminder to your teammate
                     <span @click="sendReminder()"><SendIcon/></span>
                 </span>
             </div>
-
         </div>
 
         <ChangeLog/>
@@ -66,11 +86,12 @@
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
     import KeyResults from './KeyResults'
+    import Spinner from './Animation/Spinner'
 
     export default {
         name: 'Objectives',
 
-        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults},
+        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults, Spinner},
 
         computed: {
             objectives: {
@@ -100,6 +121,18 @@
             canChangeOkr: {
                 get() {
                     return this.$store.getters.CAN_CHANGE_OKR;
+                }
+            },
+
+            landingObjective: {
+                get() {
+                    return {
+                        statement: "Create a few ambitious objectives",
+                        keyresults: [
+                            { statement: "Create at least 3 objectives for the next iteration" },
+                            { statement: "Achieve at minimum 60% of success rate" }
+                        ]
+                    };
                 }
             }
         },
