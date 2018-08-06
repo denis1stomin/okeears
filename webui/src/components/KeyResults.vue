@@ -1,7 +1,7 @@
 <template>
     <div class="key-results" :objective="objective">
         <InputForm ref="newKRForm"
-                   placeholder="Let’s create new key result"
+                   placeholder="Let’s create measurable key result"
                    :action="addKeyresult"
                    :obj="objective">
                 <span class="input-icon" @click="addKeyresult(objective, $refs.newKRForm.value)">
