@@ -25,7 +25,24 @@ export default class OkrService {
         });
     }
 
-    getObjectives(subjectId, userId, dataHandler, errHandler) {
+    loadKeyResults(objectiveId, dataHandler, errHandler) {
+        this.getPageContent(objectiveId, document => {
+            const listNode = document.querySelector(`div > ul`);
+            if(!listNode) {
+                return dataHandler([]);
+            }
+
+            const nodes = Array.from(listNode.querySelectorAll('li'));
+            const results = nodes.map(each => {
+                return {
+                    statement: each.innerText
+                }
+            });
+            dataHandler(results);
+        }, errHandler);
+    }
+
+    getObjectives(subjectId, dataHandler, errHandler) {
         this.getSection(subjectId, false, sectionId => {
             if(sectionId) {
                 this.graphClient
@@ -33,11 +50,18 @@ export default class OkrService {
                     .get()
                     .then(body => {
                         const objectives = body.value.map(page => {
-                            return {
-                                id: page.id,
+                            const pageId = page.id;
+                            const objective = {
+                                id: pageId,
                                 statement: page.title,
                                 keyresults: []
                             };
+
+                            this.loadKeyResults(objective.id, data => {
+                                objective.keyresults = data;
+                            }, errHandler);
+
+                            return objective;
                         });
                         dataHandler(objectives);
                     })
@@ -144,7 +168,7 @@ export default class OkrService {
         // TODO: Escape HTML in objective's statement
         let statement = objective.statement;
 
-        this.getPageContent(subjectId, objectiveId, document => {
+        this.getPageContent(objectiveId, document => {
             const patchBody = 
             [{
                 'target': 'title',
@@ -330,7 +354,7 @@ export default class OkrService {
         }, errHandler);
     }
 
-    getPageContent(subjectId, pageId, dataHandler, errHandler) {
+    getPageContent(pageId, dataHandler, errHandler) {
         this.graphClient
             .api(`me/onenote/pages/${pageId}/content`)
             .responseType('document')
@@ -382,15 +406,6 @@ export default class OkrService {
         return `/users/${subjectId}`;
     }
 
-    setSubjectPageId(subjectId, pageId) {
-        this.pageIds.set(subjectId, pageId);
-    }
-
-    getSubjectPageId(subjectId)
-    {
-        return this.pageIds.get(subjectId);
-    }
-
     setSubjectSectionId(subjectId, sectionId) {
         this.sectionIds.set(subjectId, sectionId);
     }
@@ -398,13 +413,5 @@ export default class OkrService {
     getSubjectSectionId(subjectId)
     {
         return this.sectionIds.get(subjectId);
-    }
-    
-    // Assuming that page is already created and its id is in cache
-    getSubjectPageContentUrl(subjectId)
-    {
-        let prefix = this.getSubjectPrefix(subjectId);
-        let pageId = this.getSubjectPageId(subjectId);
-        return `${prefix}/onenote/pages/${pageId}/content`;
     }
 }
