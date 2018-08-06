@@ -1,6 +1,9 @@
 <template>
     <div class="okr">
-        <div class="loading-objectives-message" v-if="currentlyLoading">LOADING OBJECTIVES...</div>
+        <div class="loading-objectives-waiter" v-if="currentlyLoading">
+            <div class="loading-objectives-message">Loading objectives</div>
+            <Spinner />
+        </div>
         <div class="okr-editor" v-else>
             <InputForm ref="newObjForm"
                        placeholder="Let’s create ambitious objective"
@@ -61,11 +64,12 @@
     import InputForm from './InputForm'
     import ChangeLog from './ChangeLog'
     import KeyResults from './KeyResults'
+    import Spinner from './Animation/Spinner'
 
     export default {
         name: 'Objectives',
 
-        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults},
+        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults, Spinner},
 
         computed: {
             objectives: {
