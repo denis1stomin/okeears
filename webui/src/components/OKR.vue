@@ -4,7 +4,7 @@
             <div class="loading-objectives-message">Loading objectives</div>
             <Spinner />
         </div>
-        <div class="okr-editor" v-else>
+        <div class="okr-editor" v-if="!currentlyLoading">
             <InputForm ref="newObjForm"
                        placeholder="Let’s create ambitious objective"
                        :action="addObjective"
@@ -23,8 +23,7 @@
                            placeholder=""
                            :action="editObjective"
                            :value="objective.statement"
-                           :obj="objective">
-                </InputForm>
+                           :obj="objective" />
 
                 <KeyResults :objective="objective"/>
 
@@ -38,13 +37,20 @@
                     <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
                 </div>
             </div>
-
             <div class="empty-objectives" v-if="!objectives.length">
-                <span v-if="canChangeOkr">
-                    There is no any objective yet. Let's create a first one right now ^
-                </span>
-                <span v-else>
-                    There is no any objective yet. Let's send a friendly reminder to your teammate 
+                <div class="objectives" v-if="canChangeOkr">
+                    <InputForm class="objective-title"
+                               placeholder=""
+                               :value="landingObjective.statement" />
+
+                    <KeyResults :objective="landingObjective"/>
+
+                    <div class="objective-like-icon">
+                        <StarIcon class="objective-like-icon-selected"/>
+                    </div>
+                </div>
+                <span v-if="!canChangeOkr">
+                    There is no any objective yet. You can send a friendly reminder to your teammate
                     <span @click="sendReminder()"><SendIcon/></span>
                 </span>
             </div>
@@ -99,6 +105,18 @@
             canChangeOkr: {
                 get() {
                     return this.$store.getters.CAN_CHANGE_OKR;
+                }
+            },
+
+            landingObjective: {
+                get() {
+                    return {
+                        statement: "Create a few ambitious objectives",
+                        keyresults: [
+                            { statement: "Create at least 3 objectives for the next iteration" },
+                            { statement: "Achieve at minimum 60% of success rate" }
+                        ]
+                    };
                 }
             }
         },
