@@ -7,10 +7,6 @@
   flex-direction: column;
   justify-content: space-between;
 
-  .title {
-    margin: 10px 0 35px;
-  }
-
   .empty-objectives {
     font-size: 18px;
     color: @grey;
@@ -26,95 +22,112 @@
     }
   }
 
+  .create-objective-form {
+    border-color: @lightgrey;
+  }
+
   .objectives {
-    position: relative;
     margin: 10px 0;
     background: @white;
-    border: 1px solid @rose;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px @darkgrey;
+    box-shadow: 0 1px 4px @darkgrey;
     &:hover {
       .input-form .input-icon {
         visibility: visible;
       }
     }
 
-    .objective-title {
-      background: @rose;
-      border: none;
-      border-bottom: 1px solid @rose;
-      border-radius: 5px 5px 0 0;
-      box-shadow: none;
-      transition: all 0.5s ease-out;
+    .objective-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 26px;
+      padding: 3px 15px;
+      background: @green;
 
-      textarea {
-        background: @rose;
+      .objective-like-icon {
+        width: 21px;
+        height: 21px;
         transition: all 0.5s ease-out;
-        border: 1px solid @rose;
-        &:focus {
-          border: 1px solid @purple;
+        &:hover {
+          transform: scale(1.1);
         }
-      }
-
-      .action-button {
-        display: none;
-      }
-
-      .input-icon {
-        visibility: hidden;
-        transition: all 0.5s ease-out;
-      }
-    }
-
-    .key-results {
-      margin: 10px;
-
-      .key-result {
-        margin: 5px 0;
 
         .icon {
-          width: 18px;
-          float: right;
+          width: 21px;
+          fill: @white;
           cursor: pointer;
+          transition: all 0.5s ease-out;
+          &.objective-like-icon-selected {
+            fill: @yellow;
+          }
+        }
+      }
+
+      .objective-icons {
+        height: 21px;
+
+        .icon {
+          width: 21px;
+          fill: @white;
+          cursor: pointer;
+          transition: all 0.5s ease-out;
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+
+    .objective-item-body {
+      padding: 10px 5px;
+
+      .objective-title {
+        transition: all 0.5s ease-out;
+        &:focus-within {
+          border-color: @white;
+        }
+
+        textarea {
+          transition: all 0.5s ease-out;
+          border: 1px solid @white;
+        }
+
+        .action-button {
+          display: none;
+        }
+
+        .input-icon {
+          visibility: hidden;
+          transition: all 0.5s ease-out;
+        }
+      }
+
+      .key-results {
+        margin-left: 15px;
+
+        .input-form {
+          &:focus-within {
+            border-color: @white;
+          }
+        }
+
+        .key-result {
+          margin: 5px 0;
+
+          .icon {
+            width: 18px;
+            float: right;
+            cursor: pointer;
+          }
         }
       }
     }
   }
 
-  .objective-like-icon {
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    top: 2px;
-    left: -45px;
-    padding: 3px;
-    transition: all 0.5s ease-out;
-    &:hover {
-      transform: scale(1.1);
-    }
-
-    .icon {
-      width: 30px;
-      fill: @grey;
-      cursor: pointer;
-      transition: all 0.5s ease-out;
-      &.objective-like-icon-selected {
-        fill: @rose;
-      }
-    }
-  }
-
-  .objective-icons {
-    position: absolute;
-    top: 4px;
-    right: -130px;
-
-    .icon {
-      width: 34px;
-      cursor: pointer;
-      transition: all 0.5s ease-out;
+  .input-form {
+    .icon-plus {
       &:hover {
-        transform: scale(1.1);
+        transform: scale(1);
       }
     }
   }

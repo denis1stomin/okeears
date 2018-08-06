@@ -1,7 +1,8 @@
 <template>
     <div class="okr">
         <div class="okr-editor">
-            <InputForm ref="newObjForm"
+            <InputForm class="create-objective-form"
+                       ref="newObjForm"
                        placeholder="Let’s create ambitious objective"
                        :action="addObjective"
                        v-if="canChangeOkr">
@@ -15,23 +16,27 @@
             </div>
 
             <div class="objectives" v-if="objectives.length" v-for="objective in objectives">
-                <InputForm class="objective-title"
-                           placeholder=""
-                           :action="editObjective"
-                           :value="objective.statement"
-                           :obj="objective">
-                </InputForm>
+                <div class="objective-item-header">
+                    <div class="objective-like-icon" @click="objective.like = !objective.like">
+                        <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
+                    </div>
 
-                <KeyResults :objective="objective"/>
-
-                <div class="objective-like-icon" @click="objective.like = !objective.like">
-                    <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
+                    <div class="objective-icons">
+                        <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
+                        <span @click="copyObjective(objective)"><CopyIcon/></span>
+                        <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                    </div>
                 </div>
 
-                <div class="objective-icons">
-                    <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
-                    <span @click="copyObjective(objective)"><CopyIcon/></span>
-                    <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                <div class="objective-item-body">
+                    <InputForm class="objective-title"
+                               placeholder=""
+                               :action="editObjective"
+                               :value="objective.statement"
+                               :obj="objective">
+                    </InputForm>
+
+                    <KeyResults :objective="objective"/>
                 </div>
             </div>
 
