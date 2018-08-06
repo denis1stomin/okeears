@@ -23,6 +23,9 @@ export default class OkrService {
         
         // Stores mapping from user id to his objective's page id
         this.pageIds = new Map();
+        
+        // Stores mapping from user id to his notebook section with objectives-pages
+        this.sectionIds = new Map();
 
         this.graphClient = MicrosoftGraph.Client.init({
             //debugLogging: true,
@@ -36,50 +39,68 @@ export default class OkrService {
 
     getObjectives(subjectId, userId, dataHandler, errHandler) {
         let allowPageCreation = subjectId == userId;
-        this.getPageContent(subjectId, allowPageCreation, (document) => {
-            
-            // There are no objectives created yet
-            if(!document) {
-                return dataHandler([]);
+
+        this.searchForSection(subjectId, sectionId => {
+            // Section ID is received from OneNote or taken from the cache
+            if(sectionId) {
+                this.graphClient
+                    .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
+                    .get()
+                    .then(body => {
+                        const objectives = body.value.map(page => {
+                            return {
+                                id: page.id,
+                                statement: page.title,
+                                keyresults: []
+                            };
+                        });
+                        dataHandler(objectives);
+                    })
+                    .catch(errHandler);
+            } else {
+                // if(allowPageCreation) {
+                //     // Assuming that newly created page body is not required, 
+                //     // so returning null here.
+                //     this.createSection(subjectId, () => { dataHandler([]); }, errHandler);
+                // } else {
+                //     dataHandler([]);
+                // }
+                dataHandler([]);
             }
-
-            // Reference HTML
-            // <ul id="ul:{d4a13ad7-37ee-46d4-acdb-80b67c839aaa}{167}" data-id="objectives">
-            //     <li id="li:{82859f00-f0c9-4726-8174-2c0bd865a59b}{82}" data-id="llfsd39mx">
-            //         <p id="p:{82859f00-f0c9-4726-8174-2c0bd865a59b}{83}" style="margin-top:0pt;margin-bottom:0pt">Objective One</p>
-            //         <ul id="ul:{82859f00-f0c9-4726-8174-2c0bd865a59b}{84}">
-            //             <li id="li:{82859f00-f0c9-4726-8174-2c0bd865a59b}{88}">Key Result One</li>
-            //             <li id="li:{82859f00-f0c9-4726-8174-2c0bd865a59b}{92}">Key Result Two</li>
-            //         </ul>
-            //     </li>
-            //     <li id="li:{2db45fc0-8282-4d11-823f-011d2f7c8625}{33}" data-id="llfsd39mx">Objective Two</li>
-            // </ul>
-
-            let objectivesNode = document.querySelector(`div > ul`);
-            if(!objectivesNode) {
-                return dataHandler([]);
-            }
-
-            let nodes = Array.from(objectivesNode.querySelectorAll('li[data-id]'));
-            let objectives = nodes.map(each => {
-                let resultNodes = Array.from(each.querySelectorAll('li'));
-                const keyResults = resultNodes.map(each => {
-                    return {
-                        statement: each.innerText
-                    }
-                });
-
-                let paragraphNode = each.querySelector('p');
-                let statement = paragraphNode ? paragraphNode.innerText : each.innerText;
-                return {
-                    id: each.getAttribute('data-id'),
-                    statement: statement,
-                    keyresults: keyResults
-                };
-            });
-            
-            dataHandler(objectives);
         }, errHandler);
+
+        // this.getPageContent(subjectId, allowPageCreation, (document) => {
+            
+        //     // There are no objectives created yet
+        //     if(!document) {
+        //         return dataHandler([]);
+        //     }
+
+        //     let objectivesNode = document.querySelector(`div > ul`);
+        //     if(!objectivesNode) {
+        //         return dataHandler([]);
+        //     }
+
+        //     let nodes = Array.from(objectivesNode.querySelectorAll('li[data-id]'));
+        //     let objectives = nodes.map(each => {
+        //         let resultNodes = Array.from(each.querySelectorAll('li'));
+        //         const keyResults = resultNodes.map(each => {
+        //             return {
+        //                 statement: each.innerText
+        //             }
+        //         });
+
+        //         let paragraphNode = each.querySelector('p');
+        //         let statement = paragraphNode ? paragraphNode.innerText : each.innerText;
+        //         return {
+        //             id: each.getAttribute('data-id'),
+        //             statement: statement,
+        //             keyresults: keyResults
+        //         };
+        //     });
+            
+        //     dataHandler(objectives);
+        // }, errHandler);
     }
 
     createObjective(subjectId, objective, dataHandler, errHandler) {
@@ -328,6 +349,35 @@ export default class OkrService {
             .catch(errHandler);
     }
 
+    searchForSection(subjectId, dataHandler, errHandler) {
+        let sectionId = this.getSubjectSectionId(subjectId);
+        if(sectionId) {
+            dataHandler(sectionId);
+            return;
+        }
+
+        this.graphClient
+            .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections`)
+            .filter(`displayName eq '${SECTION_NAME}'`)
+            .select('id')
+            .expand('parentNotebook')
+            .get()
+            .then((body) => {
+                // Filter out sections from another notebooks, if any
+                let sections = body.value.filter(section => section.parentNotebook.displayName == NOTEBOOK_NAME);
+                if(sections.length == 1) {
+                    let sectionId = sections[0].id;
+                    this.setSubjectSectionId(subjectId, sectionId);
+                    dataHandler(sectionId);
+                } else if(sections.length == 0) {
+                    dataHandler(null);
+                } else {
+                    errHandler({ message: `More than one '${SECTION_NAME}' sections found in the '${NOTEBOOK_NAME}' notebook.`});
+                }
+            })
+            .catch(errHandler);
+    }
+
     getSubjectPrefix(subjectId) {
         return `/users/${subjectId}`;
     }
@@ -341,6 +391,15 @@ export default class OkrService {
         return this.pageIds.get(subjectId);
     }
 
+    setSubjectSectionId(subjectId, sectionId) {
+        this.sectionIds.set(subjectId, sectionId);
+    }
+
+    getSubjectSectionId(subjectId)
+    {
+        return this.sectionIds.get(subjectId);
+    }
+    
     // Assuming that page is already created and its id is in cache
     getSubjectPageContentUrl(subjectId)
     {
