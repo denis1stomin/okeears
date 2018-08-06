@@ -25,16 +25,18 @@ export default class OkrService {
         });
     }
 
-    loadKeyResults(objectiveId, dataHandler, errHandler) {
+    getKeyResults(objectiveId, dataHandler, errHandler) {
         this.getPageContent(objectiveId, document => {
-            const listNode = document.querySelector(`div > ul`);
+
+            const listNode = document.querySelector('div > ul');
             if(!listNode) {
                 return dataHandler([]);
             }
-
-            const nodes = Array.from(listNode.querySelectorAll('li'));
+            
+            const nodes = Array.from(listNode.querySelectorAll('li[data-id]'));
             const results = nodes.map(each => {
                 return {
+                    id: each.getAttribute('data-id'),
                     statement: each.innerText
                 }
             });
@@ -44,69 +46,39 @@ export default class OkrService {
 
     getObjectives(subjectId, dataHandler, errHandler) {
         this.getSection(subjectId, false, sectionId => {
-            if(sectionId) {
-                this.graphClient
-                    .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
-                    .get()
-                    .then(body => {
-                        const objectives = body.value.map(page => {
-                            const pageId = page.id;
-                            const objective = {
-                                id: pageId,
-                                statement: page.title,
-                                keyresults: []
-                            };
-
-                            this.loadKeyResults(objective.id, data => {
-                                objective.keyresults = data;
-                            }, errHandler);
-
-                            return objective;
-                        });
-                        dataHandler(objectives);
-                    })
-                    .catch(errHandler);
-            } else {
+            
+            // User has not created any objectives yet
+            if(!sectionId) {
                 dataHandler([]);
+                return;
             }
+
+            this.graphClient
+                .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
+                .get()
+                .then(body => {
+                    const objectives = body.value.map(page => {
+                        const objective = {
+                            id: page.id,
+                            statement: page.title,
+                            keyresults: []
+                        };
+
+                        this.getKeyResults(objective.id, data => {
+                            objective.keyresults = data;
+                        }, errHandler);
+
+                        return objective;
+                    });
+                    dataHandler(objectives);
+                })
+                .catch(errHandler);
+        
         }, errHandler);
-
-        // this.getPageContent(subjectId, allowPageCreation, (document) => {
-            
-        //     // There are no objectives created yet
-        //     if(!document) {
-        //         return dataHandler([]);
-        //     }
-
-        //     let objectivesNode = document.querySelector(`div > ul`);
-        //     if(!objectivesNode) {
-        //         return dataHandler([]);
-        //     }
-
-        //     let nodes = Array.from(objectivesNode.querySelectorAll('li[data-id]'));
-        //     let objectives = nodes.map(each => {
-        //         let resultNodes = Array.from(each.querySelectorAll('li'));
-        //         const keyResults = resultNodes.map(each => {
-        //             return {
-        //                 statement: each.innerText
-        //             }
-        //         });
-
-        //         let paragraphNode = each.querySelector('p');
-        //         let statement = paragraphNode ? paragraphNode.innerText : each.innerText;
-        //         return {
-        //             id: each.getAttribute('data-id'),
-        //             statement: statement,
-        //             keyresults: keyResults
-        //         };
-        //     });
-            
-        //     dataHandler(objectives);
-        // }, errHandler);
     }
 
     createObjective(subjectId, objective, dataHandler, errHandler) {
-        const title = objective.statement;
+        const title = objective.statement ? objective.statement : '';
         const page = 
             `<html>
                 <head>
@@ -129,118 +101,49 @@ export default class OkrService {
                 })
                 .catch(errHandler);
         }, errHandler);
-
-        // // Very simple unique id generator
-        // objective.id = Math.random().toString(36).substr(2, 9);
-        
-        // // TODO: Escape HTML in objective's statement
-        // let statement = objective.statement;
-
-        // this.getPageContent(subjectId, true, (document) => {
-
-        //     // If undefined - this is the first objective, 
-        //     // need to add both ul and li tags
-        //     let objectivesNode = document.querySelector(`div > ul`);
-        //     let patchBody = objectivesNode ? 
-        //         [{
-        //               'target': `${objectivesNode.getAttribute('id')}`,
-        //               'action': 'append',
-        //               'content': `<li data-id="${objective.id}"><p>${statement}</p></li>`
-        //         }] : 
-        //         [{
-        //             // In OneNote the 'body' target means the first div on page
-        //             'target': `body`,
-        //             'action': 'append',
-        //             'content': `<ul><li data-id="${objective.id}"><p>${statement}</p></li></ul>`
-        //         }];
-
-        //     this.graphClient
-        //         .api(this.getSubjectPageContentUrl(subjectId))
-        //         .patch(patchBody)
-        //         .then((body) => dataHandler(objective))
-        //         .catch(errHandler);
-        // }, errHandler);
     }
 
     changeObjective(subjectId, objective, dataHandler, errHandler) {
-        let objectiveId = objective.id;
-        
+       
         // TODO: Escape HTML in objective's statement
         let statement = objective.statement;
 
-        this.getPageContent(objectiveId, document => {
-            const patchBody = 
-            [{
-                'target': 'title',
+        const patchBody = 
+        [{
+            'target': 'title',
+            'action': 'replace',
+            'content': statement
+        }];
+
+        if(objective.keyresults && objective.keyresults.length > 0) {
+            let content = '';
+            objective.keyresults.forEach(each => {
+                if(!each.id) {
+                    each.id = Math.random().toString(36).substr(2, 9);
+                }
+                content += `<li data-id="${each.id}">${each.statement}</li>`;
+            });
+
+            patchBody.push(
+            {
+                'target': 'body',
                 'action': 'replace',
-                'content': statement
-            }];
+                'content': `<ul>${content}</ul>`
+            });
+        } else {
+            patchBody.push(
+            {
+                'target': 'body',
+                'action': 'replace',
+                'content': '<ul></ul>'
+            });                
+        }
 
-            this.graphClient
-                .api(`me/onenote/pages/${objectiveId}/content`)
-                .patch(patchBody)
-                .then(dataHandler)
-                .catch(errHandler); 
-
-            // // Change operations should reference items by unique id generated by OneNote,
-            // // referencing by data-id is not supported
-            // const objectiveNode = document.querySelector(`li[data-id="${objectiveId}"]`);
-            // const objectiveNodeId =  objectiveNode.getAttribute('id');
-
-            // let keyResultsContent = '';
-            // if(objective.keyresults && objective.keyresults.length > 0) {
-            //     let itemsContent = '';
-            //     objective.keyresults.forEach(each => {
-            //         itemsContent += `<li>${each.statement}</li>`;
-            //     });
-            //     keyResultsContent = `<ul>${itemsContent}</ul>`;
-            // }
-
-            // // New content we want to save
-            // const content = `<li data-id="${objectiveId}"><p>${statement}</p>${keyResultsContent}</li>`;
-            
-            // // This is absolutely crazy OneNote behavior :(
-            // // It seems it does not support replacing the whole node (ul, li etc.) with the new content.
-            // // Instead it copies old content outside the target node, and only then replaces node's content.
-            // // So we need to remove (replace with empty nodes) all the existing content recursively, and then add new content.
-            // let patchBody = [];
-
-            // const existingKeyResultsNode = objectiveNode.querySelector('ul');
-            // if(existingKeyResultsNode) {
-            //     // Remove existing key results nodes, if any
-            //     const existingKeyResultNodes = existingKeyResultsNode.querySelectorAll('li');
-            //     Array.from(existingKeyResultNodes).forEach(each => {
-            //         patchBody.push(
-            //             {
-            //                 'target': `${each.getAttribute('id')}`,
-            //                 'action': 'replace',
-            //                 'content': '<li></li>'
-            //             });
-            //     });
-
-            //     // Remove existing key result list node
-            //     patchBody.push(
-            //     {
-            //         'target': `${existingKeyResultsNode.getAttribute('id')}`,
-            //         'action': 'replace',
-            //         'content': '<ul></ul>'
-            //     });
-            // }
-
-            // patchBody.push(
-            //     {
-            //         'target': `${objectiveNodeId}`,
-            //         'action': 'replace',
-            //         'content': content
-            //     }
-            // );
-            
-            // this.graphClient
-            //     .api(this.getSubjectPageContentUrl(subjectId))
-            //     .patch(patchBody)
-            //     .then(dataHandler)
-            //     .catch(errHandler); 
-        }, errHandler);
+        this.graphClient
+            .api(`me/onenote/pages/${objective.id}/content`)
+            .patch(patchBody)
+            .then(dataHandler)
+            .catch(errHandler); 
     }
 
     deleteObjective(subjectId, objectiveId, successHandler, errHandler) {
@@ -249,29 +152,6 @@ export default class OkrService {
             .delete()
             .then(successHandler)
             .catch(errHandler);
-
-        // this.getPageContent(subjectId, false, (document) => {
-
-        //     if(!document) {
-        //         return errHandler({message: "Cannot found Objective's OneNote page."});
-        //     }
-
-        //     let listNodeId = document.querySelector(`li[data-id="${objectiveId}"]`).getAttribute('id');
-
-        //     // OneNote does not support explicit delete operation, so patching with 
-        //     // the empty item - it will be completely removed in OneNote page
-        //     let patchBody = [
-        //         {
-        //         'target': `${listNodeId}`,
-        //         'action': 'replace',
-        //         'content':'<li></li>'
-        //         }];
-        //     this.graphClient
-        //         .api(this.getSubjectPageContentUrl(subjectId))
-        //         .patch(patchBody)
-        //         .then(successHandler)
-        //         .catch(errHandler); 
-        // }, errHandler);
     }
 
     createSection(subjectId, dataHandler, errHandler) {
