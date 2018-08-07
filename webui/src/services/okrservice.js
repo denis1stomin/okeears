@@ -54,6 +54,7 @@ export default class OkrService {
 
             this.graphClient
                 .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
+                .select('id, title')
                 .get()
                 .then(body => {
                     const objectives = body.value.map(page => {
@@ -237,7 +238,6 @@ export default class OkrService {
         this.graphClient
             .api(`me/onenote/pages/${pageId}/content`)
             .responseType('document')
-            .query({'includeIDs':'true'})
             .get()
             .then((body) => {
                 if(ArrayBuffer.isView(body)) {
