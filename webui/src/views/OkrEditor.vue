@@ -12,7 +12,8 @@
         <div class="menu">
             <SearchForm/>
 
-            <div class="menu-user" @click="selectInterestingSubject(user)">{{user.displayName}}</div>
+            <div class="menu-user" v-if="user.id !== selectedUser.id"
+                 @click="selectInterestingSubject(user)">Return to me</div>
 
             <OrgTree/>
         </div>
@@ -53,6 +54,12 @@
             user: {
                 get() {
                     return this.$store.state.user.me;
+                }
+            },
+
+            selectedUser: {
+                get() {
+                    return this.$store.state.user.selectedSubject
                 }
             }
         },

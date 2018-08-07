@@ -1,19 +1,41 @@
 .org-tree {
   display: flex;
   flex-direction: column;
-  margin-top: 30px;
+  margin: 30px 0;
 
   .org-tree-item {
-    margin-bottom: 10px;
-    padding: 10px;
+    padding: 10px 30px;
     display: flex;
-    flex-direction: column;
     font-size: 14px;
+    color: @white;
     cursor: pointer;
     transition: transform 0.3s ease-out;
-    &:hover,
     &.org-tree-item-selected {
+      color: @darkgrey;
       background: @white;
+    }
+    &:hover {
+      color: @darkgrey;
+      background: @lightgrey;
+    }
+
+    .user-card-img {
+      height: 2.5em;
+      width: 2.5em;
+      margin-right: 5px;
+
+      .user-card-photo {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center center;
+        border-radius: 5px;
+      }
+
+      .user-card-no-photo {
+        fill: @grey;
+        color: @grey;
+      }
     }
 
     .org-tree-item-job {
