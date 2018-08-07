@@ -30,10 +30,12 @@ export default class OkrService {
                 return dataHandler([]);
             }
             
-            const nodes = Array.from(listNode.querySelectorAll('li[data-id]'));
+            const nodes = Array.from(listNode.querySelectorAll('li'));
             const results = nodes.map(each => {
+                const idAttribute = each.getAttribute('data-id');
+                const id = idAttribute ? idAttribute : this.createId(); 
                 return {
-                    id: each.getAttribute('data-id'),
+                    id: id,
                     statement: each.innerText
                 }
             });
@@ -116,7 +118,7 @@ export default class OkrService {
             let content = '';
             objective.keyresults.forEach(each => {
                 if(!each.id) {
-                    each.id = Math.random().toString(36).substr(2, 9);
+                    each.id = this.createId();
                 }
                 content += `<li data-id="${each.id}">${each.statement}</li>`;
             });
@@ -290,5 +292,9 @@ export default class OkrService {
     getSubjectSectionId(subjectId)
     {
         return this.sectionIds.get(subjectId);
+    }
+
+    createId() {
+        return Math.random().toString(36).substr(2, 9);
     }
 }
