@@ -2,16 +2,25 @@
     <div class="org-tree">
         <div class="org-tree-item" :class="{'org-tree-item-selected': user.id === selectedSubject.id}"
              v-for="user in orgtree" @click="selectSubject(user)">
-            <img class="org-tree-item-photo" :src="user.photo" v-if="user.photo"/>
-            <span class="org-tree-item-name">{{user.displayName}}</span>
-            <span class="org-tree-item-job">{{user.jobTitle}}</span>
+            <div class="user-card-img">
+                <div class="user-card-photo" v-if="user.photo" :style="{backgroundImage: `url('${user.photo}')`}"></div>
+                <UserIcon class="user-card-no-photo" v-if="!user.photo"/>
+            </div>
+            <div class="orgtree-item-info">
+                <div class="org-tree-item-name">{{user.displayName}}</div>
+                <div class="org-tree-item-job">{{user.jobTitle}}</div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import UserIcon from './Icons/UserIcon'
+
     export default {
         name: 'OrgTree',
+
+        components: {UserIcon},
 
         computed: {
             orgtree: {

@@ -6,6 +6,7 @@ let okrSvc = new OkrService();
 export default {
     state: {
         objectives: [],
+        loading: false,
         error: ''
     },
 
@@ -13,10 +14,12 @@ export default {
         OBJECTIVES_COMPLETE(state, payload) {
             state.error = null;
             state.objectives = payload;
+            state.loading = false;
         },
 
         OBJECTIVES_FAILED(state, payload) {
             state.error = payload;
+            state.loading = false;
         },
 
         CREATE_OBJECTIVE(state, payload) {
@@ -95,7 +98,8 @@ export default {
     },
 
     actions: {
-        GET_OBJECTIVES({commit}) {
+        GET_OBJECTIVES({state, commit}) {
+            state.loading = true;
             okrSvc.getObjectives(
                 user.state.selectedSubject.id,
                 data => commit('OBJECTIVES_COMPLETE', data),
