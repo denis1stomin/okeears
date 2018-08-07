@@ -76,7 +76,6 @@ export default {
             let objectiveIndex = objectives.indexOf(targetObjective);
             let keyresultIndex = targetObjective.keyresults.indexOf(payload.keyresult);
 
-            console.log(payload.krStatement, payload.krPercent);
             objectives[objectiveIndex].keyresults[keyresultIndex].statement = payload.krStatement;
             objectives[objectiveIndex].keyresults[keyresultIndex].percent = payload.krPercent;
             state.objectives = objectives;
