@@ -4,7 +4,7 @@ const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
 const NOTEBOOK_NAME = 'Okeears';
-const SECTION_NAME = 'Objectives';
+const SECTION_NAME = 'FY2018';
 
 export default class OkrService {
     constructor() {
@@ -46,8 +46,9 @@ export default class OkrService {
         }, errHandler);
     }
 
-    getObjectives(subjectId, dataHandler, errHandler) {
-        this.getSection(subjectId, false, sectionId => {
+    getObjectives(subjectId, userId, dataHandler, errHandler) {
+        const createSection = subjectId == userId;
+        this.getSection(subjectId, createSection, sectionId => {
             
             // User has not created any objectives yet
             if(!sectionId) {
