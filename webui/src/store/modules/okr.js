@@ -73,10 +73,12 @@ export default {
         EDIT_KEYRESULT(state, payload) {
             let objectives = state.objectives;
             let targetObjective = payload.objective;
-            let objective = objectives.indexOf(targetObjective);
-            let keyresult = targetObjective.keyresults.indexOf(payload.keyresult);
+            let objectiveIndex = objectives.indexOf(targetObjective);
+            let keyresultIndex = targetObjective.keyresults.indexOf(payload.keyresult);
 
-            objectives[objective].keyresults[keyresult].statement = payload.krStatement;
+            console.log(payload.krStatement, payload.krPercent);
+            objectives[objectiveIndex].keyresults[keyresultIndex].statement = payload.krStatement;
+            objectives[objectiveIndex].keyresults[keyresultIndex].percent = payload.krPercent;
             state.objectives = objectives;
         },
 
@@ -102,7 +104,6 @@ export default {
             state.loading = true;
             okrSvc.getObjectives(
                 user.state.selectedSubject.id,
-                user.state.me.id,
                 data => commit('OBJECTIVES_COMPLETE', data),
                 err => commit('OBJECTIVES_FAILED', err)
             );
