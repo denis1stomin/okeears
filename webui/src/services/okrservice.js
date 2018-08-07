@@ -25,18 +25,21 @@ export default class OkrService {
     getKeyResults(objectiveId, dataHandler, errHandler) {
         this.getPageContent(objectiveId, document => {
 
-            const listNode = document.querySelector('div > ul');
-            if(!listNode) {
+            const table = document.querySelector('div > table');
+            if(!table) {
                 return dataHandler([]);
             }
             
-            const nodes = Array.from(listNode.querySelectorAll('li'));
-            const results = nodes.map(each => {
-                const idAttribute = each.getAttribute('data-id');
-                const id = idAttribute ? idAttribute : this.createId(); 
+            const rows = Array.from(table.querySelectorAll('tr'));
+            const results = rows.map(each => {
+                const rowId = each.getAttribute('data-id');
+                const id = rowId ? rowId : this.createId(); 
+                
+                const cells = Array.from(each.querySelectorAll('td'));
                 return {
                     id: id,
-                    statement: each.innerText
+                    statement: cells[0].innerText,
+                    percent: parseInt(cells[1].innerText, 10)
                 }
             });
             dataHandler(results);
@@ -114,30 +117,26 @@ export default class OkrService {
             'action': 'replace',
             'content': statement
         }];
-
+        
+        let content = '';
         if(objective.keyresults && objective.keyresults.length > 0) {
-            let content = '';
             objective.keyresults.forEach(each => {
                 if(!each.id) {
                     each.id = this.createId();
                 }
-                content += `<li data-id="${each.id}">${each.statement}</li>`;
+                if(!each.percent) {
+                    each.percent = 0;
+                }
+                content += `<tr data-id="${each.id}"><td>${each.statement}</td><td>${each.percent}</td></tr>`;
             });
-
-            patchBody.push(
-            {
-                'target': 'body',
-                'action': 'replace',
-                'content': `<ul>${content}</ul>`
-            });
-        } else {
-            patchBody.push(
-            {
-                'target': 'body',
-                'action': 'replace',
-                'content': '<ul></ul>'
-            });                
         }
+
+        patchBody.push(
+        {
+            'target': 'body',
+            'action': 'replace',
+            'content': `<table>${content}</table>`
+        });   
 
         this.graphClient
             .api(`me/onenote/pages/${objective.id}/content`)

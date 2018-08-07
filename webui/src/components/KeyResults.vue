@@ -8,6 +8,7 @@
                        :kr="keyresult">
                 <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
+            <input type="range" min="0" max="100" v-model.number="keyresult.percent" @blur="editPercent(objective, keyresult)"/>
         </div>
         <InputForm ref="newKRForm"
                    placeholder="Let’s create measurable key result"
@@ -33,11 +34,12 @@
         props: ['objective'],
 
         methods: {
-            addKeyresult(objective, krStatement) {
+            addKeyresult(objective, statement) {
                 this.$store.dispatch('CREATE_KEYRESULT', {
                     objective: objective,
                     keyresult: {
-                        statement: krStatement
+                        statement: statement,
+                        percent: 0
                     }
                 })
             },
@@ -46,7 +48,8 @@
                 this.$store.dispatch('EDIT_KEYRESULT', {
                     objective: objective,
                     keyresult: keyresult,
-                    krStatement: krStatement
+                    krStatement: krStatement,
+                    krPercent: keyresult.percent
                 });
             },
 
@@ -55,6 +58,15 @@
                     objective: objective,
                     keyresult: keyresult
                 })
+            },
+
+            editPercent(objective, keyresult) {
+                this.$store.dispatch('EDIT_KEYRESULT', {
+                    objective: objective,
+                    keyresult: keyresult,
+                    krStatement: keyresult.statement,
+                    krPercent: keyresult.percent
+                });
             }
         }
     }
