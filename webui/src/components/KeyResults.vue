@@ -1,13 +1,5 @@
 <template>
     <div class="key-results" :objective="objective">
-        <InputForm ref="newKRForm"
-                   placeholder="Let’s create measurable key result"
-                   :action="addKeyresult"
-                   :obj="objective">
-                <span class="input-icon" @click="addKeyresult(objective, $refs.newKRForm.value)">
-                    <PlusIcon/>
-                </span>
-        </InputForm>
         <div class="key-result" v-for="keyresult in objective.keyresults">
             <InputForm placeholder=""
                        :action="editKeyresult"
@@ -17,6 +9,14 @@
                 <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
         </div>
+        <InputForm ref="newKRForm"
+                   placeholder="Let’s create measurable key result"
+                   :action="addKeyresult"
+                   :obj="objective">
+        <span class="input-icon" @click="addKeyresult(objective, $refs.newKRForm.value)">
+            <PlusIcon/>
+        </span>
+        </InputForm>
     </div>
 </template>
 
