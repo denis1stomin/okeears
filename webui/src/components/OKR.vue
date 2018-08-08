@@ -129,8 +129,14 @@
                     return {
                         statement: "Create a few ambitious objectives",
                         keyresults: [
-                            { statement: "Create at least 3 objectives for the next iteration" },
-                            { statement: "Achieve at minimum 60% of success rate" }
+                            { 
+                                statement: "Create at least 3 objectives for the next iteration",
+                                percent: 0
+                            },
+                            {
+                                statement: "Achieve at minimum 60% of success rate",
+                                percent: 0
+                            }
                         ]
                     };
                 }
