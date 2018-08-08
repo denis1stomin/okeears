@@ -8,9 +8,10 @@
                 <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
             
-            <input type="range" min="0" max="100" v-model.number="keyresult.percent" @blur="editPercent(objective, keyresult)"/>
+            <input type="range" min="0" max="100"
+                   v-model.number="keyresult.percent"
+                   @blur="editPercent(objective, keyresult)"/>
             <span>{{keyresult.percent}}%</span>
-
         </div>
         <InputForm ref="newKRForm"
                    placeholder="Let’s create measurable key result"
