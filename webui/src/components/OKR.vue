@@ -8,9 +8,9 @@
             <InputForm class="create-objective-form"
                        ref="newObjForm"
                        placeholder="Let’s create ambitious objective"
-                       :action="addObjective"
+                       :action="text => { addObjective(text); }"
                        v-if="canChangeOkr">
-                <span class="input-icon" @click="addObjective($refs.newObjForm.value)">
+                <span class="input-icon" @click="addObjective($refs.newObjForm.text)">
                     <PlusIcon/>
                 </span>
             </InputForm>
@@ -35,9 +35,8 @@
                 <div class="objective-item-body">
                     <InputForm class="objective-title"
                                placeholder=""
-                               :action="editObjective"
-                               :value="objective.statement"
-                               :obj="objective">
+                               :action="text => { editObjective(objective, text); }"
+                               :value="objective.statement">
                     </InputForm>
 
                     <KeyResults :objective="objective"/>
@@ -145,6 +144,7 @@
 
         methods: {
             addObjective(objStatement) {
+                this.$refs.newObjForm.clear();
                 this.$store.dispatch('CREATE_OBJECTIVE', {
                     statement: objStatement
                 });
