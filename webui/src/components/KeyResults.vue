@@ -5,7 +5,7 @@
                        autosave="true"
                        :action="text => { editKeyresult(objective, text, keyresult); }"
                        :value="keyresult.statement">
-                <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
+                <span v-if="canChangeOkr" class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
             
             <input type="range" min="0" max="100"
@@ -17,7 +17,7 @@
                    placeholder="Let’s create measurable key result"
                    :action="text => { addKeyresult(objective, text); }">
         <span class="input-icon" @click="addKeyresult(objective, $refs.newKRForm.text)">
-            <PlusIcon/>
+            <PlusIcon v-if="canChangeOkr"/>
         </span>
         </InputForm>
     </div>
@@ -34,6 +34,14 @@
         components: {InputForm, PlusIcon, TrashIcon},
 
         props: ['objective'],
+
+        computed: {
+            canChangeOkr: {
+                get() {
+                    return this.$store.getters.CAN_CHANGE_OKR;
+                }
+            },
+        },
 
         methods: {
             addKeyresult(objective, statement) {
