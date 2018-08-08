@@ -5,20 +5,18 @@
                        autosave="true"
                        :action="text => { editKeyresult(objective, text, keyresult); }"
                        :value="keyresult.statement">
-                <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
             
-            <input type="range" min="0" max="100"
+            <input class="key-result-range" type="range" min="0" max="100"
                    v-model.number="keyresult.percent"
                    @blur="editPercent(objective, keyresult)"/>
-            <span>{{keyresult.percent}}%</span>
+            <span class="key-result-percents">{{keyresult.percent}}%</span>
+
+            <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
         </div>
         <InputForm ref="newKRForm"
-                   placeholder="Let’s create measurable key result"
+                   placeholder="+ Add measurable key result"
                    :action="text => { addKeyresult(objective, text); }">
-        <span class="input-icon" @click="addKeyresult(objective, $refs.newKRForm.text)">
-            <PlusIcon/>
-        </span>
         </InputForm>
     </div>
 </template>

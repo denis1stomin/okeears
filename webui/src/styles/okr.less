@@ -33,11 +33,6 @@
     margin: 10px 0;
     background: @white;
     box-shadow: 0 1px 4px @darkgrey;
-    &:hover {
-      .input-form .input-icon {
-        visibility: visible;
-      }
-    }
 
     .objective-item-header {
       display: flex;
@@ -93,20 +88,16 @@
         textarea {
           transition: all 0.5s ease-out;
           border: 1px solid @white;
-          font-weight: bold;
+          font-weight: 500;
         }
 
         .action-button {
           display: none;
         }
-
-        .input-icon {
-          visibility: hidden;
-          transition: all 0.5s ease-out;
-        }
       }
 
       .key-results {
+        margin-right: 5px;
         margin-left: 15px;
 
         .input-form {
@@ -116,12 +107,58 @@
         }
 
         .key-result {
+          display: flex;
+          align-items: center;
           margin: 5px 0;
 
-          .icon {
+          .input-form {
+            padding: 2px;
+            flex-grow: 1;
+          }
+
+          .key-result-range {
+            width: 10em;
+            height: 10px;
+            margin: 0 10px;
+            -webkit-appearance: none;
+            border-radius: 5px;
+            background: @grey;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+
+            &::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              width: 15px;
+              height: 15px;
+              border-radius: 50%;
+              background: @lightblue;
+              cursor: pointer;
+            }
+
+            &::-moz-range-thumb {
+              width: 25px;
+              height: 25px;
+              border-radius: 50%;
+              background: #4CAF50;
+              cursor: pointer;
+            }
+          }
+
+          .key-result-percents {
+            margin: 0 10px;
+            flex-basis: 2.6em;
+            font-size: 14px;
+          }
+
+          .icon-trash {
             width: 18px;
-            float: right;
-            cursor: pointer;
+            .linkstyle();
+            &:hover {
+              .linkhover();
+            }
           }
         }
       }
