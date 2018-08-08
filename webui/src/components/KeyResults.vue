@@ -3,11 +3,13 @@
         <div class="key-result" v-for="keyresult in objective.keyresults">
             <InputForm placeholder=""
                        autosave="true"
+                       :readonly="!canChangeOkr"
                        :action="text => { editKeyresult(objective, text, keyresult); }"
                        :value="keyresult.statement">
+                <span v-if="canChangeOkr" class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
-            
-            <input class="key-result-range" type="range" min="0" max="100"
+
+            <input class="key-result-range" type="range" min="0" max="100" v-if="canChangeOkr"
                    v-model.number="keyresult.percent"
                    @blur="editPercent(objective, keyresult)"/>
             <span class="key-result-percents">{{keyresult.percent}}%</span>
@@ -15,6 +17,7 @@
             <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
         </div>
         <InputForm ref="newKRForm"
+                   v-if="canChangeOkr"
                    placeholder="+ Add measurable key result"
                    :action="text => { addKeyresult(objective, text); }">
         </InputForm>
@@ -32,6 +35,14 @@
         components: {InputForm, PlusIcon, TrashIcon},
 
         props: ['objective'],
+
+        computed: {
+            canChangeOkr: {
+                get() {
+                    return this.$store.getters.CAN_CHANGE_OKR;
+                }
+            },
+        },
 
         methods: {
             addKeyresult(objective, statement) {
