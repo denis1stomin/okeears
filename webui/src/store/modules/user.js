@@ -2,7 +2,6 @@ import AuthSvc from './../../services/authservice'
 import GraphSubjectService from './../../services/graphsubjectservice'
 
 const DELVE_LINK_TPL = 'https://nam.delve.office.com/?u=';
-const AAD_LINK_TPL = 'https://portal.azure.com/#blade/Microsoft_AAD_IAM/UserDetailsMenuBlade/Profile/userId/';
 
 const SubjectSvc = new GraphSubjectService();
 
@@ -147,7 +146,6 @@ export default {
             const errorHandler = error => console.log(error);
 
             subject.delvelink = DELVE_LINK_TPL + subject.id;
-            subject.aadlink = AAD_LINK_TPL + subject.id;
             subject.photo = null;
 
             if(state.selectedSubject.id == subject.id) {
