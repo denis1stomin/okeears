@@ -1,20 +1,22 @@
 <template>
-    <div class="key-results" :objective="objective">
+    <div class="key-results">
         <div class="key-result" v-for="keyresult in objective.keyresults">
             <InputForm placeholder=""
-                       :action="editKeyresult"
-                       :value="keyresult.statement"
-                       :obj="objective"
-                       :kr="keyresult">
+                       autosave="true"
+                       :action="text => { editKeyresult(objective, text, keyresult); }"
+                       :value="keyresult.statement">
                 <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
-            <input type="range" min="0" max="100" v-model.number="keyresult.percent" @blur="editPercent(objective, keyresult)"/>
+            
+            <input type="range" min="0" max="100"
+                   v-model.number="keyresult.percent"
+                   @blur="editPercent(objective, keyresult)"/>
+            <span>{{keyresult.percent}}%</span>
         </div>
         <InputForm ref="newKRForm"
                    placeholder="Let’s create measurable key result"
-                   :action="addKeyresult"
-                   :obj="objective">
-        <span class="input-icon" @click="addKeyresult(objective, $refs.newKRForm.value)">
+                   :action="text => { addKeyresult(objective, text); }">
+        <span class="input-icon" @click="addKeyresult(objective, $refs.newKRForm.text)">
             <PlusIcon/>
         </span>
         </InputForm>
@@ -35,6 +37,7 @@
 
         methods: {
             addKeyresult(objective, statement) {
+                this.$refs.newKRForm.clear();
                 this.$store.dispatch('CREATE_KEYRESULT', {
                     objective: objective,
                     keyresult: {

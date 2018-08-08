@@ -1,16 +1,14 @@
 <template>
-    <div class="input-form"
-         :action="action"
-         :value="value">
+    <div class="input-form">
         <label :for="name"></label>
         <textarea type="text"
                   v-autosize="text"
                   v-model="text"
                   :id="name"
                   :placeholder="placeholder"
-                  :obj="obj"
-                  :kr="kr"
-                  @keyup.enter="initAction"/>
+                  @blur="onBlur(text)"
+                  @keyup.enter="action(text)"
+                  @keydown.enter="suppressEnter"/>
         <div class="action-button">
             <slot/>
         </div>
@@ -21,26 +19,30 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'value', 'obj', 'kr'],
+        props: ['name', 'placeholder', 'action', 'value', 'autosave'],
 
-        computed: {
-            text: {
-                get() {
-                    return this.value;
-                },
-
-                set(changed) {
-                    this.value = changed;
-                }
+        data() {
+            return {
+                text: this.value
             }
         },
 
         methods: {
-            initAction() {
-                if (this.obj)
-                    return this.action(this.obj, this.value, this.kr);
-                else
-                    return this.action(this.value);
+            onBlur(text) {
+                if(this.autosave) {
+                    this.action(text);
+                }
+            },
+
+            suppressEnter(event) {
+                event.stopPropagation();
+    	        event.preventDefault();
+                event.returnValue = false;
+                this.text = event.target.value;
+            },
+
+            clear() {
+                this.text = '';
             }
         }
     }
