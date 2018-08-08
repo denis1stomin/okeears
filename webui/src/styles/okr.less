@@ -30,8 +30,8 @@
   }
 
   .objectives {
-    margin: 10px 0;
-    background: @white;
+    margin: 25px 0;
+    background: transparent;
     box-shadow: 0 1px 4px @darkgrey;
 
     .objective-item-header {
@@ -78,18 +78,22 @@
 
     .objective-item-body {
       padding: 10px 5px;
+      background: white;
 
       .objective-title {
+        background: transparent;
         transition: all 0.5s ease-out;
+        border: none;
+        // TODO: do we need focus border?
         &:focus-within {
           border-color: @white;
         }
 
         textarea {
           transition: all 0.5s ease-out;
-          border: 1px solid @white;
           font-weight: 600;
           color: @blue;
+          background: transparent;
         }
 
         .action-button {
@@ -119,6 +123,12 @@
           .input-form {
             padding: 2px;
             flex-grow: 1;
+            background: transparent;
+            border: none;
+
+            textarea {
+              background: transparent;
+            }
           }
 
           .key-result-range {
@@ -173,6 +183,13 @@
   }
 
   .input-form {
+    background: transparent;
+
+    textarea {
+      background: transparent;
+      border: none;
+    }
+
     .icon-plus {
       &:hover {
         transform: scale(1);
