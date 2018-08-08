@@ -6,6 +6,7 @@
                   v-model="text"
                   :id="name"
                   :placeholder="placeholder"
+                  @blur="onBlur(text)"
                   @keyup.enter="action(text)"
                   @keydown.enter="suppressEnter"/>
         <div class="action-button">
@@ -18,7 +19,7 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'value'],
+        props: ['name', 'placeholder', 'action', 'value', 'autosave'],
 
         data() {
             return {
@@ -27,6 +28,12 @@
         },
 
         methods: {
+            onBlur(text) {
+                if(this.autosave) {
+                    this.action(text);
+                }
+            },
+
             suppressEnter(event) {
                 event.stopPropagation();
     	        event.preventDefault();

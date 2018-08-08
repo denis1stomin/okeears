@@ -35,6 +35,7 @@
                 <div class="objective-item-body">
                     <InputForm class="objective-title"
                                placeholder=""
+                               autosave="true"
                                :action="text => { editObjective(objective, text); }"
                                :value="objective.statement">
                     </InputForm>
@@ -146,7 +147,8 @@
             addObjective(objStatement) {
                 this.$refs.newObjForm.clear();
                 this.$store.dispatch('CREATE_OBJECTIVE', {
-                    statement: objStatement
+                    statement: objStatement,
+                    keyresults: []
                 });
 
                 this.logChange(`Me created '${objStatement}'`);

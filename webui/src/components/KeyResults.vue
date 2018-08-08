@@ -2,6 +2,7 @@
     <div class="key-results">
         <div class="key-result" v-for="keyresult in objective.keyresults">
             <InputForm placeholder=""
+                       autosave="true"
                        :action="text => { editKeyresult(objective, text, keyresult); }"
                        :value="keyresult.statement">
                 <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>

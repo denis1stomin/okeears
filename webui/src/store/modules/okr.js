@@ -57,10 +57,6 @@ export default {
         CREATE_KEYRESULT(state, payload) {
             let objectives = state.objectives;
             let objective = payload.objective;
-            if(!objective.keyresults) {
-                objective.keyresults = [];
-            }
-
             objective.keyresults.push(payload.keyresult);
             objectives[objectives.indexOf(objective)].keyresults = objective.keyresults;
             state.objectives = objectives;
