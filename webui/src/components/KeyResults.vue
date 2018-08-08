@@ -1,6 +1,6 @@
 <template>
     <div class="key-results">
-        <div class="key-result" v-for="keyresult in objective.keyresults">
+        <div class="key-result" v-for="keyresult in objective.keyresults" :key="keyresult.id">
             <InputForm placeholder=""
                        autosave="true"
                        :readonly="!canChangeOkr"

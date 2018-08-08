@@ -19,7 +19,7 @@
                 <span>{{error.message}}</span>
             </div>
 
-            <div class="objectives" v-if="objectives.length" v-for="objective in objectives">
+            <div class="objectives" v-if="objectives.length" v-for="objective in objectives" :key="objective.id">
                 <div class="objective-item-header">
                     <div class="objective-like-icon" @click="objective.like = !objective.like">
                         <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
