@@ -4,6 +4,7 @@
             <h2 class="title">Okeears</h2>
 
             <div class="header-nav-item">
+                <span class="saving-indicator" v-if="currentlySaving">Saving...</span>
                 <span class="user-name">{{authenticatedUser.displayName}}</span>
                 <span class="log-out" @click="logOut"><LogoutIcon/></span>
             </div>
@@ -61,7 +62,13 @@
                 get() {
                     return this.$store.state.user.selectedSubject
                 }
-            }
+            },
+            
+            currentlySaving: {
+                get() {
+                    return this.$store.state.okr.saving;
+                }
+            }            
         },
 
         methods: {

@@ -171,10 +171,9 @@
                 });
             },
 
-            deleteObjective(objId) {
-                this.$store.dispatch('DELETE_OBJECTIVE', objId);
-
-                this.logChange(`Me deleted '${objId}'`);
+            deleteObjective(objectiveId) {
+                this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
+                this.logChange(`Me deleted '${objectiveId}'`);
             },
 
             sendChangeSuggestion(objective) {
