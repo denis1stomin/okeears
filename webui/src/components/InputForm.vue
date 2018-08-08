@@ -5,6 +5,7 @@
                   v-autosize="text"
                   v-model="text"
                   :id="name"
+                  :readonly="readonly"
                   :placeholder="placeholder"
                   @blur="onBlur(text)"
                   @keyup.enter="action(text)"
@@ -19,7 +20,7 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'value', 'autosave'],
+        props: ['name', 'placeholder', 'action', 'value', 'autosave', 'readonly'],
 
         data() {
             return {
@@ -29,7 +30,7 @@
 
         methods: {
             onBlur(text) {
-                if(this.autosave) {
+                if(this.autosave && !this.readonly) {
                     this.action(text);
                 }
             },

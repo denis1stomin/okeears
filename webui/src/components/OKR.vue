@@ -36,6 +36,7 @@
                     <InputForm class="objective-title"
                                placeholder=""
                                autosave="true"
+                               :readonly="!canChangeOkr"
                                :action="text => { editObjective(objective, text); }"
                                :value="objective.statement">
                     </InputForm>
