@@ -16,6 +16,8 @@
 
 <script>
     import UserIcon from './Icons/UserIcon'
+    
+    import { mapState } from 'vuex'
 
     export default {
         name: 'OrgTree',
@@ -23,17 +25,10 @@
         components: {UserIcon},
 
         computed: {
-            orgtree: {
-                get() {
-                    return this.$store.state.user.orgtree;
-                }
-            },
-
-            selectedSubject: {
-                get() {
-                    return this.$store.state.user.selectedSubject;
-                }
-            }
+            ...mapState({
+               orgtree: state => state.user.orgtree,
+               selectedSubject: state => state.user.selectedSubject
+            })
         },
 
         methods: {

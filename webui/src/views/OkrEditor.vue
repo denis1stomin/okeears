@@ -13,7 +13,7 @@
         <div class="menu">
             <SearchForm/>
 
-            <div class="menu-user" v-if="user.id !== selectedUser.id"
+            <div class="menu-user" v-if="user.id !== selectedSubject.id"
                  @click="selectInterestingSubject(user)">Return to me</div>
 
             <OrgTree/>
@@ -41,34 +41,22 @@
     import OKR from './../components/OKR'
 
     import AuthSvc from './../services/authservice'
+    
+    import { mapState, mapGetters } from 'vuex'
 
     export default {
         components: {LogoutIcon, SearchForm, OrgTree, UserCard, OKR},
 
         computed: {
-            authenticatedUser: {
-                get() {
-                    return this.$store.getters.GET_AUTHENTICATED_USER;
-                }
-            },
+            ...mapGetters({
+                authenticatedUser: 'GET_AUTHENTICATED_USER'
+            }),
 
-            user: {
-                get() {
-                    return this.$store.state.user.me;
-                }
-            },
-
-            selectedUser: {
-                get() {
-                    return this.$store.state.user.selectedSubject
-                }
-            },
-            
-            currentlySaving: {
-                get() {
-                    return this.$store.state.okr.saving;
-                }
-            }            
+            ...mapState({
+               currentlySaving: state => state.okr.saving,
+               selectedSubject: state => state.user.selectedSubject,
+               user: state => state.user.me
+            })            
         },
 
         methods: {

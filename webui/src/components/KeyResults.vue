@@ -30,6 +30,8 @@
     import PlusIcon from './Icons/PlusIcon'
     import TrashIcon from './Icons/TrashIcon'
 
+    import { mapGetters } from 'vuex'
+
     export default {
         name: 'KeyResults',
 
@@ -38,11 +40,9 @@
         props: ['objective'],
 
         computed: {
-            canChangeOkr: {
-                get() {
-                    return this.$store.getters.CAN_CHANGE_OKR;
-                }
-            },
+            ...mapGetters({
+                canChangeOkr: 'CAN_CHANGE_OKR'
+            })
         },
 
         methods: {
