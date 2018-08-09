@@ -3,9 +3,20 @@ import user from './user'
 
 let okrSvc = new OkrService();
 
+const moveItem = (itemId, fromArr, toArr) => {
+    const idx = fromArr.findIndex((x) => x.id === itemId);
+    if (idx > -1) {
+        const item = fromArr[idx];
+
+        fromArr.splice(idx, 1);
+        toArr.push(item);
+    }
+};
+
 export default {
     state: {
         objectives: [],
+        removedObjectives: [],
         loading: false,
         saving: false,
         error: null
@@ -38,7 +49,7 @@ export default {
 
         EDIT_OBJECTIVE(state, payload) {
             state.saving = true;
-           
+
             let objectives = state.objectives;
             let obj = payload.objective;
 
@@ -55,15 +66,19 @@ export default {
             state.error = null;
             state.saving = true;
 
-            let idx = state.objectives.findIndex((x) => x.id === objectiveId);
-            if (idx > -1) {
-                state.objectives.splice(idx, 1);
-            }
+            moveItem(objectiveId, state.objectives, state.removedObjectives);
         },
 
         DELETE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
+        },
+
+        RESTORE_OBJECTIVE(state, objectiveId) {
+            state.error = null;
+            state.saving = true;
+
+            moveItem(objectiveId, state.removedObjectives, state.objectives);
         },
 
         CREATE_KEYRESULT(state, payload) {
@@ -219,6 +234,31 @@ export default {
                 objectiveId,
                 data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
+            )
+        },
+
+        RESTORE_OBJECTIVE({state, commit}, objectiveId) {
+            // restore in local objectives list
+            commit('RESTORE_OBJECTIVE', objectiveId);
+
+            const objective = state.objectives.find((x) => x.id === objectiveId);
+
+            // send request to create the objective
+            okrSvc.createObjective(
+                user.state.selectedSubject.id,
+                objective,
+                data => {
+                    // when objective is created new id is returned.
+                    // we need to update the id field
+                    let changedList = state.objectives;
+                    let idx = changedList.indexOf(objective);
+                    if (idx > -1) {
+                        // TODO: Use mutations!
+                        changedList[idx].id = data.id;
+                        commit('OBJECTIVES_COMPLETE', changedList);
+                    }
+                },
+                err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
         },
 

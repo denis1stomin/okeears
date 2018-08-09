@@ -19,7 +19,11 @@
                 <span>{{error.message}}</span>
             </div>
 
-            <div class="objectives" v-if="objectives.length" v-for="objective in objectives" :key="objective.id">
+            <div :class="{'objectives': !isRemovedObjective(objective.id), 'objective-deleted': isRemovedObjective(objective.id)}"
+                 v-if="objectives.length"
+                 v-for="objective in objectives.concat(removedObjectives)"
+                 :key="objective.id">
+
                 <div class="objective-item-header">
                     <div class="objective-like-icon" @click="objective.like = !objective.like">
                         <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
@@ -121,6 +125,7 @@
 
             ...mapState({
                objectives: state => state.okr.objectives,
+               removedObjectives: state => state.okr.removedObjectives,
                error: state => state.okr.error,
                currentlyLoading: state => state.okr.loading,
                selectedSubject: state => state.user.selectedSubject
@@ -157,6 +162,13 @@
             deleteObjective(objectiveId) {
                 this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
                 this.logChange(`Me deleted '${objectiveId}'`);
+            },
+
+            isRemovedObjective(objectiveId) {
+                console.log(this.$store.state.okr.removedObjectives);
+                const idx = this.$store.state.okr.removedObjectives.findIndex((x) => x.id === objectiveId);
+                console.log(idx > -1);
+                return (idx > -1);
             },
 
             sendChangeSuggestion(objective) {
