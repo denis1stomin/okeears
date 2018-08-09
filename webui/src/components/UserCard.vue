@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 class="user-card-name">{{user.givenName + ' ' + user.surname}}</h4>
+        <h4 class="user-card-name">{{user.givenName}} {{user.surname}}</h4>
         <div class="user-card-img">
             <div class="user-card-photo" v-if="user.photo" :style="{backgroundImage: `url('${user.photo}')`}"></div>
             <UserIcon class="user-card-no-photo" v-if="!user.photo"/>
