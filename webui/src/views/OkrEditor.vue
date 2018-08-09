@@ -26,10 +26,6 @@
         <div class="content">
             <OKR/>
         </div>
-
-        <footer class="footer">
-            @idioma
-        </footer>
     </div>
 </template>
 

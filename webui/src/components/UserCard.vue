@@ -12,8 +12,6 @@
                 View in
                 <a class="user-card-item-link" target="_blank" rel="noopener noreferrer"
                    :href="user.delvelink">Delve</a>
-                <a class="user-card-item-link" target="_blank" rel="noopener noreferrer"
-                   :href="user.aadlink">Azure</a>
             </div>
         </div>
     </div>

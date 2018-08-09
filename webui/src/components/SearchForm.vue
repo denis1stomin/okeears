@@ -89,9 +89,10 @@
 
         .suggested-subjects-list {
             position: absolute;
-            top: 35px;
+            top: 38px;
             right: 0;
             left: 0;
+            padding: 10px 0;
             z-index: 1;
 
             .suggested-subjects-no-items {
