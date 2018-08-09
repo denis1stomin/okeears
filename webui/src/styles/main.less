@@ -16,7 +16,7 @@ a {
   text-decoration: none;
   .linkstyle();
   &:hover {
-    .linkhover();
+    color: @blue;
   }
 }
 
@@ -33,8 +33,8 @@ a {
 .container {
   display: grid;
   grid-template-columns: auto auto 1fr;
-  grid-template-rows: 60px 1fr 60px;
-  grid-template-areas: 'header header header' 'menu user-card content' 'footer footer footer';
+  grid-template-rows: 60px 1fr;
+  grid-template-areas: 'header header header' 'menu user-card content';
   min-height: 100vh;
 
   .header {
@@ -51,7 +51,7 @@ a {
       display: inline-block;
       margin: 15px 30px;
       font-size: 30px;
-      font-weight: bold;
+      font-weight: 500;
     }
 
     .header-nav-item {
@@ -77,11 +77,10 @@ a {
 
   .menu {
     grid-area: menu;
-    background: @blue;
+    background: @panelgrey;
 
     .input-form {
       margin: 30px 30px 15px;
-      border-color: @purple;
 
       .icon-search {
         fill: @grey;
@@ -127,15 +126,6 @@ a {
   .content {
     grid-area: content;
     padding: 30px;
-  }
-
-  .footer {
-    grid-area: footer;
-    height: 30px;
-    padding: 15px;
-    border-top: 1px solid @darkgrey;
-    background: @darkgrey;
-    color: @white;
   }
 }
 
