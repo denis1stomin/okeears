@@ -28,6 +28,7 @@ export default {
             state.loading = false;
             state.saving = false;
             state.objectives = payload;
+            state.removedObjectives = [];
         },
 
         OBJECTIVES_FAILED(state, payload) {
