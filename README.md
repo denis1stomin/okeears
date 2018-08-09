@@ -1,4 +1,4 @@
-# Okeears - objectives and key results solution
+# Okeears - objectives and key results solution [![Build Status](https://travis-ci.org/denis1stomin/okeears.svg?branch=master)](https://travis-ci.org/denis1stomin/okeears)
 
 Microsoft Office 365 highly integrated web application.
 
