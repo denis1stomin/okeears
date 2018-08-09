@@ -59,6 +59,7 @@ export default class OkrService {
             this.graphClient
                 .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
                 .select('id, title')
+                .orderby('createdDateTime asc')
                 .get()
                 .then(body => {
                     const objectives = body.value.map(page => {

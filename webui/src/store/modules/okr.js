@@ -7,31 +7,38 @@ export default {
     state: {
         objectives: [],
         loading: false,
-        error: ''
+        saving: false,
+        error: null
     },
 
     mutations: {
         OBJECTIVES_COMPLETE(state, payload) {
             state.error = null;
-            state.objectives = payload;
             state.loading = false;
+            state.saving = false;
+            state.objectives = payload;
         },
 
         OBJECTIVES_FAILED(state, payload) {
             state.error = payload;
             state.loading = false;
+            state.saving = false;
         },
 
         CREATE_OBJECTIVE(state, payload) {
             state.error = null;
+            state.saving = true;
             state.objectives = payload;
         },
 
         CREATE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
+            state.saving = false;
         },
 
         EDIT_OBJECTIVE(state, payload) {
+            state.saving = true;
+           
             let objectives = state.objectives;
             let obj = payload.objective;
 
@@ -41,20 +48,26 @@ export default {
 
         EDIT_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
+            state.saving = false;
         },
 
-        DELETE_OBJECTIVE(state, payload) {
+        DELETE_OBJECTIVE(state, objectiveId) {
             state.error = null;
-            let objectives = state.objectives;
+            state.saving = true;
 
-            objectives.splice(objectives.indexOf(payload), 1);
+            let idx = state.objectives.findIndex((x) => x.id === objectiveId);
+            if (idx > -1) {
+                state.objectives.splice(idx, 1);
+            }
         },
 
         DELETE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
+            state.saving = false;
         },
 
         CREATE_KEYRESULT(state, payload) {
+            state.saving = true;
             let objectives = state.objectives;
             let objective = payload.objective;
             objective.keyresults.push(payload.keyresult);
@@ -64,9 +77,11 @@ export default {
 
         CREATE_KEYRESULT_FAILED(state, payload) {
             state.error = payload;
+            state.saving = false;
         },
 
         EDIT_KEYRESULT(state, payload) {
+            state.saving = true;
             let objectives = state.objectives;
             let targetObjective = payload.objective;
             let objectiveIndex = objectives.indexOf(targetObjective);
@@ -79,9 +94,11 @@ export default {
 
         EDIT_KEYRESULT_FAILED(state, payload) {
             state.error = payload;
+            state.saving = false;
         },
 
         DELETE_KEYRESULT(state, payload) {
+            state.saving = true;
             let objectives = state.objectives;
             let objective = payload.objective;
             let keyresults = objectives[objectives.indexOf(objective)].keyresults;
@@ -91,12 +108,27 @@ export default {
 
         DELETE_KEYRESULT_FAILED(state, payload) {
             state.error = payload;
+            state.saving = false;
         },
+
+        SAVING_SUCCESSFULLY_COMPLETE(state) {
+            state.error = null;
+            state.saving = false;
+        },
+
+        SAVING_STARTED(state) {
+            state.saving = true;
+        },
+
+        LOADING_STARTED(state) {
+            state.loading = true;
+        }
     },
 
     actions: {
         GET_OBJECTIVES({state, commit}) {
-            state.loading = true;
+            commit('LOADING_STARTED');
+
             okrSvc.getObjectives(
                 user.state.selectedSubject.id,
                 user.state.me.id,
@@ -110,6 +142,7 @@ export default {
             let changedList = state.objectives;
             changedList.push(objective);
             commit('OBJECTIVES_COMPLETE', changedList);
+            commit('SAVING_STARTED');
 
             // send request to create new objective
             okrSvc.createObjective(
@@ -121,6 +154,7 @@ export default {
                     let changedList = state.objectives;
                     let idx = changedList.indexOf(objective);
                     if (idx > -1) {
+                        // TODO: Use mutations!
                         changedList[idx].id = data.id;
                         commit('OBJECTIVES_COMPLETE', changedList);
                     }
@@ -136,6 +170,8 @@ export default {
                 changedList.push(objective);
                 commit('OBJECTIVES_COMPLETE', changedList);
             }
+
+            commit('SAVING_STARTED');
 
             // send request to create objective copy
             okrSvc.createObjective(
@@ -153,6 +189,8 @@ export default {
                             commit('OBJECTIVES_COMPLETE', changedList);
                         }
                     }
+
+                    commit('SAVING_SUCCESSFULLY_COMPLETE');
                 },
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
@@ -166,23 +204,20 @@ export default {
             okrSvc.changeObjective(
                 user.state.selectedSubject.id,
                 data.objective,
-                data => { /* successfully updated */ },
+                data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('EDIT_OBJECTIVE_FAILED', err)
             )
         },
 
         DELETE_OBJECTIVE({state, commit}, objectiveId) {
-            // delete from local objectives list
-            let idx = state.objectives.findIndex((x) => x.id === objectiveId);
-            if (idx > -1) {
-                state.objectives.splice(idx, 1);
-            }
+            // delete in local objectives list
+            commit('DELETE_OBJECTIVE', objectiveId);
 
             // send request to delete the objective
             okrSvc.deleteObjective(
                 user.state.selectedSubject.id,
                 objectiveId,
-                data => { /* successfully deleted */ },
+                data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
         },
@@ -196,8 +231,8 @@ export default {
             okrSvc.changeObjective(
                 user.state.selectedSubject.id,
                 data.objective,
-                data => { /* successfully created */ },
-                err => {commit('CREATE_KEYRESULT_FAILED', err)}
+                data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
+                err => commit('CREATE_KEYRESULT_FAILED', err)
             );
         },
 
@@ -210,8 +245,8 @@ export default {
             okrSvc.changeObjective(
                 user.state.selectedSubject.id,
                 data.objective,
-                data => { /* successfully created */ },
-                err => {commit('EDIT_KEYRESULT_FAILED', err)}
+                data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
+                err => commit('EDIT_KEYRESULT_FAILED', err)
             );
         },
 
@@ -224,8 +259,8 @@ export default {
             okrSvc.changeObjective(
                 user.state.selectedSubject.id,
                 data.objective,
-                data => { /* successfully created */ },
-                err => {commit('DELETE_KEYRESULT_FAILED', err)}
+                data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
+                err => commit('DELETE_KEYRESULT_FAILED', err)
             );
         },
     }

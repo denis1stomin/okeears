@@ -19,7 +19,7 @@
                 <span>{{error.message}}</span>
             </div>
 
-            <div class="objectives" v-if="objectives.length" v-for="objective in objectives">
+            <div class="objectives" v-if="objectives.length" v-for="objective in objectives" :key="objective.id">
                 <div class="objective-item-header">
                     <div class="objective-like-icon" @click="objective.like = !objective.like">
                         <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
@@ -88,6 +88,8 @@
     import ChangeLog from './ChangeLog'
     import KeyResults from './KeyResults'
     import Spinner from './Animation/Spinner'
+    
+    import { mapState, mapGetters } from 'vuex'
 
     export default {
         name: 'Objectives',
@@ -95,36 +97,6 @@
         components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults, Spinner},
 
         computed: {
-            objectives: {
-                get() {
-                    return this.$store.state.okr.objectives;
-                }
-            },
-
-            currentlyLoading: {
-                get() {
-                    return this.$store.state.okr.loading;
-                }
-            },
-
-            error: {
-                get() {
-                    return this.$store.state.okr.error;
-                }
-            },
-
-            selectedSubject: {
-                get() {
-                    return this.$store.state.user.selectedSubject;
-                }
-            },
-
-            canChangeOkr: {
-                get() {
-                    return this.$store.getters.CAN_CHANGE_OKR;
-                }
-            },
-
             landingObjective: {
                 get() {
                     return {
@@ -141,7 +113,18 @@
                         ]
                     };
                 }
-            }
+            },
+
+            ...mapGetters({
+                canChangeOkr: 'CAN_CHANGE_OKR'
+            }),
+
+            ...mapState({
+               objectives: state => state.okr.objectives,
+               error: state => state.okr.error,
+               currentlyLoading: state => state.okr.loading,
+               selectedSubject: state => state.user.selectedSubject
+            })
         },
 
         methods: {
@@ -171,10 +154,9 @@
                 });
             },
 
-            deleteObjective(objId) {
-                this.$store.dispatch('DELETE_OBJECTIVE', objId);
-
-                this.logChange(`Me deleted '${objId}'`);
+            deleteObjective(objectiveId) {
+                this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
+                this.logChange(`Me deleted '${objectiveId}'`);
             },
 
             sendChangeSuggestion(objective) {
