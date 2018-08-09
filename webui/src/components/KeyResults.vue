@@ -9,12 +9,15 @@
                 <span v-if="canChangeOkr" class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
 
-            <input class="key-result-range" type="range" min="0" max="100" v-if="canChangeOkr"
+            <input class="key-result-range" type="range" min="0" max="100"
+                   v-if="canChangeOkr"
                    v-model.number="keyresult.percent"
                    @blur="editPercent(objective, keyresult)"/>
             <span class="key-result-percents">{{keyresult.percent}}%</span>
 
-            <span class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
+            <span class="input-icon"
+                  v-if="canChangeOkr"
+                  @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
         </div>
         <InputForm ref="newKRForm"
                    v-if="canChangeOkr"
