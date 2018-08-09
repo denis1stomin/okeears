@@ -30,8 +30,8 @@
   }
 
   .objectives {
-    margin: 10px 0;
-    background: @white;
+    margin: 25px 0;
+    background: transparent;
     box-shadow: 0 1px 4px @darkgrey;
 
     .objective-item-header {
@@ -78,17 +78,21 @@
 
     .objective-item-body {
       padding: 10px 5px;
+      background: white;
 
       .objective-title {
+        background: transparent;
         transition: all 0.5s ease-out;
+        border: none;
         &:focus-within {
           border-color: @white;
         }
 
         textarea {
           transition: all 0.5s ease-out;
-          border: 1px solid @white;
-          font-weight: 500;
+          font-weight: 600;
+          color: @blue;
+          background: transparent;
         }
 
         .action-button {
@@ -104,6 +108,10 @@
           &:focus-within {
             border-color: @white;
           }
+
+          textarea {
+            color: @blue;
+          }
         }
 
         .key-result {
@@ -114,6 +122,16 @@
           .input-form {
             padding: 2px;
             flex-grow: 1;
+            background: transparent;
+            border: none;
+
+            textarea {
+              background: transparent;
+            }
+
+            .icon-trash {
+              display: none;
+            }
           }
 
           .key-result-range {
@@ -151,6 +169,8 @@
             margin: 0 10px;
             flex-basis: 2.6em;
             font-size: 14px;
+            color: @blue;
+            font-weight: 600;
           }
 
           .icon-trash {
@@ -166,6 +186,13 @@
   }
 
   .input-form {
+    background: transparent;
+
+    textarea {
+      background: transparent;
+      border: none;
+    }
+
     .icon-plus {
       &:hover {
         transform: scale(1);

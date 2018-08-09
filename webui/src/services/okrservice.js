@@ -22,8 +22,8 @@ export default class OkrService {
         });
     }
 
-    getKeyResults(objectiveId, dataHandler, errHandler) {
-        this.getPageContent(objectiveId, document => {
+    getKeyResults(subjectId, objectiveId, dataHandler, errHandler) {
+        this.getPageContent(subjectId, objectiveId, document => {
 
             const table = document.querySelector('div > table');
             if(!table) {
@@ -68,7 +68,7 @@ export default class OkrService {
                             keyresults: []
                         };
 
-                        this.getKeyResults(objective.id, data => {
+                        this.getKeyResults(subjectId, objective.id, data => {
                             objective.keyresults = data;
                         }, errHandler);
 
@@ -234,9 +234,9 @@ export default class OkrService {
         }, errHandler);
     }
 
-    getPageContent(pageId, dataHandler, errHandler) {
+    getPageContent(subjectId, pageId, dataHandler, errHandler) {
         this.graphClient
-            .api(`me/onenote/pages/${pageId}/content`)
+            .api(`${this.getSubjectPrefix(subjectId)}/onenote/pages/${pageId}/content`)
             .responseType('document')
             .get()
             .then((body) => {
