@@ -4,7 +4,7 @@ const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
-const ORGTREE_USER_SELECT = 'id,displayName,jobTitle,officeLocation,givenName,mail,userPrincipalName';
+const ORGTREE_USER_SELECT = 'id,displayName,jobTitle,officeLocation,givenName,surname,mail,userPrincipalName';
 const PEOPLE_SEARCH_SELECT = 'id,displayName,mail,userPrincipalName';
 const RELEVANT_PEOPLE_SELECT = 'id,displayName,emailAddresses,userPrincipalName';
 
