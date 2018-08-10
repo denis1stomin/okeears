@@ -32,13 +32,15 @@
   .objective-card {
     margin: 25px 0;
     box-shadow: 0 1px 4px @darkgrey;
+    width: 700px;
+    height: 300px;
 
     .objective,
     .objective-deleted {
       position: absolute;
       display: inline-block;
-      width: auto;
-      height: auto;
+      width: inherit;
+      height: inherit;
 
       .objective-item-header {
         display: flex;
@@ -193,15 +195,17 @@
 
     .objective-restore-layer {
       position: absolute;
-      background: rgba(255, 0, 0, 0.3);
-      text-align: center;
-      width: auto;
-      height: auto;
+      background: rgba(255, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: inherit;
+      height: inherit;
 
       .objective-restore-button {
         cursor: pointer;
         font-size: 45px;
-        font-weight: 700;
+        font-weight: 800;
         background: transparent;
         color: @blue;
       }
