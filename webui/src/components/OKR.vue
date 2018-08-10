@@ -25,11 +25,11 @@
                  :key="objective.id">
 
                 <div class="objective-item-header">
-                    <div class="objective-like-icon" @click="objective.like = !objective.like">
+                    <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
                         <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
                     </div>
 
-                    <div class="objective-icons">
+                    <div class="objective-icons icons-container">
                         <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
                         <span @click="copyObjective(objective)"><CopyIcon/></span>
                         <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
@@ -52,11 +52,11 @@
             <div class="empty-objectives" v-if="!objectives.length">
                 <div class="objectives" v-if="canChangeOkr">
                     <div class="objective-item-header">
-                        <div class="objective-like-icon" @click="objective.like = !objective.like">
+                        <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
                             <StarIcon class="objective-like-icon-selected"/>
                         </div>
 
-                        <div class="objective-icons">
+                        <div class="objective-icons icons-container">
                             <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
                             <span @click="copyObjective(objective)"><CopyIcon/></span>
                             <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
