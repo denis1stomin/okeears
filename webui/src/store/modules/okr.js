@@ -141,6 +141,16 @@ export default {
         }
     },
 
+    getters: {
+        HAVE_VISIBLE_OBJECTIVES(state) {
+            return (state.objectives.length + state.removedObjectives.length) > 0;
+        },
+
+        VISIBLE_OBJECTIVES(state) {
+            return state.objectives.concat(state.removedObjectives);
+        }
+    },
+
     actions: {
         GET_OBJECTIVES({state, commit}) {
             commit('LOADING_STARTED');

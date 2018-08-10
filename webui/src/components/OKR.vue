@@ -19,37 +19,44 @@
                 <span>{{error.message}}</span>
             </div>
 
-            <div :class="{'objectives': !isRemovedObjective(objective.id), 'objective-deleted': isRemovedObjective(objective.id)}"
-                 v-if="objectives.length"
-                 v-for="objective in objectives.concat(removedObjectives)"
-                 :key="objective.id">
+            <div class="objective-card"
+                 v-if="haveVisibleObjectives"
+                 v-for="objective in visibleObjectives">
 
-                <div class="objective-item-header">
-                    <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
-                        <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
+                <div :class="{'objective': !isRemovedObjective(objective.id), 'objective-deleted': isRemovedObjective(objective.id)}"
+                     :key="objective.id">
+
+                    <div class="objective-item-header">
+                        <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
+                            <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
+                        </div>
+
+                        <div class="objective-icons icons-container">
+                            <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
+                            <span @click="copyObjective(objective)"><CopyIcon/></span>
+                            <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                        </div>
                     </div>
 
-                    <div class="objective-icons icons-container">
-                        <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
-                        <span @click="copyObjective(objective)"><CopyIcon/></span>
-                        <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                    <div class="objective-item-body">
+                        <InputForm class="objective-title"
+                                   placeholder=""
+                                   autosave="true"
+                                   :readonly="!canChangeOkr"
+                                   :action="text => { editObjective(objective, text); }"
+                                   :value="objective.statement">
+                        </InputForm>
+
+                        <KeyResults :objective="objective"/>
                     </div>
                 </div>
 
-                <div class="objective-item-body">
-                    <InputForm class="objective-title"
-                               placeholder=""
-                               autosave="true"
-                               :readonly="!canChangeOkr"
-                               :action="text => { editObjective(objective, text); }"
-                               :value="objective.statement">
-                    </InputForm>
-
-                    <KeyResults :objective="objective"/>
+                <div class="objective-restore-layer" v-if="isRemovedObjective(objective.id)">
+                    <div class="objective-restore-button" @click="restoreObjective(objective.id)">RESTORE</div>
                 </div>
             </div>
 
-            <div class="empty-objectives" v-if="!objectives.length">
+            <div class="empty-objectives" v-if="!haveVisibleObjectives">
                 <div class="objectives" v-if="canChangeOkr">
                     <div class="objective-item-header">
                         <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
@@ -120,7 +127,9 @@
             },
 
             ...mapGetters({
-                canChangeOkr: 'CAN_CHANGE_OKR'
+                canChangeOkr: 'CAN_CHANGE_OKR',
+                haveVisibleObjectives: 'HAVE_VISIBLE_OBJECTIVES',
+                visibleObjectives: 'VISIBLE_OBJECTIVES'
             }),
 
             ...mapState({
@@ -139,8 +148,6 @@
                     statement: objStatement,
                     keyresults: []
                 });
-
-                this.logChange(`Me created '${objStatement}'`);
             },
 
             editObjective(obj, objStatement) {
@@ -148,8 +155,6 @@
                     objective: obj,
                     statement: objStatement
                 });
-
-                this.logChange(`Me changed '${objStatement}'`);
             },
 
             copyObjective(objective) {
@@ -161,14 +166,15 @@
 
             deleteObjective(objectiveId) {
                 this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
-                this.logChange(`Me deleted '${objectiveId}'`);
             },
 
             isRemovedObjective(objectiveId) {
-                console.log(this.$store.state.okr.removedObjectives);
                 const idx = this.$store.state.okr.removedObjectives.findIndex((x) => x.id === objectiveId);
-                console.log(idx > -1);
                 return (idx > -1);
+            },
+
+            restoreObjective(objectiveId) {
+                this.$store.dispatch('RESTORE_OBJECTIVE', objectiveId);
             },
 
             sendChangeSuggestion(objective) {
@@ -187,10 +193,6 @@ Please take a look at your objective '${objective.statement}' on <a href="${wind
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
 Please fill objectives for the next period on <a href="${window.location}">OKR Portal</a>.`;
-            },
-
-            logChange(description) {
-                this.$store.dispatch('POST_AUDIT_ITEM', description);
             }
         }
     }
