@@ -47,7 +47,7 @@
                                    :value="objective.statement">
                         </InputForm>
 
-                        <KeyResults :objective="objective"/>
+                        <KeyResults :objective="objective" :readonly="!canChangeOkr"/>
                     </div>
                 </div>
 
@@ -59,25 +59,25 @@
             </div>
 
             <div class="empty-objectives" v-if="!haveVisibleObjectives">
-                <div class="objectives" v-if="canChangeOkr">
-                    <div class="objective-item-header">
-                        <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
-                            <StarIcon class="objective-like-icon-selected"/>
+                <div class="objective-card">
+                    <div class="objective" v-if="canChangeOkr">
+                        <div class="objective-item-header">
+                            <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
+                                <StarIcon class="objective-like-icon-selected"/>
+                            </div>
+
+                            <div class="objective-icons icons-container">
+                                <span @click="copyObjective(landingObjective)"><CopyIcon/></span>
+                            </div>
                         </div>
 
-                        <div class="objective-icons icons-container">
-                            <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
-                            <span @click="copyObjective(objective)"><CopyIcon/></span>
-                            <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                        <div class="objective-item-body">
+                            <InputForm class="objective-title"
+                                       placeholder=""
+                                       :value="landingObjective.statement" />
+
+                            <KeyResults :objective="landingObjective" :readonly="true"/>
                         </div>
-                    </div>
-
-                    <div class="objective-item-body">
-                        <InputForm class="objective-title"
-                                   placeholder=""
-                                   :value="landingObjective.statement" />
-
-                        <KeyResults :objective="landingObjective"/>
                     </div>
                 </div>
                 <span v-if="!canChangeOkr">
@@ -110,24 +110,6 @@
         components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults, Spinner},
 
         computed: {
-            landingObjective: {
-                get() {
-                    return {
-                        statement: "Create a few ambitious objectives",
-                        keyresults: [
-                            { 
-                                statement: "Create at least 3 objectives for the next iteration",
-                                percent: 0
-                            },
-                            {
-                                statement: "Achieve at minimum 60% of success rate",
-                                percent: 0
-                            }
-                        ]
-                    };
-                }
-            },
-
             ...mapGetters({
                 canChangeOkr: 'CAN_CHANGE_OKR',
                 haveVisibleObjectives: 'HAVE_VISIBLE_OBJECTIVES',
@@ -137,6 +119,7 @@
             ...mapState({
                objectives: state => state.okr.objectives,
                removedObjectives: state => state.okr.removedObjectives,
+               landingObjective: state => state.okr.landingObjective,
                error: state => state.okr.error,
                currentlyLoading: state => state.okr.loading,
                selectedSubject: state => state.user.selectedSubject
@@ -161,7 +144,6 @@
 
             copyObjective(objective) {
                 this.$store.dispatch('COPY_OBJECTIVE_TO_CURRENT_USER', {
-                    // TODO : add COPY only for the same user
                     statement: objective.statement + ' COPY'
                 });
             },
