@@ -1,7 +1,7 @@
 <template>
     <div class="org-tree">
         <div class="org-tree-item" :class="{'org-tree-item-selected': user.id === selectedSubject.id}"
-             v-for="user in orgtree" @click="selectSubject(user)">
+             v-for="user in orgtree" :key="user.id" @click="selectSubject(user)">
             <div class="user-card-img">
                 <div class="user-card-photo" v-if="user.photo" :style="{backgroundImage: `url('${user.photo}')`}"></div>
                 <UserIcon class="user-card-no-photo" v-if="!user.photo"/>
