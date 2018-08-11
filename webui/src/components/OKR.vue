@@ -49,11 +49,11 @@
 
                         <KeyResults :objective="objective" :readonly="!canChangeOkr"/>
                     </div>
-                </div>
 
-                <div class="objective-restore-layer" v-if="isRemovedObjective(objective.id)">
-                    <div class="objective-restore-button" @click="restoreObjective(objective.id)">
-                        RESTORE OBJECTIVE
+                    <div class="objective-restore-layer" v-if="isRemovedObjective(objective.id)">
+                        <div class="objective-restore-button" @click="restoreObjective(objective.id)">
+                            RESTORE OBJECTIVE
+                        </div>
                     </div>
                 </div>
             </div>

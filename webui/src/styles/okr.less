@@ -32,16 +32,9 @@
   .objective-card {
     margin: 25px 0;
     box-shadow: 0 1px 4px @darkgrey;
-    width: 700px;
-    height: 300px;
 
     .objective,
     .objective-deleted {
-      position: absolute;
-      display: inline-block;
-      width: inherit;
-      height: inherit;
-
       .objective-item-header {
         display: flex;
         justify-content: space-between;
@@ -50,36 +43,13 @@
         padding: 3px 15px;
         background: @green;
 
-        .objective-like-icon {
+        .icon {
           width: 21px;
-          height: 21px;
+          fill: @white;
+          cursor: pointer;
           transition: all 0.5s ease-out;
           &:hover {
             transform: scale(1.1);
-          }
-
-          .icon {
-            width: 21px;
-            fill: @white;
-            cursor: pointer;
-            transition: all 0.5s ease-out;
-            &.objective-like-icon-selected {
-              fill: @yellow;
-            }
-          }
-        }
-
-        .objective-icons {
-          height: 21px;
-
-          .icon {
-            width: 21px;
-            fill: @white;
-            cursor: pointer;
-            transition: all 0.5s ease-out;
-            &:hover {
-              transform: scale(1.1);
-            }
           }
         }
       }
@@ -100,11 +70,6 @@
             transition: all 0.5s ease-out;
             font-weight: 600;
             color: @blue;
-            background: transparent;
-          }
-
-          .action-button {
-            display: none;
           }
         }
 
@@ -113,10 +78,6 @@
           margin-left: 15px;
 
           .input-form {
-            &:focus-within {
-              border-color: @white;
-            }
-
             textarea {
               color: @blue;
             }
@@ -130,12 +91,6 @@
             .input-form {
               padding: 2px;
               flex-grow: 1;
-              background: transparent;
-              border: none;
-
-              textarea {
-                background: transparent;
-              }
 
               .icon-trash {
                 display: none;
@@ -154,21 +109,14 @@
               -webkit-transition: .2s;
               transition: opacity .2s;
 
-              &::-webkit-slider-thumb {
+              &::-webkit-slider-thumb,
+              &::-moz-range-thumb {
                 -webkit-appearance: none;
                 appearance: none;
                 width: 15px;
                 height: 15px;
                 border-radius: 50%;
                 background: @lightblue;
-                cursor: pointer;
-              }
-
-              &::-moz-range-thumb {
-                width: 25px;
-                height: 25px;
-                border-radius: 50%;
-                background: #4CAF50;
                 cursor: pointer;
               }
             }
@@ -193,36 +141,36 @@
       }
     }
 
-    .objective-restore-layer {
-      position: absolute;
-      background: rgba(255, 0, 0, 0.2);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: inherit;
-      height: inherit;
-
-      .objective-restore-button {
-        cursor: pointer;
-        font-size: 45px;
-        font-weight: 800;
-        background: transparent;
-        color: @blue;
-      }
-    }
-
     .objective-deleted {
-      .objective-item-header {
-        background: @darkgrey;
-      }
-      .objective-item-body {
-        background: #f0f0f0;
+      position: relative;
+
+      .objective-restore-layer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.4);
+
+        .objective-restore-button {
+          font-size: 3em;
+          color: @white;
+          cursor: pointer;
+          transition: all 0.5s ease-out;
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
       }
     }
   }
 
   .input-form {
     background: transparent;
+    border: none;
 
     textarea {
       background: transparent;
