@@ -39,7 +39,7 @@ export default class OkrService {
                 return {
                     id: id,
                     statement: cells[0].innerText,
-                    percent: parseInt(cells[1].innerText, 10)
+                    percent: parseInt(cells[1] ? cells[1].innerText : "0", 10)
                 }
             });
             dataHandler(results);

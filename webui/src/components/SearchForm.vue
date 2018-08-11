@@ -12,6 +12,7 @@
         <transition name="fade">
             <div class="suggested-subjects-list" v-show="suggestedSubjectsAreVisible">
                 <div v-for="item in suggestedSubjects"
+                     :key="item.id"
                      class="suggested-subjects-item"
                      @click="selectInterestingSubject(item)">{{item.displayName}}</div>
                 <div class="suggested-subjects-no-items" v-if="!suggestedSubjects.length">No matches</div>

@@ -7,12 +7,9 @@
         <div class="okr-editor" v-else>
             <InputForm class="create-objective-form"
                        ref="newObjForm"
-                       placeholder="Add ambitious objective"
+                       placeholder="+ Add ambitious objective"
                        :action="text => { addObjective(text); }"
                        v-if="canChangeOkr">
-                <span class="input-icon" @click="addObjective($refs.newObjForm.text)">
-                    <PlusIcon/>
-                </span>
             </InputForm>
 
             <div class="error" v-if="error">

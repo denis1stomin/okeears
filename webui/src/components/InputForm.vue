@@ -8,7 +8,7 @@
                   :readonly="readonly"
                   :placeholder="placeholder"
                   @blur="onBlur(text)"
-                  @keyup.enter="action(text)"
+                  @keyup.enter="onEnter(text)"
                   @keydown.enter="suppressEnter"/>
         <div class="action-button">
             <slot/>
@@ -31,6 +31,12 @@
         methods: {
             onBlur(text) {
                 if(this.autosave && !this.readonly) {
+                    this.action(text);
+                }
+            },
+
+            onEnter(text) {
+                if(text || this.autosave) {
                     this.action(text);
                 }
             },
