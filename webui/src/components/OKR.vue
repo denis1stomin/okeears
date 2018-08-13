@@ -29,9 +29,14 @@
                         </div>
 
                         <div class="objective-icons icons-container">
-                            <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
-                            <span @click="copyObjective(objective)"><CopyIcon/></span>
-                            <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                            <span v-if="canChangeOkr"
+                                  title="Delete objective"
+                                  @click="deleteObjective(objective.id)"><TrashIcon/></span>
+                            <span title="Duplicate objective"
+                                  @click="copyObjective(objective)"><CopyIcon/></span>
+                            <span v-if="!canChangeOkr"
+                                  title="Send suggestion email"
+                                  @click="sendChangeSuggestion(objective)"><SendIcon/></span>
                         </div>
                     </div>
 
@@ -79,7 +84,8 @@
                 </div>
                 <span v-if="!canChangeOkr">
                     There is no any objective yet. You can send a friendly reminder to your teammate
-                    <span @click="sendReminder()"><SendIcon/></span>
+                    <span title="Send reminder email"
+                          @click="sendReminder()"><SendIcon/></span>
                 </span>
             </div>
         </div>

@@ -17,6 +17,7 @@
 
             <span class="input-icon"
                   v-if="!readonly"
+                  title="Delete key result"
                   @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
         </div>
         <InputForm ref="newKRForm"
