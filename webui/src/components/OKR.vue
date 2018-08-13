@@ -140,9 +140,15 @@
             },
 
             copyObjective(objective) {
-                this.$store.dispatch('COPY_OBJECTIVE_TO_CURRENT_USER', {
-                    statement: objective.statement + ' COPY'
-                });
+                const objectiveCopy = {
+                    statement: objective.statement,
+                    keyresults: objective.keyresults
+                };
+                objectiveCopy.keyresults.forEach(
+                    each => { each.percent = 0; }
+                );
+
+                this.$store.dispatch('COPY_OBJECTIVE_TO_CURRENT_USER', objectiveCopy);
             },
 
             deleteObjective(objectiveId) {
