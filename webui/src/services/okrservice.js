@@ -58,13 +58,14 @@ export default class OkrService {
 
             this.graphClient
                 .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
-                .select('id, title')
+                .select('id, title, createdDateTime')
                 .orderby('createdDateTime asc')
                 .get()
                 .then(body => {
                     const objectives = body.value.map(page => {
                         const objective = {
                             id: page.id,
+                            createdDateTime: page.createdDateTime,
                             statement: page.title,
                             keyresults: []
                         };
@@ -102,12 +103,18 @@ export default class OkrService {
                 .post(page)
                 .then(body => {
                     objective.id = body.id;
+                    objective.createdDateTime = body.createdDateTime;
 
-                    // TODO : we should avoid using timers
-                    //        Need to use repeatable wait-getter function
-                    setTimeout(() => {
-                        this.changeObjective(subjectId, objective, dataHandler, errHandler);
-                    }, 2000);
+                    if (objective.keyresults && objective.keyresults.length > 0) {
+                        // TODO : we should avoid using timers
+                        //        Need to use repeatable wait-getter function
+                        setTimeout(() => {
+                            this.changeObjective(subjectId, objective, dataHandler, errHandler);
+                        }, 2000);
+                    }
+                    else {
+                        dataHandler(objective);
+                    }
                 })
                 .catch(errHandler);
         }, errHandler);

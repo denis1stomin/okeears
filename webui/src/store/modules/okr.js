@@ -44,16 +44,15 @@ export default {
             state.removedObjectives = [];
         },
 
+        ADD_OBJECTIVE(state, payload) {
+            state.error = null;
+            state.objectives.unshift(payload);
+        },
+
         OBJECTIVES_FAILED(state, payload) {
             state.error = payload;
             state.loading = false;
             state.saving = false;
-        },
-
-        CREATE_OBJECTIVE(state, payload) {
-            state.error = null;
-            state.saving = true;
-            state.objectives = payload;
         },
 
         CREATE_OBJECTIVE_FAILED(state, payload) {
@@ -160,7 +159,11 @@ export default {
         },
 
         VISIBLE_OBJECTIVES(state) {
-            return state.objectives.concat(state.removedObjectives);
+            return state.objectives
+                .concat(state.removedObjectives)
+                .sort((a, b) => {
+                    return a.createdDateTime < b.createdDateTime;
+                });
         }
     },
 
@@ -177,27 +180,14 @@ export default {
         },
 
         CREATE_OBJECTIVE({state, commit}, objective) {
-            // change local objectives list
-            let changedList = state.objectives;
-            changedList.push(objective);
-            commit('OBJECTIVES_COMPLETE', changedList);
+            commit('ADD_OBJECTIVE', objective);
             commit('SAVING_STARTED');
 
             // send request to create new objective
             okrSvc.createObjective(
                 user.state.selectedSubject.id,
                 objective,
-                data => {
-                    // when objective is created new id is returned.
-                    // we need to update the id field
-                    let changedList = state.objectives;
-                    let idx = changedList.indexOf(objective);
-                    if (idx > -1) {
-                        // TODO: Use mutations!
-                        changedList[idx].id = data.id;
-                        commit('OBJECTIVES_COMPLETE', changedList);
-                    }
-                },
+                createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
         },
@@ -205,32 +195,15 @@ export default {
         COPY_OBJECTIVE_TO_CURRENT_USER({state, commit}, objective) {
             // Need to update model only if copy own objective
             if (user.state.me.id === user.state.selectedSubject.id) {
-                let changedList = state.objectives;
-                changedList.push(objective);
-                commit('OBJECTIVES_COMPLETE', changedList);
+                commit('ADD_OBJECTIVE', objective);
             }
-
             commit('SAVING_STARTED');
 
             // send request to create objective copy
             okrSvc.createObjective(
                 user.state.me.id,
                 objective,
-                data => {
-                    // Need to update model only if copy own objective
-                    if (user.state.me.id === user.state.selectedSubject.id) {
-                        // when objective is created new id is returned.
-                        // we need to update the id field
-                        let changedList = state.objectives;
-                        let idx = changedList.indexOf(objective);
-                        if (idx > -1) {
-                            changedList[idx].id = data.id;
-                            commit('OBJECTIVES_COMPLETE', changedList);
-                        }
-                    }
-
-                    commit('SAVING_SUCCESSFULLY_COMPLETE');
-                },
+                createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
         },
@@ -271,17 +244,7 @@ export default {
             okrSvc.createObjective(
                 user.state.selectedSubject.id,
                 objective,
-                data => {
-                    // when objective is created new id is returned.
-                    // we need to update the id field
-                    let changedList = state.objectives;
-                    let idx = changedList.indexOf(objective);
-                    if (idx > -1) {
-                        // TODO: Use mutations!
-                        changedList[idx].id = data.id;
-                        commit('OBJECTIVES_COMPLETE', changedList);
-                    }
-                },
+                createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
         },
