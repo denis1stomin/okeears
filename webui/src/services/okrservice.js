@@ -47,8 +47,8 @@ export default class OkrService {
     }
 
     getObjectives(subjectId, userId, dataHandler, errHandler) {
-        const createSection = subjectId == userId;
-        this.getSection(subjectId, createSection, sectionId => {
+        const readonlyMode = subjectId != userId;
+        this.getSection(subjectId, readonlyMode, sectionId => {
             
             // User has not created any objectives yet
             if(!sectionId) {
@@ -221,12 +221,23 @@ export default class OkrService {
             .catch(errHandler); 
     }
 
-    getSection(subjectId, createSection, dataHandler, errHandler) {
+    getSection(subjectId, readonlyMode, dataHandler, errHandler) {
+        const cachedSectionId = this.sectionIds.get(subjectId);
+        if(cachedSectionId) {
+            dataHandler(cachedSectionId);
+            return;
+        }
+
         this.searchForSection(subjectId, sectionId => {
             if(sectionId) {
                 dataHandler(sectionId);
+                if(!readonlyMode) {
+                    // Ensure that notebook is shared.
+                    // It is OK to share notebook several times
+                    this.shareNotebook(errHandler);
+                }
             } else {
-                if(createSection) {
+                if(!readonlyMode) {
                     this.createSection(subjectId, dataHandler, errHandler);
                 } else {
                     dataHandler(null);
@@ -254,12 +265,6 @@ export default class OkrService {
     }
 
     searchForSection(subjectId, dataHandler, errHandler) {
-        let sectionId = this.getSubjectSectionId(subjectId);
-        if(sectionId) {
-            dataHandler(sectionId);
-            return;
-        }
-
         this.graphClient
             .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections`)
             .filter(`displayName eq '${SECTION_NAME}'`)
@@ -288,11 +293,6 @@ export default class OkrService {
 
     setSubjectSectionId(subjectId, sectionId) {
         this.sectionIds.set(subjectId, sectionId);
-    }
-
-    getSubjectSectionId(subjectId)
-    {
-        return this.sectionIds.get(subjectId);
     }
 
     createId() {
