@@ -58,13 +58,14 @@ export default class OkrService {
 
             this.graphClient
                 .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
-                .select('id, title')
+                .select('id, title, createdDateTime')
                 .orderby('createdDateTime asc')
                 .get()
                 .then(body => {
                     const objectives = body.value.map(page => {
                         const objective = {
                             id: page.id,
+                            createdDateTime: page.createdDateTime,
                             statement: page.title,
                             keyresults: []
                         };
@@ -83,7 +84,7 @@ export default class OkrService {
     }
 
     createObjective(subjectId, objective, dataHandler, errHandler) {
-        const title = objective.statement ? objective.statement : '';
+        const title = objective.statement || '';
         const page = 
             `<html>
                 <head>
@@ -102,16 +103,27 @@ export default class OkrService {
                 .post(page)
                 .then(body => {
                     objective.id = body.id;
-                    dataHandler(objective);
+                    objective.createdDateTime = body.createdDateTime;
+
+                    if (objective.keyresults && objective.keyresults.length > 0) {
+                        // TODO : we should avoid using timers
+                        //        Need to use repeatable wait-getter function
+                        setTimeout(() => {
+                            this.changeObjective(subjectId, objective, dataHandler, errHandler);
+                        }, 2000);
+                    }
+                    else {
+                        dataHandler(objective);
+                    }
                 })
                 .catch(errHandler);
         }, errHandler);
     }
 
     changeObjective(subjectId, objective, dataHandler, errHandler) {
-       
+
         // TODO: Escape HTML in objective's statement
-        let statement = objective.statement;
+        const statement = objective.statement;
 
         const patchBody = 
         [{
@@ -138,7 +150,7 @@ export default class OkrService {
             'target': 'body',
             'action': 'replace',
             'content': `<table>${content}</table>`
-        });   
+        });
 
         this.graphClient
             .api(`me/onenote/pages/${objective.id}/content`)
