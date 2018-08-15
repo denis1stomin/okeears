@@ -61,8 +61,8 @@
             </div>
 
             <div class="empty-objectives" v-if="!haveVisibleObjectives">
-                <div class="objective-card">
-                    <div class="objective" v-if="canChangeOkr">
+                <div class="objective-card" v-if="canChangeOkr">
+                    <div class="objective">
                         <div class="objective-item-header">
                             <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
                                 <StarIcon class="objective-like-icon-selected"/>
@@ -82,11 +82,17 @@
                         </div>
                     </div>
                 </div>
-                <span v-if="!canChangeOkr">
-                    There is no any objective yet. You can send a friendly reminder to your teammate
-                    <span title="Send reminder email"
-                          @click="sendReminder()"><SendIcon/></span>
-                </span>
+                <div v-if="!canChangeOkr">
+                    <span v-if="invalidOneDriveForBusinessLicense">
+                        There is no any objective yet. You can send a friendly reminder to your teammate
+                        <span title="Send reminder email"
+                              @click="sendReminder()"><SendIcon/></span>
+                    </span>
+                    <span v-else>
+                        It looks like there is no OneDrive For Business license for the user {{selectedSubject.userPrincipalName}}.
+                        Or OneDrive services are not activated. You can open https://portal.office.com/account/#apps and check for OneDrive license.
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -125,7 +131,8 @@
                landingObjective: state => state.okr.landingObjective,
                error: state => state.okr.error,
                currentlyLoading: state => state.okr.loading,
-               selectedSubject: state => state.user.selectedSubject
+               selectedSubject: state => state.user.selectedSubject,
+               invalidOneDriveForBusinessLicense: state => state.okr.invalidOneDriveForBusinessLicense
             })
         },
 
