@@ -158,7 +158,11 @@
             },
 
             deleteObjective(objectiveId) {
-                this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
+                // Send remove request only if we have real objective page id.
+                // We need it to avoid invalid Onenote API requests.
+                if (!objectiveId.startsWith('temp')) {
+                    this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
+                }
             },
 
             isRemovedObjective(objectiveId) {

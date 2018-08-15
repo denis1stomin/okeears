@@ -183,7 +183,7 @@ export default {
             // We need to set unique objective id before committing mutation,
             // otherwise Vue's list rendering engine (v-for statement) will reuse DOM elements
             // and display several items with the same text for newly added objectives.
-            objective.id = okrSvc.createId();
+            objective.id = 'temp-' + okrSvc.createId();
 
             commit('ADD_OBJECTIVE', objective);
             commit('SAVING_STARTED');
