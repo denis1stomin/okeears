@@ -6,7 +6,7 @@
                        :readonly="readonly"
                        :action="text => { editKeyresult(objective, text, keyresult); }"
                        :value="keyresult.statement">
-                <span v-if="canChangeOkr" class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
+                <span v-if="!readonly" class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
 
             <input class="key-result-range" type="range" min="0" max="100"
