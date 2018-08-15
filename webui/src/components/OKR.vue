@@ -16,57 +16,76 @@
                 <span>{{error.message}}</span>
             </div>
 
-            <div class="objectives" v-if="objectives.length" v-for="objective in objectives" :key="objective.id">
-                <div class="objective-item-header">
-                    <div class="objective-like-icon" @click="objective.like = !objective.like">
-                        <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
-                    </div>
+            <div class="objective-card"
+                 v-if="haveVisibleObjectives"
+                 v-for="objective in visibleObjectives" 
+                 :key="objective.id">
 
-                    <div class="objective-icons">
-                        <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
-                        <span @click="copyObjective(objective)"><CopyIcon/></span>
-                        <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
-                    </div>
-                </div>
+                <div :class="{'objective': !isRemovedObjective(objective.id), 'objective-deleted': isRemovedObjective(objective.id)}">
 
-                <div class="objective-item-body">
-                    <InputForm class="objective-title"
-                               placeholder=""
-                               autosave="true"
-                               :readonly="!canChangeOkr"
-                               :action="text => { editObjective(objective, text); }"
-                               :value="objective.statement">
-                    </InputForm>
-
-                    <KeyResults :objective="objective"/>
-                </div>
-            </div>
-
-            <div class="empty-objectives" v-if="!objectives.length">
-                <div class="objectives" v-if="canChangeOkr">
                     <div class="objective-item-header">
-                        <div class="objective-like-icon" @click="objective.like = !objective.like">
-                            <StarIcon class="objective-like-icon-selected"/>
+                        <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
+                            <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
                         </div>
 
-                        <div class="objective-icons">
-                            <span v-if="canChangeOkr" @click="deleteObjective(objective.id)"><TrashIcon/></span>
-                            <span @click="copyObjective(objective)"><CopyIcon/></span>
-                            <span v-if="!canChangeOkr" @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                        <div class="objective-icons icons-container">
+                            <span v-if="canChangeOkr"
+                                  title="Delete objective"
+                                  @click="deleteObjective(objective.id)"><TrashIcon/></span>
+                            <span title="Duplicate objective"
+                                  @click="copyObjective(objective)"><CopyIcon/></span>
+                            <span v-if="!canChangeOkr"
+                                  title="Send suggestion email"
+                                  @click="sendChangeSuggestion(objective)"><SendIcon/></span>
                         </div>
                     </div>
 
                     <div class="objective-item-body">
                         <InputForm class="objective-title"
                                    placeholder=""
-                                   :value="landingObjective.statement" />
+                                   autosave="true"
+                                   :readonly="!canChangeOkr"
+                                   :action="text => { editObjective(objective, text); }"
+                                   :value="objective.statement">
+                        </InputForm>
 
-                        <KeyResults :objective="landingObjective"/>
+                        <KeyResults :objective="objective" :readonly="!canChangeOkr"/>
+                    </div>
+
+                    <div class="objective-restore-layer" v-if="isRemovedObjective(objective.id)">
+                        <div class="objective-restore-button" @click="restoreObjective(objective.id)">
+                            RESTORE OBJECTIVE
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-objectives" v-if="!haveVisibleObjectives">
+                <div class="objective-card">
+                    <div class="objective" v-if="canChangeOkr">
+                        <div class="objective-item-header">
+                            <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
+                                <StarIcon class="objective-like-icon-selected"/>
+                            </div>
+
+                            <div class="objective-icons icons-container">
+                                <span @click="copyObjective(landingObjective)"><CopyIcon/></span>
+                            </div>
+                        </div>
+
+                        <div class="objective-item-body">
+                            <InputForm class="objective-title"
+                                       placeholder=""
+                                       :value="landingObjective.statement" />
+
+                            <KeyResults :objective="landingObjective" :readonly="true"/>
+                        </div>
                     </div>
                 </div>
                 <span v-if="!canChangeOkr">
                     There is no any objective yet. You can send a friendly reminder to your teammate
-                    <span @click="sendReminder()"><SendIcon/></span>
+                    <span title="Send reminder email"
+                          @click="sendReminder()"><SendIcon/></span>
                 </span>
             </div>
         </div>
@@ -94,30 +113,16 @@
         components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults, Spinner},
 
         computed: {
-            landingObjective: {
-                get() {
-                    return {
-                        statement: "Create a few ambitious objectives",
-                        keyresults: [
-                            { 
-                                statement: "Create at least 3 objectives for the next iteration",
-                                percent: 0
-                            },
-                            {
-                                statement: "Achieve at minimum 60% of success rate",
-                                percent: 0
-                            }
-                        ]
-                    };
-                }
-            },
-
             ...mapGetters({
-                canChangeOkr: 'CAN_CHANGE_OKR'
+                canChangeOkr: 'CAN_CHANGE_OKR',
+                haveVisibleObjectives: 'HAVE_VISIBLE_OBJECTIVES',
+                visibleObjectives: 'VISIBLE_OBJECTIVES'
             }),
 
             ...mapState({
                objectives: state => state.okr.objectives,
+               removedObjectives: state => state.okr.removedObjectives,
+               landingObjective: state => state.okr.landingObjective,
                error: state => state.okr.error,
                currentlyLoading: state => state.okr.loading,
                selectedSubject: state => state.user.selectedSubject
@@ -131,8 +136,6 @@
                     statement: objStatement,
                     keyresults: []
                 });
-
-                this.logChange(`Me created '${objStatement}'`);
             },
 
             editObjective(obj, objStatement) {
@@ -140,20 +143,35 @@
                     objective: obj,
                     statement: objStatement
                 });
-
-                this.logChange(`Me changed '${objStatement}'`);
             },
 
             copyObjective(objective) {
-                this.$store.dispatch('COPY_OBJECTIVE_TO_CURRENT_USER', {
-                    // TODO : add COPY only for the same user
-                    statement: objective.statement + ' COPY'
-                });
+                const objectiveCopy = {
+                    statement: objective.statement,
+                    keyresults: objective.keyresults
+                };
+                objectiveCopy.keyresults.forEach(
+                    each => { each.percent = 0; }
+                );
+
+                this.$store.dispatch('COPY_OBJECTIVE_TO_CURRENT_USER', objectiveCopy);
             },
 
             deleteObjective(objectiveId) {
-                this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
-                this.logChange(`Me deleted '${objectiveId}'`);
+                // Send remove request only if we have real objective page id.
+                // We need it to avoid invalid Onenote API requests.
+                if (!objectiveId.startsWith('temp')) {
+                    this.$store.dispatch('DELETE_OBJECTIVE', objectiveId);
+                }
+            },
+
+            isRemovedObjective(objectiveId) {
+                const idx = this.$store.state.okr.removedObjectives.findIndex((x) => x.id === objectiveId);
+                return (idx > -1);
+            },
+
+            restoreObjective(objectiveId) {
+                this.$store.dispatch('RESTORE_OBJECTIVE', objectiveId);
             },
 
             sendChangeSuggestion(objective) {
@@ -172,10 +190,6 @@ Please take a look at your objective '${objective.statement}' on <a href="${wind
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
 Please fill objectives for the next period on <a href="${window.location}">OKR Portal</a>.`;
-            },
-
-            logChange(description) {
-                this.$store.dispatch('POST_AUDIT_ITEM', description);
             }
         }
     }

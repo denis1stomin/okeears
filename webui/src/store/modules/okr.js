@@ -3,9 +3,33 @@ import user from './user'
 
 let okrSvc = new OkrService();
 
+const moveItem = (itemId, fromArr, toArr) => {
+    const idx = fromArr.findIndex((x) => x.id === itemId);
+    if (idx > -1) {
+        const item = fromArr[idx];
+
+        fromArr.splice(idx, 1);
+        toArr.push(item);
+    }
+};
+
 export default {
     state: {
         objectives: [],
+        removedObjectives: [],
+        landingObjective: {
+            statement: "Create a few ambitious objectives",
+            keyresults: [
+                { 
+                    statement: "Create 3 objectives for the next iteration",
+                    percent: 0
+                },
+                {
+                    statement: "Create 1-3 measurable key results for each objective",
+                    percent: 0
+                }
+            ]
+        },
         loading: false,
         saving: false,
         error: null
@@ -17,18 +41,18 @@ export default {
             state.loading = false;
             state.saving = false;
             state.objectives = payload;
+            state.removedObjectives = [];
+        },
+
+        ADD_OBJECTIVE(state, payload) {
+            state.error = null;
+            state.objectives.unshift(payload);
         },
 
         OBJECTIVES_FAILED(state, payload) {
             state.error = payload;
             state.loading = false;
             state.saving = false;
-        },
-
-        CREATE_OBJECTIVE(state, payload) {
-            state.error = null;
-            state.saving = true;
-            state.objectives = payload;
         },
 
         CREATE_OBJECTIVE_FAILED(state, payload) {
@@ -38,7 +62,7 @@ export default {
 
         EDIT_OBJECTIVE(state, payload) {
             state.saving = true;
-           
+
             let objectives = state.objectives;
             let obj = payload.objective;
 
@@ -55,15 +79,19 @@ export default {
             state.error = null;
             state.saving = true;
 
-            let idx = state.objectives.findIndex((x) => x.id === objectiveId);
-            if (idx > -1) {
-                state.objectives.splice(idx, 1);
-            }
+            moveItem(objectiveId, state.objectives, state.removedObjectives);
         },
 
         DELETE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
+        },
+
+        RESTORE_OBJECTIVE(state, objectiveId) {
+            state.error = null;
+            state.saving = true;
+
+            moveItem(objectiveId, state.removedObjectives, state.objectives);
         },
 
         CREATE_KEYRESULT(state, payload) {
@@ -125,6 +153,20 @@ export default {
         }
     },
 
+    getters: {
+        HAVE_VISIBLE_OBJECTIVES(state) {
+            return (state.objectives.length + state.removedObjectives.length) > 0;
+        },
+
+        VISIBLE_OBJECTIVES(state) {
+            return state.objectives
+                .concat(state.removedObjectives)
+                .sort((a, b) => {
+                    return a.createdDateTime < b.createdDateTime;
+                });
+        }
+    },
+
     actions: {
         GET_OBJECTIVES({state, commit}) {
             commit('LOADING_STARTED');
@@ -138,27 +180,19 @@ export default {
         },
 
         CREATE_OBJECTIVE({state, commit}, objective) {
-            // change local objectives list
-            let changedList = state.objectives;
-            changedList.push(objective);
-            commit('OBJECTIVES_COMPLETE', changedList);
+            // We need to set unique objective id before committing mutation,
+            // otherwise Vue's list rendering engine (v-for statement) will reuse DOM elements
+            // and display several items with the same text for newly added objectives.
+            objective.id = 'temp-' + okrSvc.createId();
+
+            commit('ADD_OBJECTIVE', objective);
             commit('SAVING_STARTED');
 
             // send request to create new objective
             okrSvc.createObjective(
                 user.state.selectedSubject.id,
                 objective,
-                data => {
-                    // when objective is created new id is returned.
-                    // we need to update the id field
-                    let changedList = state.objectives;
-                    let idx = changedList.indexOf(objective);
-                    if (idx > -1) {
-                        // TODO: Use mutations!
-                        changedList[idx].id = data.id;
-                        commit('OBJECTIVES_COMPLETE', changedList);
-                    }
-                },
+                createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
         },
@@ -166,32 +200,15 @@ export default {
         COPY_OBJECTIVE_TO_CURRENT_USER({state, commit}, objective) {
             // Need to update model only if copy own objective
             if (user.state.me.id === user.state.selectedSubject.id) {
-                let changedList = state.objectives;
-                changedList.push(objective);
-                commit('OBJECTIVES_COMPLETE', changedList);
+                commit('ADD_OBJECTIVE', objective);
             }
-
             commit('SAVING_STARTED');
 
             // send request to create objective copy
             okrSvc.createObjective(
                 user.state.me.id,
                 objective,
-                data => {
-                    // Need to update model only if copy own objective
-                    if (user.state.me.id === user.state.selectedSubject.id) {
-                        // when objective is created new id is returned.
-                        // we need to update the id field
-                        let changedList = state.objectives;
-                        let idx = changedList.indexOf(objective);
-                        if (idx > -1) {
-                            changedList[idx].id = data.id;
-                            commit('OBJECTIVES_COMPLETE', changedList);
-                        }
-                    }
-
-                    commit('SAVING_SUCCESSFULLY_COMPLETE');
-                },
+                createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
         },
@@ -219,6 +236,21 @@ export default {
                 objectiveId,
                 data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
+            )
+        },
+
+        RESTORE_OBJECTIVE({state, commit}, objectiveId) {
+            // restore in local objectives list
+            commit('RESTORE_OBJECTIVE', objectiveId);
+
+            const objective = state.objectives.find((x) => x.id === objectiveId);
+
+            // send request to create the objective
+            okrSvc.createObjective(
+                user.state.selectedSubject.id,
+                objective,
+                createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
+                err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
         },
 
