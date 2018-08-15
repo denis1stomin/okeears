@@ -18,10 +18,10 @@
 
             <div class="objective-card"
                  v-if="haveVisibleObjectives"
-                 v-for="objective in visibleObjectives">
+                 v-for="objective in visibleObjectives" 
+                 :key="objective.id">
 
-                <div :class="{'objective': !isRemovedObjective(objective.id), 'objective-deleted': isRemovedObjective(objective.id)}"
-                     :key="objective.id">
+                <div :class="{'objective': !isRemovedObjective(objective.id), 'objective-deleted': isRemovedObjective(objective.id)}">
 
                     <div class="objective-item-header">
                         <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
