@@ -65,6 +65,10 @@ export default {
             state.saving = false;
         },
 
+        MARK_ONEDRIVE_LICENSE_ERROR(state) {
+            state.invalidOneDriveForBusinessLicense = true;
+        },
+
         CREATE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
@@ -188,9 +192,9 @@ export default {
                 err => {
                     if (err.statusCode == 404 && err.code == 30108) {
                         // The OneDriveForBusiness for this user account cannot be retrieved
-                        state.invalidOneDriveForBusinessLicense = true;
+                        commit('MARK_ONEDRIVE_LICENSE_ERROR');
                         // No objectives available for such users
-                        commit('CLEAR_OBJECTIVES')
+                        commit('CLEAR_OBJECTIVES');
                     } else {
                         commit('OBJECTIVES_FAILED', err);
                     }
