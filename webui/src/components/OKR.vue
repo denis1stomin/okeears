@@ -164,7 +164,8 @@
             copyObjective(objective) {
                 const objectiveCopy = {
                     statement: objective.statement,
-                    keyresults: objective.keyresults
+                    // Make deep copy below
+                    keyresults: JSON.parse(JSON.stringify(objective.keyresults))
                 };
                 objectiveCopy.keyresults.forEach(
                     each => { each.percent = 0; }
