@@ -4,7 +4,19 @@
             <Spinner/>
         </div>
 
-        <div class="okr-editor" v-else>
+        <div class="centered-suggestion-message"
+             v-if="!currentlyLoading && invalidOneDriveForBusinessLicense">
+            <span>
+                It looks like there is no active
+                <a href="https://blogs.business.microsoft.com/en-my/2017/05/22/what-is-onedrive-for-business/" target="_blank" rel="noopener noreferrer">OneDrive For Business</a>
+                license for the user {{selectedSubject.userPrincipalName}}.<br/>
+                You can go to
+                <a href="https://portal.office.com/" target="_blank" rel="noopener noreferrer">Office 365 Portal</a>
+                to check for appropriate OneDrive For Business license or to activate it.
+            </span>
+        </div>
+
+        <div class="okr-editor" v-if="!currentlyLoading && !invalidOneDriveForBusinessLicense">
             <InputForm class="create-objective-form"
                        ref="newObjForm"
                        placeholder="+ Add ambitious objective"
@@ -82,15 +94,12 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="!canChangeOkr">
-                    <span v-if="invalidOneDriveForBusinessLicense">
-                        There is no any objective yet. You can send a friendly reminder to your teammate
+                <div class="centered-suggestion-message" v-if="!canChangeOkr">
+                    <span>
+                        There is no any objective yet.<br/>
+                        You can send a friendly reminder to your teammate
                         <span title="Send reminder email"
                               @click="sendReminder()"><SendIcon/></span>
-                    </span>
-                    <span v-else>
-                        It looks like there is no OneDrive For Business license for the user {{selectedSubject.userPrincipalName}}.
-                        Or OneDrive services are not activated. You can open https://portal.office.com/account/#apps and check for OneDrive license.
                     </span>
                 </div>
             </div>
@@ -186,7 +195,7 @@
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
 subject=Objective: ${objective.statement}&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
-Please take a look at your objective '${objective.statement}' on <a href="${window.location}">OKR Portal</a>.`;
+Please take a look at your objective '${objective.statement}' on <a href="${window.location}">Okeears</a>.`;
             },
 
             // TODO : check is it safe to invite user to window.location?
@@ -196,7 +205,7 @@ Please take a look at your objective '${objective.statement}' on <a href="${wind
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
-Please fill objectives for the next period on <a href="${window.location}">OKR Portal</a>.`;
+Please fill objectives for the next period on <a href="${window.location}">Okeears</a>.`;
             }
         }
     }

@@ -46,6 +46,13 @@ export default {
             state.removedObjectives = [];
         },
 
+        CLEAR_OBJECTIVES(state) {
+            state.objectives = [];
+            state.removedObjectives = [];
+            state.loading = false;
+            state.saving = false;
+        },
+
         ADD_OBJECTIVE(state, payload) {
             state.error = null;
             state.objectives.unshift(payload);
@@ -183,7 +190,7 @@ export default {
                         // The OneDriveForBusiness for this user account cannot be retrieved
                         state.invalidOneDriveForBusinessLicense = true;
                         // No objectives available for such users
-                        commit('OBJECTIVES_COMPLETE', [])
+                        commit('CLEAR_OBJECTIVES')
                     } else {
                         commit('OBJECTIVES_FAILED', err);
                     }
