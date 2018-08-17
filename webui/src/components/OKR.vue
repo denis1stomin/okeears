@@ -4,7 +4,19 @@
             <Spinner/>
         </div>
 
-        <div class="okr-editor" v-else>
+        <div class="centered-suggestion-message"
+             v-if="!currentlyLoading && invalidOneDriveForBusinessLicense">
+            <span>
+                It looks like there is no active
+                <a href="https://blogs.business.microsoft.com/en-my/2017/05/22/what-is-onedrive-for-business/" target="_blank" rel="noopener noreferrer">OneDrive For Business</a>
+                license for the user {{selectedSubject.userPrincipalName}}.<br/>
+                You can go to
+                <a href="https://portal.office.com/" target="_blank" rel="noopener noreferrer">Office 365 Portal</a>
+                to check for appropriate OneDrive For Business license or to activate it.
+            </span>
+        </div>
+
+        <div class="okr-editor" v-if="!currentlyLoading && !invalidOneDriveForBusinessLicense">
             <InputForm class="create-objective-form"
                        ref="newObjForm"
                        placeholder="+ Add ambitious objective"
@@ -61,8 +73,8 @@
             </div>
 
             <div class="empty-objectives" v-if="!haveVisibleObjectives">
-                <div class="objective-card">
-                    <div class="objective" v-if="canChangeOkr">
+                <div class="objective-card" v-if="canChangeOkr">
+                    <div class="objective">
                         <div class="objective-item-header">
                             <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
                                 <StarIcon class="objective-like-icon-selected"/>
@@ -82,11 +94,14 @@
                         </div>
                     </div>
                 </div>
-                <span v-if="!canChangeOkr">
-                    There is no any objective yet. You can send a friendly reminder to your teammate
-                    <span title="Send reminder email"
-                          @click="sendReminder()"><SendIcon/></span>
-                </span>
+                <div class="centered-suggestion-message" v-if="!canChangeOkr">
+                    <span>
+                        There is no any objective yet.<br/>
+                        You can send a friendly reminder to your teammate
+                        <span title="Send reminder email"
+                              @click="sendReminder()"><SendIcon/></span>
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -125,7 +140,8 @@
                landingObjective: state => state.okr.landingObjective,
                error: state => state.okr.error,
                currentlyLoading: state => state.okr.loading,
-               selectedSubject: state => state.user.selectedSubject
+               selectedSubject: state => state.user.selectedSubject,
+               invalidOneDriveForBusinessLicense: state => state.okr.invalidOneDriveForBusinessLicense
             })
         },
 
@@ -148,7 +164,8 @@
             copyObjective(objective) {
                 const objectiveCopy = {
                     statement: objective.statement,
-                    keyresults: objective.keyresults
+                    // Make deep copy below
+                    keyresults: JSON.parse(JSON.stringify(objective.keyresults))
                 };
                 objectiveCopy.keyresults.forEach(
                     each => { each.percent = 0; }
@@ -179,7 +196,7 @@
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
 subject=Objective: ${objective.statement}&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
-Please take a look at your objective '${objective.statement}' on <a href="${window.location}">OKR Portal</a>.`;
+Please take a look at your objective '${objective.statement}' on <a href="${window.location}">Okeears</a>.`;
             },
 
             // TODO : check is it safe to invite user to window.location?
@@ -189,7 +206,7 @@ Please take a look at your objective '${objective.statement}' on <a href="${wind
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
-Please fill objectives for the next period on <a href="${window.location}">OKR Portal</a>.`;
+Please fill objectives for the next period on <a href="${window.location}">Okeears</a>.`;
             }
         }
     }

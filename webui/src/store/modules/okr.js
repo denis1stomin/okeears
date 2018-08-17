@@ -32,16 +32,25 @@ export default {
         },
         loading: false,
         saving: false,
-        error: null
+        error: null,
+        invalidOneDriveForBusinessLicense: false
     },
 
     mutations: {
         OBJECTIVES_COMPLETE(state, payload) {
             state.error = null;
+            state.invalidOneDriveForBusinessLicense = false;
             state.loading = false;
             state.saving = false;
             state.objectives = payload;
             state.removedObjectives = [];
+        },
+
+        CLEAR_OBJECTIVES(state) {
+            state.objectives = [];
+            state.removedObjectives = [];
+            state.loading = false;
+            state.saving = false;
         },
 
         ADD_OBJECTIVE(state, payload) {
@@ -51,8 +60,13 @@ export default {
 
         OBJECTIVES_FAILED(state, payload) {
             state.error = payload;
+            state.invalidOneDriveForBusinessLicense = false;
             state.loading = false;
             state.saving = false;
+        },
+
+        MARK_ONEDRIVE_LICENSE_ERROR(state) {
+            state.invalidOneDriveForBusinessLicense = true;
         },
 
         CREATE_OBJECTIVE_FAILED(state, payload) {
@@ -175,7 +189,16 @@ export default {
                 user.state.selectedSubject.id,
                 user.state.me.id,
                 data => commit('OBJECTIVES_COMPLETE', data),
-                err => commit('OBJECTIVES_FAILED', err)
+                err => {
+                    if (err.statusCode == 404 && err.code == 30108) {
+                        // The OneDriveForBusiness for this user account cannot be retrieved
+                        commit('MARK_ONEDRIVE_LICENSE_ERROR');
+                        // No objectives available for such users
+                        commit('CLEAR_OBJECTIVES');
+                    } else {
+                        commit('OBJECTIVES_FAILED', err);
+                    }
+                }
             );
         },
 
