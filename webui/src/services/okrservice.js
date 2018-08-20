@@ -194,12 +194,13 @@ export default class OkrService {
                     this.graphClient
                         .api('me/onenote/notebooks')
                         .filter(`displayName eq '${NOTEBOOK_NAME}'`)
-                        .select('id')
+                        .select('id, links')
                         .get()
                         .then((body) => {
-                            let notebooks = body.value;
-                            if(notebooks.length == 1) {
-                                let notebookId = notebooks[0].id;
+                            const notebooks = body.value;
+                            if (notebooks.length == 1) {
+                                const notebookId = notebooks[0].id;
+                                const oneNoteWebUrl = notebooks[0].links.oneNoteWebUrl.href;
                                 createSectionHandler(notebookId);
                             } else {
                                 errHandler({ message: `Cannot find and/or create the '${NOTEBOOK_NAME}' notebook.`});
@@ -241,7 +242,7 @@ export default class OkrService {
         }
 
         this.searchForSection(subjectId, sectionId => {
-            if(sectionId) {
+            if (sectionId) {
                 dataHandler(sectionId);
                 if(!readonlyMode) {
                     // Ensure that notebook is shared.
@@ -280,14 +281,16 @@ export default class OkrService {
         this.graphClient
             .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections`)
             .filter(`displayName eq '${SECTION_NAME}'`)
-            .select('id')
+            .select('id, links')
             .expand('parentNotebook')
             .get()
             .then((body) => {
                 // Filter out sections from another notebooks, if any
-                let sections = body.value.filter(section => section.parentNotebook.displayName == NOTEBOOK_NAME);
+                const sections = body.value.filter(section => section.parentNotebook.displayName == NOTEBOOK_NAME);
                 if(sections.length == 1) {
-                    let sectionId = sections[0].id;
+                    const sectionId = sections[0].id;
+                    const oneNoteWebUrl = sections[0].links.oneNoteWebUrl.href;
+                    const notebookFilePath = this.getNotebookFilePath(oneNoteWebUrl);
                     this.setSubjectSectionId(subjectId, sectionId);
                     dataHandler(sectionId);
                 } else if(sections.length == 0) {
@@ -297,6 +300,13 @@ export default class OkrService {
                 }
             })
             .catch(errHandler);
+    }
+
+    getNotebookFilePath(notebookWebUrl) {
+        const regex = `https:\/\/.+sharepoint\.com\/personal\/.+(\/.+\/.+\/${NOTEBOOK_NAME})`;
+        const match = notebookWebUrl.match(regex);
+
+        return match[1];
     }
 
     getSubjectPrefix(subjectId) {
