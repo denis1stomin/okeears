@@ -168,14 +168,14 @@ export default class OkrService {
     }
 
     createSection(subjectId, dataHandler, errHandler) {
-        const createSectionHandler = notebookId => {
+        const createSectionHandler = (notebookId, filePath) => {
             this.graphClient
                 .api(`me/onenote/notebooks/${notebookId}/sections`)
                 .post({ displayName: SECTION_NAME })
                 .then((body) => {
                     let sectionId = body.id;
                     this.setSubjectSectionId(subjectId, sectionId);
-                    this.shareNotebook(errHandler);
+                    this.shareNotebook(filePath, errHandler);
                     dataHandler(sectionId);
                 })
                 .catch(errHandler);
@@ -185,8 +185,9 @@ export default class OkrService {
             .api('me/onenote/notebooks')
             .post({ displayName: NOTEBOOK_NAME })
             .then((body) => {
-                let notebookId = body.id;
-                createSectionHandler(notebookId);
+                const notebookId = body.id;
+                const notebookFilePath = this.getNotebookFilePath(body.links.notebookWebUrl.href);
+                createSectionHandler(notebookId, notebookFilePath);
             })
             .catch(error => {
                 // An item with this name already exists in this location.
@@ -201,7 +202,8 @@ export default class OkrService {
                             if (notebooks.length == 1) {
                                 const notebookId = notebooks[0].id;
                                 const oneNoteWebUrl = notebooks[0].links.oneNoteWebUrl.href;
-                                createSectionHandler(notebookId);
+                                const notebookFilePath = this.getNotebookFilePath(oneNoteWebUrl);
+                                createSectionHandler(notebookId, notebookFilePath);
                             } else {
                                 errHandler({ message: `Cannot find and/or create the '${NOTEBOOK_NAME}' notebook.`});
                             }
@@ -213,7 +215,7 @@ export default class OkrService {
             });
     }
 
-    shareNotebook(errHandler) {
+    shareNotebook(filePath, errHandler) {
         const body = {
             "recipients": [
                 {
@@ -226,7 +228,7 @@ export default class OkrService {
                 "read"
             ]
         };
-        const url = `me/drive/root:/Notebooks/${NOTEBOOK_NAME}:/invite`;
+        const url = `me/drive/root:${filePath}:/invite`;
         this.graphClient
             .api(url)
             .post(body)
@@ -241,13 +243,13 @@ export default class OkrService {
             return;
         }
 
-        this.searchForSection(subjectId, sectionId => {
+        this.searchForSection(subjectId, (sectionId, notebookFilePath) => {
             if (sectionId) {
                 dataHandler(sectionId);
                 if(!readonlyMode) {
                     // Ensure that notebook is shared.
                     // It is OK to share notebook several times
-                    this.shareNotebook(errHandler);
+                    this.shareNotebook(notebookFilePath, errHandler);
                 }
             } else {
                 if(!readonlyMode) {
@@ -292,7 +294,7 @@ export default class OkrService {
                     const oneNoteWebUrl = sections[0].links.oneNoteWebUrl.href;
                     const notebookFilePath = this.getNotebookFilePath(oneNoteWebUrl);
                     this.setSubjectSectionId(subjectId, sectionId);
-                    dataHandler(sectionId);
+                    dataHandler(sectionId, notebookFilePath);
                 } else if(sections.length == 0) {
                     dataHandler(null);
                 } else {
@@ -303,8 +305,9 @@ export default class OkrService {
     }
 
     getNotebookFilePath(notebookWebUrl) {
-        const regex = `https:\/\/.+sharepoint\.com\/personal\/.+(\/.+\/.+\/${NOTEBOOK_NAME})`;
+        const regex = `https:\/\/.+sharepoint\.com\/personal\/.+\/.+(\/.+\/${NOTEBOOK_NAME})`;
         const match = notebookWebUrl.match(regex);
+        console.log("match notebook path:", match);
 
         return match[1];
     }
