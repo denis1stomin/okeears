@@ -7,12 +7,12 @@ Okeears is a simple to use SaaS application which helps your team and organizati
 ## Security and compliance
 
 * Microsoft Azure Active Directory authentication.
-(Azure AD multifactor authentication (MFA) is supported out-of-the-box.)
+(Azure AD multifactor authentication (MFA) is supported out-of-the-box)
 * Graph API is used to retrieve organizational structure.
 * All the OKR data is stored in your organization's OneDrive account.
-(Currently OneDrive for Business is supported only.)
+(Currently OneDrive for Business is supported only)
 * OneNote API is used to store the data in human-readable format.
-(You can use the OKR information in other O365-integrated systems.)
+(You can use the OKR information in other O365-integrated systems. You can use OneNote mobile app on your phone)
 * GDPR compliant :) since OneDrive/OneNote is used as a backend solution.
 * Okeears is hosted in Azure as static web site.
 * All the source code is open-source!
@@ -32,22 +32,22 @@ Allows the app to read, share, and modify OneNote notebooks on your behalf.
 * `Read your OneNote notebooks`
 Allows the app to read OneNote notebooks on your behalf.
 
-* Create your OneNote notebooks
+* `Create your OneNote notebooks`
 Allows the app to view the titles of your OneNote notebooks and sections and to create new pages, notebooks, and sections on your behalf.
 
-* Sign you in and read your profile
+* `Sign you in and read your profile`
 Allows you to sign in to the app with your organizational account and let the app read your profile. It also allows the app to read basic company information.
 
-* Read all users' basic profiles
+* `Read all users' basic profiles`
 Allows the app to read a basic set of profile properties of other users in your organization on your behalf. Includes display name, first and last name, email address and photo.
 
-* Read your files
+* `Read your files`
 Allows the app to read your files.
 
-* Have full access to your files
+* `Have full access to your files`
 Allows the app to read, create, update, and delete your files.
 
-* Read your relevant people list
+* `Read your relevant people list`
 Allows the app to read a list of people in the order that's most relevant to you. This includes your local contacts, your contacts from social networking, people listed in your organization's directory, and people from recent communications.
 
 ## Useful links
