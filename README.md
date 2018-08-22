@@ -14,17 +14,46 @@ Okeears is a simple to use SaaS application which helps your team and organizati
 * OneNote API is used to store the data in human-readable format.
 (You can use the OKR information in other O365-integrated systems.)
 * GDPR compliant :) since OneDrive/OneNote is used as a backend solution.
-* Okeears is hosted in Azure.
+* Okeears is hosted in Azure as static web site.
 * All the source code is open-source!
 
 ## Application permissions
 
 Okeears needs you to provide a number of Azure AD `on-behalf-of` permissions.
+You can easily revoke application permissions any time on https://portal.office.com/account/#apps.
 
+* `Read all OneNote notebooks that you can access`
+Allows the app to read all the OneNote notebooks that you have access to.
+You need the permission to look at your teammates objectives.
 
+* `Read and write your OneNote notebooks`
+Allows the app to read, share, and modify OneNote notebooks on your behalf.
+
+* `Read your OneNote notebooks`
+Allows the app to read OneNote notebooks on your behalf.
+
+* Create your OneNote notebooks
+Allows the app to view the titles of your OneNote notebooks and sections and to create new pages, notebooks, and sections on your behalf.
+
+* Sign you in and read your profile
+Allows you to sign in to the app with your organizational account and let the app read your profile. It also allows the app to read basic company information.
+
+* Read all users' basic profiles
+Allows the app to read a basic set of profile properties of other users in your organization on your behalf. Includes display name, first and last name, email address and photo.
+
+* Read your files
+Allows the app to read your files.
+
+* Have full access to your files
+Allows the app to read, create, update, and delete your files.
+
+* Read your relevant people list
+Allows the app to read a list of people in the order that's most relevant to you. This includes your local contacts, your contacts from social networking, people listed in your organization's directory, and people from recent communications.
 
 ## Useful links
 
 https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-scenarios
 https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-howitworks
+https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-permissions-and-consent
 https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow
+https://developer.microsoft.com/en-us/graph/docs/concepts/permissions_reference
