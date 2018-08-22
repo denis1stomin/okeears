@@ -196,7 +196,7 @@
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
 subject=Objective: ${objective.statement}&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
-Please take a look at your objective '${objective.statement}' on <a href="${window.location}">Okeears</a>.`;
+Please take a look at your objective '${objective.statement}' on ${window.location}.`;
             },
 
             // TODO : check is it safe to invite user to window.location?
@@ -206,7 +206,7 @@ Please take a look at your objective '${objective.statement}' on <a href="${wind
                 window.location = `mailto:${targetSubject.mail || targetSubject.userPrincipalName}?
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
-Please fill objectives for the next period on <a href="${window.location}">Okeears</a>.`;
+Please fill objectives for the next period on ${window.location}.`;
             }
         }
     }
