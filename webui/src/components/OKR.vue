@@ -19,7 +19,7 @@
         <div class="okr-editor" v-if="!currentlyLoading && !invalidOneDriveForBusinessLicense">
             <InputForm class="create-objective-form"
                        ref="newObjForm"
-                       placeholder="+ Add ambitious objective"
+                       placeholder="+ Type ambitious objective and press Enter"
                        :action="text => { addObjective(text); }"
                        v-if="canChangeOkr">
             </InputForm>
