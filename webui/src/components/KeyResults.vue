@@ -22,7 +22,7 @@
         </div>
         <InputForm ref="newKRForm"
                    v-if="!readonly"
-                   placeholder="+ Add measurable key result"
+                   placeholder="+ Type measurable key result and press Enter"
                    :action="text => { addKeyresult(objective, text); }">
         </InputForm>
     </div>
