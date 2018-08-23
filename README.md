@@ -24,7 +24,6 @@ You can easily revoke application permissions any time on https://portal.office.
 
 * `Read all OneNote notebooks that you can access`
 Allows the app to read all the OneNote notebooks that you have access to.
-
 _You need the permission to look over your teammates' objectives._
 
 * `Read your OneNote notebooks`
@@ -34,28 +33,27 @@ Allows the app to read OneNote notebooks on your behalf.
 Allows the app to read, share, and modify OneNote notebooks on your behalf.
 
 * `Create your OneNote notebooks`
-_Allows the app to view the titles of your OneNote notebooks and sections and to create new pages, notebooks, and sections on your behalf._
-
-You need those three permissions above to work with your objectives.
+Allows the app to view the titles of your OneNote notebooks and sections and to create new pages, notebooks, and sections on your behalf.
+_You need those three permissions above to work with your objectives._
 
 * `Sign you in and read your profile`
 Allows you to sign in to the app with your organizational account and let the app read your profile. It also allows the app to read basic company information.
+_The permission is used to retrieve basic information about your teammates._
 
 * `Read all users' basic profiles`
 Allows the app to read a basic set of profile properties of other users in your organization on your behalf. Includes display name, first and last name, email address and photo.
+_The permission is used to retrieve your profile basic information._
 
 * `Read your files`
 Allows the app to read your files.
 
 * `Have full access to your files`
 Allows the app to read, create, update, and delete your files.
-
-OneDrive permissions are used only to share your OKR notebook with your teammates since OneNote API currently does not provide such possibility. Theoretically OneDrive permissions will be removed from the application in future when OneNote API become more mature.
+_OneDrive permissions are used only to share your OKR notebook with your teammates since OneNote API currently does not provide such possibility. Theoretically OneDrive permissions will be removed from the application in future when OneNote API become more mature._
 
 * `Read your relevant people list`
 Allows the app to read a list of people in the order that's most relevant to you. This includes your local contacts, your contacts from social networking, people listed in your organization's directory, and people from recent communications.
-
-Since firstly you want to look at objectives of people most relevant to you, Okeears automatically suggests you those people list. See links below to find more details about relevant people list.
+_Since firstly you want to look at objectives of people most relevant to you, Okeears automatically suggests you those people list. See links below to find more details about relevant people list._
 
 
 ## Useful links
