@@ -15,11 +15,11 @@ Okeears is a simple-to-use SaaS application which helps your team and organizati
 (You can use the OKR information in other O365-integrated systems. You can use OneNote mobile app on your phone)
 * GDPR compliant :) since OneDrive/OneNote is used as a backend solution.
 * Okeears is hosted in Azure as static web site.
-* All the source code is open-source!
+* All the code is open-source!
 
 ## Application permissions
 
-Okeears needs you to provide a number of Azure AD `on-behalf-of` permissions.
+Okeears needs you to provide a number of Azure AD `on-behalf-of` or delegated permissions.
 You can easily revoke application permissions any time on https://portal.office.com/account/#apps.
 
 * `Read all OneNote notebooks that you can access`
@@ -55,6 +55,11 @@ _OneDrive permissions are used only to share your OKR notebook with your teammat
 Allows the app to read a list of people in the order that's most relevant to you. This includes your local contacts, your contacts from social networking, people listed in your organization's directory, and people from recent communications.
 _Since firstly you want to look at objectives of people most relevant to you, Okeears automatically suggests you those people list. See links below to find more details about relevant people list._
 
+* `Read all users' full profiles`
+Allows the app to read the full set of profile properties, reports, and managers of other users in your organization, on behalf of the signed-in user.
+_ __The permission requires admin consent, therefore it is not consented by Okeears currently.__
+But the permission is under consideration to be added in future. Using this permission Okeears could retrieve full organizational structure relevant to you like it is done in Microsoft Delve. It will significally help you to synchronize your goals with your managers._
+
 
 ## Useful links
 
@@ -63,4 +68,5 @@ https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-m
 https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-permissions-and-consent
 https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow
 https://developer.microsoft.com/en-us/graph/docs/concepts/permissions_reference
+https://github.com/microsoftgraph/microsoft-graph-docs/blob/master/concepts/permissions_reference.md
 https://developer.microsoft.com/en-us/graph/docs/concepts/people_example
