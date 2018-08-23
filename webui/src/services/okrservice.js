@@ -252,7 +252,7 @@ export default class OkrService {
         this.searchForSection(subjectId, (sectionId, notebookId) => {
             if (sectionId) {
                 dataHandler(sectionId);
-                if(!readonlyMode) {
+                if(!readonlyMode && notebookId) {
                     // Ensure that notebook is shared.
                     // It is OK to share notebook several times
                     this.shareNotebook(notebookId, errHandler);
