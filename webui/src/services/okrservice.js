@@ -169,14 +169,14 @@ export default class OkrService {
     }
 
     createSection(subjectId, dataHandler, errHandler) {
-        const createSectionHandler = (notebookId, filePath) => {
+        const createSectionHandler = (notebookId) => {
             this.graphClient
                 .api(`me/onenote/notebooks/${notebookId}/sections`)
                 .post({ displayName: SECTION_NAME })
                 .then((body) => {
                     let sectionId = body.id;
                     this.setSubjectSectionId(subjectId, sectionId);
-                    this.shareNotebook(filePath, errHandler);
+                    this.shareNotebook(notebookId, errHandler);
                     dataHandler(sectionId);
                 })
                 .catch(errHandler);
@@ -187,8 +187,7 @@ export default class OkrService {
             .post({ displayName: NOTEBOOK_NAME })
             .then((body) => {
                 const notebookId = body.id;
-                const notebookFilePath = this.getNotebookFilePath(body.links.notebookWebUrl.href);
-                createSectionHandler(notebookId, notebookFilePath);
+                createSectionHandler(notebookId);
             })
             .catch(error => {
                 // An item with this name already exists in this location.
@@ -196,15 +195,13 @@ export default class OkrService {
                     this.graphClient
                         .api('me/onenote/notebooks')
                         .filter(`displayName eq '${NOTEBOOK_NAME}'`)
-                        .select('id, links')
+                        .select('id')
                         .get()
                         .then((body) => {
                             const notebooks = body.value;
                             if (notebooks.length == 1) {
                                 const notebookId = notebooks[0].id;
-                                const oneNoteWebUrl = notebooks[0].links.oneNoteWebUrl.href;
-                                const notebookFilePath = this.getNotebookFilePath(oneNoteWebUrl);
-                                createSectionHandler(notebookId, notebookFilePath);
+                                createSectionHandler(notebookId);
                             } else {
                                 errHandler({ message: `Cannot find and/or create the '${NOTEBOOK_NAME}' notebook.`});
                             }
@@ -216,7 +213,7 @@ export default class OkrService {
             });
     }
 
-    shareNotebook(filePath, errHandler) {
+    shareNotebook(notebookId, errHandler) {
         const body = {
             "recipients": [
                 {
@@ -229,11 +226,19 @@ export default class OkrService {
                 "read"
             ]
         };
-        const url = `me/drive/root:${filePath}:/invite`;
+
+        const oneDriveETag = notebookId.substr(2);
+        const oneDriveSearchUrl = `me/drive/root/search(q='{${oneDriveETag}}')`;
         this.graphClient
-            .api(url)
-            .post(body)
-            .then(data => {})
+            .api(oneDriveSearchUrl)
+            .get()
+            .then(data => {
+                this.graphClient
+                    .api(`me/drive/items/${data.value[0].id}/invite`)
+                    .post(body)
+                    .then(data => {})
+                    .catch(errHandler);
+            })
             .catch(errHandler); 
     }
 
@@ -244,13 +249,13 @@ export default class OkrService {
             return;
         }
 
-        this.searchForSection(subjectId, (sectionId, notebookFilePath) => {
+        this.searchForSection(subjectId, (sectionId, notebookId) => {
             if (sectionId) {
                 dataHandler(sectionId);
                 if(!readonlyMode) {
                     // Ensure that notebook is shared.
                     // It is OK to share notebook several times
-                    this.shareNotebook(notebookFilePath, errHandler);
+                    this.shareNotebook(notebookId, errHandler);
                 }
             } else {
                 if(!readonlyMode) {
@@ -284,7 +289,7 @@ export default class OkrService {
         this.graphClient
             .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections`)
             .filter(`displayName eq '${SECTION_NAME}'`)
-            .select('id, links')
+            .select('id')
             .expand('parentNotebook')
             .get()
             .then((body) => {
@@ -292,25 +297,16 @@ export default class OkrService {
                 const sections = body.value.filter(section => section.parentNotebook.displayName == NOTEBOOK_NAME);
                 if(sections.length == 1) {
                     const sectionId = sections[0].id;
-                    const oneNoteWebUrl = sections[0].links.oneNoteWebUrl.href;
-                    const notebookFilePath = this.getNotebookFilePath(oneNoteWebUrl);
+                    const notebookId = sections[0].parentNotebook.id;
                     this.setSubjectSectionId(subjectId, sectionId);
-                    dataHandler(sectionId, notebookFilePath);
+                    dataHandler(sectionId, notebookId);
                 } else if(sections.length == 0) {
-                    dataHandler(null);
+                    dataHandler(null, null);
                 } else {
                     errHandler({ message: `More than one '${SECTION_NAME}' sections found in the '${NOTEBOOK_NAME}' notebook.`});
                 }
             })
             .catch(errHandler);
-    }
-
-    getNotebookFilePath(notebookWebUrl) {
-        const regex = `https:\/\/.+sharepoint\.com\/personal\/.+\/.+(\/.+\/${NOTEBOOK_NAME})`;
-        const match = notebookWebUrl.match(regex);
-        console.log("match notebook path:", match);
-
-        return match[1];
     }
 
     getSubjectPrefix(subjectId) {
