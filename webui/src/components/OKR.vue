@@ -41,14 +41,14 @@
                         </div>
 
                         <div class="objective-icons icons-container">
-                            <span v-if="canChangeOkr"
-                                  title="Delete objective"
-                                  @click="deleteObjective(objective.id)"><TrashIcon/></span>
-                            <span title="Duplicate objective"
-                                  @click="copyObjective(objective)"><CopyIcon/></span>
                             <span v-if="!canChangeOkr"
                                   title="Send suggestion email"
                                   @click="sendChangeSuggestion(objective)"><SendIcon/></span>
+                            <span title="Duplicate objective"
+                                  @click="copyObjective(objective)"><CopyIcon/></span>
+                            <span v-if="canChangeOkr"
+                                  title="Delete objective"
+                                  @click="deleteObjective(objective.id)"><TrashIcon/></span>
                         </div>
                     </div>
 
