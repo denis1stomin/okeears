@@ -57,7 +57,7 @@ _Since firstly you want to look at objectives of people most relevant to you, Ok
 
 * __Not consented by Okeears currently__ `Read all users' full profiles`
 Allows the app to read the full set of profile properties, reports, and managers of other users in your organization, on behalf of the signed-in user.
-_The permission requires admin consent, therefore it is not consented by Okeears currently. But the permission is under consideration to be added in future. Using this permission Okeears could retrieve full organizational structure relevant to you like it is done in Microsoft Delve. It will help you to synchronize your goals with your managers._
+_The permission requires admin consent, therefore it is not consented by Okeears currently. But the permission is under consideration to be added in the future. Using this permission Okeears could retrieve full organizational structure relevant to you like it is done in Microsoft Delve. It will help you to align your goals with your managers tree._
 
 
 ## Useful links
