@@ -2,7 +2,9 @@ import AuthenticationContext from 'adal-angular'
 
 class AuthService {
     constructor() {
-        const appConfig = window.AppConfig || {auth: {clientId: '6f9caa6b-b5cf-467d-a326-f25cb0aca8f2'}};
+        // TODO: Temporary hack to support testing in node
+        // where window.AppConfig is not defined
+        const appConfig = window.AppConfig || {auth: {clientId: '00000000-0000-0000-0000-000000000000'}};
         this.authContext = new AuthenticationContext(appConfig.auth);
     }
 
