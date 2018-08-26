@@ -4,8 +4,11 @@ class AuthService {
     constructor() {
         // TODO: Temporary hack to support testing in node
         // where window.AppConfig is not defined
-        const appConfig = window.AppConfig || {auth: {clientId: '00000000-0000-0000-0000-000000000000'}};
-        this.authContext = new AuthenticationContext(appConfig.auth);
+        let config = { clientId: '00000000-0000-0000-0000-000000000000' };
+        if (typeof window !== "undefined") {
+            config = window.AppConfig.auth;
+        }
+        this.authContext = new AuthenticationContext(config);
     }
 
     getCurrentUser() {
