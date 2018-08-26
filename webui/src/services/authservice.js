@@ -1,10 +1,13 @@
 import AuthenticationContext from 'adal-angular'
 
-const AuthContext = new AuthenticationContext(window.AppConfig.auth);
-
 class AuthService {
+    constructor() {
+        const appConfig = window.AppConfig || {auth: {clientId: '6f9caa6b-b5cf-467d-a326-f25cb0aca8f2'}};
+        this.authContext = new AuthenticationContext(appConfig.auth);
+    }
+
     getCurrentUser() {
-        return AuthContext.getCachedUser();
+        return this.authContext.getCachedUser();
     }
 
     isAuthenticated() {
@@ -13,19 +16,19 @@ class AuthService {
 
     // Handles current window location parameters to check/parse token etc
     handleCurrentWindowLocation() {
-        if (AuthContext.isCallback(window.location.hash)) {
-            AuthContext.handleWindowCallback();
+        if (this.authContext.isCallback(window.location.hash)) {
+            this.authContext.handleWindowCallback();
         }
     }
 
     // Acquires access token and then makes an action with the token
     withToken(actionFunc, tokenResource) {
-        const user = AuthContext.getCachedUser();
+        const user = this.authContext.getCachedUser();
         if (user && window.parent === window && !window.opener) {
-            AuthContext.acquireToken(tokenResource, (errorDesc, token, error) => {
+            this.authContext.acquireToken(tokenResource, (errorDesc, token, error) => {
                 if (error) {
                     console.log(error, errorDesc);
-                    AuthContext.acquireTokenRedirect(tokenResource, null, null);
+                    this.authContext.acquireTokenRedirect(tokenResource, null, null);
                 }
                 else {
                     actionFunc(token);
@@ -38,11 +41,11 @@ class AuthService {
     }
 
     login() {
-        AuthContext.login();
+        this.authContext.login();
     }
 
     logout() {
-        AuthContext.logOut();
+        this.authContext.logOut();
     }
 }
 
