@@ -68,9 +68,21 @@ export default class GraphSubjectService {
     getSubjectOrgTree(subjectId, dataHandler, errHandler) {
         // First get user information
         this.getUserById(subjectId, (user) => {
+            const orgtree = [user];
             // Then retrieve managers chain
-            this.getManagersRecursively([user], `/users/${subjectId}`, dataHandler, errHandler);
+            this.getManagersRecursively(orgtree, `/users/${subjectId}`, dataHandler, errHandler);
+            // Then get direct reports
+            this.getDirectReports(subjectId, reports => orgtree.push(...reports), errHandler);
         }, errHandler);
+    }
+
+    getDirectReports(subjectId, dataHandler, errHandler) {
+        this.graphClient
+            .api(`/users/${subjectId}/directReports`)
+            .select(ORGTREE_USER_SELECT)
+            .get()
+            .then(body => dataHandler(body.value))
+            .catch(errHandler);
     }
 
     getCurrentUserRelevantPeople(dataHandler, errHandler) {
