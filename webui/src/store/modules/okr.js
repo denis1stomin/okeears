@@ -108,6 +108,10 @@ export default {
             moveItem(objectiveId, state.removedObjectives, state.objectives);
         },
 
+        PURGE_OBJECTIVE(state, objectiveId) {
+            moveItem(objectiveId, state.removedObjectives, []);
+        },
+
         CREATE_KEYRESULT(state, payload) {
             state.saving = true;
             let objectives = state.objectives;
@@ -275,6 +279,10 @@ export default {
                 createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
+        },
+
+        PURGE_OBJECTIVE({commit}, objectiveId) {
+            commit('PURGE_OBJECTIVE', objectiveId);
         },
 
         CREATE_KEYRESULT({state, commit}, data) {

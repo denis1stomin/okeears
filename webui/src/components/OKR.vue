@@ -66,7 +66,10 @@
 
                     <div class="objective-restore-layer" v-if="isRemovedObjective(objective.id)">
                         <div class="objective-restore-button" @click="restoreObjective(objective.id)">
-                            RESTORE OBJECTIVE
+                            RESTORE
+                        </div>
+                        <div class="objective-delete-button" @click="purgeObjective(objective.id)">
+                            DELETE
                         </div>
                     </div>
                 </div>
@@ -189,6 +192,10 @@
 
             restoreObjective(objectiveId) {
                 this.$store.dispatch('RESTORE_OBJECTIVE', objectiveId);
+            },
+
+            purgeObjective(objectiveId) {
+                this.$store.dispatch('PURGE_OBJECTIVE', objectiveId);
             },
 
             sendChangeSuggestion(objective) {

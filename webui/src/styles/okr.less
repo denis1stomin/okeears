@@ -155,11 +155,17 @@
         left: 0;
         background: rgba(0, 0, 0, 0.4);
 
-        .objective-restore-button {
+        .objective-restore-button,
+        .objective-delete-button {
           font-size: 2em;
           color: @white;
           cursor: pointer;
           transition: all 0.5s ease-out;
+          margin: 30px;
+        }
+
+        .objective-delete-button {
+          color: red;
         }
       }
     }
