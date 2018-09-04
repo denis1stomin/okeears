@@ -239,7 +239,9 @@ export default class OkrService {
                     .then(data => {})
                     .catch(errHandler);
             })
-            .catch(errHandler); 
+            // Hide sharing error since most users shared the notebook using work-around.
+            // TODO : return back when OneNote API sharing functionality will be used.
+            .catch(() => {});
     }
 
     getSection(subjectId, readonlyMode, dataHandler, errHandler) {
