@@ -220,7 +220,9 @@ export default class OkrService {
             .api(oneDriveSearchUrl)
             .get()
             .then(data => {
-                this.shareOneDriveItem(data.value[0].id, errHandler);
+                if(data.value.length > 0) {
+                    this.shareOneDriveItem(data.value[0].id, errHandler);
+                }
             })
             .catch(errHandler);
     }
