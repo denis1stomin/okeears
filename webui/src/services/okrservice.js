@@ -214,10 +214,38 @@ export default class OkrService {
     }
 
     shareNotebook(notebookId, errHandler) {
+        const oneDriveETag = notebookId.substr(2);
+        const oneDriveSearchUrl = `me/drive/root/search(q='{${oneDriveETag}}')`;
+        this.graphClient
+            .api(oneDriveSearchUrl)
+            .get()
+            .then(data => {
+                this.shareOneDriveItem(data.value[0].id, errHandler);
+            })
+            .catch(errHandler);
+    }
+
+    shareOneDriveItem(itemId, errHandler, aliasIndex = 0) {
+
+        // From https://github.com/SharePoint/PnP-Sites-Core/blob/master/Core/OfficeDevPnP.Core/Extensions/SecurityExtensions.cs#L171
+        const aliases = [
+            "Everyone except external users",
+            "Все, кроме внешних пользователей",
+            "Jeder, außer externen Benutzern",
+            "Tout le monde sauf les utilisateurs externes",
+            "除外部用户外的任何人",
+            "外部使用者以外的所有人",
+        ];
+
+        if(aliasIndex >= aliases.length) {
+            // We have tried all the known aliases but still no luck :(
+            return;
+        }
+
         const body = {
             "recipients": [
                 {
-                    "alias": "Everyone except external users"
+                    "alias": aliases[aliasIndex]
                 }
             ],
             "requireSignIn": true,
@@ -226,22 +254,21 @@ export default class OkrService {
                 "read"
             ]
         };
-
-        const oneDriveETag = notebookId.substr(2);
-        const oneDriveSearchUrl = `me/drive/root/search(q='{${oneDriveETag}}')`;
+        
         this.graphClient
-            .api(oneDriveSearchUrl)
-            .get()
-            .then(data => {
-                this.graphClient
-                    .api(`me/drive/items/${data.value[0].id}/invite`)
-                    .post(body)
-                    .then(data => {})
-                    .catch(errHandler);
-            })
-            // Hide sharing error since most users shared the notebook using work-around.
-            // TODO : return back when OneNote API sharing functionality will be used.
-            .catch(() => {});
+            .api(`me/drive/items/${itemId}/invite`)
+            .post(body)
+            .then(data => {})
+            .catch(error => {
+                // Most likely it is "The request is malformed or incorrect." 
+                // due to wrong alias language or (probably?) already shared notebook.
+                // TODO: Refactor this when OneNote API sharing functionality will be used.
+                if(error.code == 'invalidRequest') {
+                    this.shareOneDriveItem(itemId, errHandler, aliasIndex + 1);
+                } else {
+                    errHandler(error);
+                }
+            });        
     }
 
     getSection(subjectId, readonlyMode, dataHandler, errHandler) {
