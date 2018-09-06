@@ -26,12 +26,18 @@
   }
 
   .create-objective-form {
-    border-color: @lightgrey;
+    //border-color: @lightgrey;
+    border: 1px solid #aeaa4c;
+    padding-top: 15px;
   }
 
   .objective-card {
     margin: 25px 0;
     box-shadow: 0 1px 4px @darkgrey;
+
+    .input-form {
+      border: none;
+    }
 
     .objective,
     .objective-deleted {
@@ -181,7 +187,6 @@
 
   .input-form {
     background: transparent;
-    border: none;
 
     textarea {
       background: transparent;
