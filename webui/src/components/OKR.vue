@@ -69,6 +69,7 @@
                         <div class="objective-restore-button" @click="restoreObjective(objective.id)">
                             RESTORE
                         </div>
+                        <div class="objective-restore-separator">|</div>
                         <div class="objective-delete-button" @click="purgeObjective(objective.id)">
                             DELETE
                         </div>

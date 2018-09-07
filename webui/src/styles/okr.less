@@ -26,12 +26,17 @@
   }
 
   .create-objective-form {
-    border-color: @lightgrey;
+    border: 1px solid @lightblue;
+    padding-top: 15px;
   }
 
   .objective-card {
     margin: 25px 0;
     box-shadow: 0 1px 4px @darkgrey;
+
+    .input-form {
+      border: none;
+    }
 
     .objective,
     .objective-deleted {
@@ -109,16 +114,13 @@
               -webkit-transition: .2s;
               transition: opacity .2s;
 
-              &::-webkit-slider-thumb,
-              &::-moz-range-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
-                background: @lightblue;
-                cursor: pointer;
+              &::-webkit-slider-thumb {
+                .range-thumb();
               }
+            }
+
+            &::-moz-range-thumb {
+              .range-thumb();
             }
 
             .key-result-percents {
@@ -146,26 +148,30 @@
 
       .objective-restore-layer {
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
         position: absolute;
         top: 0;
         right: 0;
         bottom: 0;
         left: 0;
+        padding: 0 25%;
         background: rgba(0, 0, 0, 0.4);
 
         .objective-restore-button,
         .objective-delete-button {
-          font-size: 2em;
-          color: @white;
+          font-size: 1.7em;
+          color: @lightgrey;
           cursor: pointer;
           transition: all 0.5s ease-out;
-          margin: 30px;
+          &:hover {
+            color: @white;
+          }
         }
 
-        .objective-delete-button {
-          color: red;
+        .objective-restore-separator {
+          font-size: 1.7em;
+          color: @lightgrey;
         }
       }
     }
@@ -181,7 +187,6 @@
 
   .input-form {
     background: transparent;
-    border: none;
 
     textarea {
       background: transparent;
