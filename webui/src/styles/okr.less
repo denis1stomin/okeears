@@ -114,16 +114,13 @@
               -webkit-transition: .2s;
               transition: opacity .2s;
 
-              &::-webkit-slider-thumb,
-              &::-moz-range-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
-                background: @lightblue;
-                cursor: pointer;
+              &::-webkit-slider-thumb {
+                .range-thumb();
               }
+            }
+
+            &::-moz-range-thumb {
+              .range-thumb();
             }
 
             .key-result-percents {
