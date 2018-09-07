@@ -26,8 +26,7 @@
   }
 
   .create-objective-form {
-    //border-color: @lightgrey;
-    border: 1px solid #aeaa4c;
+    border: 1px solid @lightblue;
     padding-top: 15px;
   }
 
@@ -152,26 +151,30 @@
 
       .objective-restore-layer {
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
         position: absolute;
         top: 0;
         right: 0;
         bottom: 0;
         left: 0;
+        padding: 0 25%;
         background: rgba(0, 0, 0, 0.4);
 
         .objective-restore-button,
         .objective-delete-button {
-          font-size: 2em;
-          color: @white;
+          font-size: 1.7em;
+          color: @lightgrey;
           cursor: pointer;
           transition: all 0.5s ease-out;
-          margin: 30px;
+          &:hover {
+            color: @white;
+          }
         }
 
-        .objective-delete-button {
-          color: red;
+        .objective-restore-separator {
+          font-size: 1.7em;
+          color: @lightgrey;
         }
       }
     }
