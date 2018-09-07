@@ -3,6 +3,7 @@
         <div class="key-result" v-for="keyresult in objective.keyresults" :key="keyresult.id">
             <InputForm placeholder=""
                        autosave="true"
+                       acceptEmpty="true"
                        :readonly="readonly"
                        :action="text => { editKeyresult(objective, text, keyresult); }"
                        :value="keyresult.statement">
@@ -22,6 +23,7 @@
         </div>
         <InputForm ref="newKRForm"
                    v-if="!readonly"
+                   autosave="true"
                    placeholder="+ Type measurable key result and press Enter"
                    :action="text => { addKeyresult(objective, text); }">
         </InputForm>
