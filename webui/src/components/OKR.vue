@@ -56,6 +56,7 @@
                         <InputForm class="objective-title"
                                    placeholder=""
                                    autosave="true"
+                                   acceptEmpty="true"
                                    :readonly="!canChangeOkr"
                                    :action="text => { editObjective(objective, text); }"
                                    :value="objective.statement">
@@ -68,6 +69,7 @@
                         <div class="objective-restore-button" @click="restoreObjective(objective.id)">
                             RESTORE
                         </div>
+                        <div class="objective-restore-separator">|</div>
                         <div class="objective-delete-button" @click="purgeObjective(objective.id)">
                             DELETE
                         </div>

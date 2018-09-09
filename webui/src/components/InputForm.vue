@@ -20,7 +20,7 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'value', 'autosave', 'readonly'],
+        props: ['name', 'placeholder', 'action', 'value', 'autosave', 'readonly', 'acceptEmpty'],
 
         data() {
             return {
@@ -30,13 +30,13 @@
 
         methods: {
             onBlur(text) {
-                if(this.autosave && !this.readonly) {
-                    this.action(text);
+                if(this.autosave) {
+                    this.onEnter(text);
                 }
             },
 
             onEnter(text) {
-                if(text || this.autosave) {
+                if(!this.readonly && (text || this.acceptEmpty)) {
                     this.action(text);
                 }
             },
