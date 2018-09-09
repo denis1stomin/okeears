@@ -1,9 +1,11 @@
 import AuthSvc from './../../services/authservice'
 import GraphSubjectService from './../../services/graphsubjectservice'
+import TelemetryService from './../../services/telemetryservice';
 
 const DELVE_LINK_TPL = 'https://nam.delve.office.com/?u=';
 
 const SubjectSvc = new GraphSubjectService();
+const telemetry = new TelemetryService();
 
 export default {
     state: {
@@ -88,6 +90,8 @@ export default {
                 user => {
                     context.commit('CURRENT_USER_COMPLETE', user);
                     context.dispatch('SET_INTERESTING_SUBJECT', user);
+                    
+                    telemetry.setUser(user.displayName);
                 },
                 err => console.log(err)
             );
@@ -112,6 +116,8 @@ export default {
                     data => commit('SUGGESTED_SUBJECTS_LIST', data),
                     err => console.log(err)
                 );
+
+                telemetry.trackEvent("SearchSubjects");
             } else {
                 dispatch('GET_RELEVANT_SUBJECTS');
             }
@@ -121,11 +127,15 @@ export default {
             context.commit('INTERESTING_SUBJECT', subject);
             context.dispatch('GET_ORGTREE');
             context.dispatch('SET_SELECTED_SUBJECT', subject);
+            
+            telemetry.trackEvent("SetInterestingSubject");
         },
 
         SET_SELECTED_SUBJECT(context, subject) {
             context.commit('SELECTED_SUBJECT', subject);
             context.dispatch('GET_OBJECTIVES');
+            
+            telemetry.trackEvent("SetSelectedSubject");
         },
 
         // Gets OrgTree for an interesting subject
