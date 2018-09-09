@@ -91,7 +91,7 @@ export default {
                     context.commit('CURRENT_USER_COMPLETE', user);
                     context.dispatch('SET_INTERESTING_SUBJECT', user);
                     
-                    telemetry.setUser(user.displayName);
+                    telemetry.setUser(user);
                 },
                 err => console.log(err)
             );

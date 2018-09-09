@@ -2,8 +2,9 @@ export default class TelemetryService {
     constructor() {
     }
 
-    setUser(userId) {
-        window.appInsights.context.user.id = userId;
+    setUser(user) {
+        //TODO: Change to ' = hash(user.id)'
+        window.appInsights.context.user.id = user.id;
     }
 
     trackEvent(name, data) {
