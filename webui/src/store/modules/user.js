@@ -90,8 +90,6 @@ export default {
                 user => {
                     context.commit('CURRENT_USER_COMPLETE', user);
                     context.dispatch('SET_INTERESTING_SUBJECT', user);
-                    
-                    telemetry.setUser(user);
                 },
                 err => console.log(err)
             );
@@ -180,6 +178,10 @@ export default {
                     subject.photo = null;
                 }
             }, errorHandler);
+        },
+
+        LOGOUT() {
+            AuthSvc.logout();
         }
     }
 }

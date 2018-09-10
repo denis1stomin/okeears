@@ -1,12 +1,9 @@
 export default class TelemetryService {
-    constructor() {
+    setAuthenticatedUser(userId) {
+        window.appInsights.setAuthenticatedUserContext(userId);
     }
 
-    setUser(user) {
-        window.appInsights.setAuthenticatedUserContext(user.id);
-    }
-
-    clearUser() {
+    clearAuthenticatedUser() {
         window.appInsights.clearAuthenticatedUserContext();
     }
 

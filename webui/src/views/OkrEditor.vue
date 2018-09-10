@@ -35,9 +35,7 @@
     import UserCard from './../components/UserCard'
     import OrgTree from './../components/OrgTree'
     import OKR from './../components/OKR'
-
-    import AuthSvc from './../services/authservice'
-    
+   
     import { mapState, mapGetters } from 'vuex'
 
     export default {
@@ -58,7 +56,6 @@
         methods: {
             logOut() {
                 this.$store.dispatch('LOGOUT');
-                AuthSvc.logout();
             },
 
             selectInterestingSubject(item) {

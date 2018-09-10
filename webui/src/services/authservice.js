@@ -1,5 +1,5 @@
-import TelemetryService from './telemetryservice';
 import AuthenticationContext from 'adal-angular'
+import TelemetryService from './telemetryservice';
 
 const AuthContext = new AuthenticationContext(window.AppConfig.auth);
 const telemetry = new TelemetryService();
@@ -45,7 +45,7 @@ class AuthService {
 
     logout() {
         AuthContext.logOut();
-        telemetry.clearUser();
+        telemetry.clearAuthenticatedUser();
     }
 }
 
