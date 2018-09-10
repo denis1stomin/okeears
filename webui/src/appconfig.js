@@ -22,5 +22,7 @@ window.AppConfig = {
         //    'https://graph.microsoft.com/v1.0/users',
         //    'https://graph.microsoft.com/v1.0/onenote'
         //]
-    }
+    },
+
+    instrumentationKey: "0a12fbd1-0c70-41d3-87d8-34cbd47955fb"
 };
