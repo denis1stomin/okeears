@@ -4,6 +4,7 @@ import OkrEditor from './views/OkrEditor.vue'
 import Signin from './views/Signin.vue'
 
 import AuthSvc from './services/authservice'
+import TelemetryService from './services/telemetryservice';
 
 Vue.use(Router);
 
@@ -11,6 +12,9 @@ const checkAuth = (to, from, next) => {
     AuthSvc.handleCurrentWindowLocation();
 
     if (AuthSvc.isAuthenticated()) {
+        const user = AuthSvc.getCurrentUser();
+        new TelemetryService().setAuthenticatedUser( user.profile.oid );
+
         next();
         return;
     }
