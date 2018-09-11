@@ -1,7 +1,9 @@
 import OkrService from './../../services/okrservice';
+import TelemetryService from './../../services/telemetryservice';
 import user from './user'
 
-let okrSvc = new OkrService();
+const okrSvc = new OkrService();
+const telemetry = new TelemetryService();
 
 const moveItem = (itemId, fromArr, toArr) => {
     const idx = fromArr.findIndex((x) => x.id === itemId);
@@ -222,6 +224,8 @@ export default {
                 createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
+
+            telemetry.trackEvent("CreateObjective");
         },
 
         COPY_OBJECTIVE_TO_CURRENT_USER({state, commit}, objective) {
@@ -238,6 +242,8 @@ export default {
                 createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
+
+            telemetry.trackEvent("CopyObjective");
         },
 
         EDIT_OBJECTIVE({state, commit}, data) {
@@ -251,6 +257,8 @@ export default {
                 data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('EDIT_OBJECTIVE_FAILED', err)
             )
+
+            telemetry.trackEvent("EditObjective");
         },
 
         DELETE_OBJECTIVE({state, commit}, objectiveId) {
@@ -264,6 +272,8 @@ export default {
                 data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('DELETE_OBJECTIVE_FAILED', err)
             )
+
+            telemetry.trackEvent("DeleteObjective");
         },
 
         RESTORE_OBJECTIVE({state, commit}, objectiveId) {
@@ -279,10 +289,12 @@ export default {
                 createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
+            telemetry.trackEvent("RestoreObjective");
         },
 
         PURGE_OBJECTIVE({commit}, objectiveId) {
             commit('PURGE_OBJECTIVE', objectiveId);
+            telemetry.trackEvent("PurgeObjective");
         },
 
         CREATE_KEYRESULT({state, commit}, data) {
@@ -297,6 +309,8 @@ export default {
                 data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_KEYRESULT_FAILED', err)
             );
+
+            telemetry.trackEvent("CreateKeyResult");
         },
 
         EDIT_KEYRESULT({state, commit}, data) {
@@ -311,6 +325,8 @@ export default {
                 data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('EDIT_KEYRESULT_FAILED', err)
             );
+
+            telemetry.trackEvent("EditKeyResult");
         },
 
         DELETE_KEYRESULT({state, commit}, data) {
@@ -325,6 +341,8 @@ export default {
                 data => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('DELETE_KEYRESULT_FAILED', err)
             );
+
+            telemetry.trackEvent("DeleteKeyResult");
         },
     }
 }
