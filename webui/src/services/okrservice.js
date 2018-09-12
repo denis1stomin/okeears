@@ -58,7 +58,7 @@ export default class OkrService {
 
             this.graphClient
                 .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
-                .select('id, title, createdDateTime, links')
+                .select('id, title, createdDateTime, lastModifiedDateTime, links')
                 .orderby('createdDateTime asc')
                 .get()
                 .then(body => {
@@ -66,6 +66,7 @@ export default class OkrService {
                         const objective = {
                             id: page.id,
                             createdDateTime: page.createdDateTime,
+                            lastModifiedDateTime: page.lastModifiedDateTime,
                             statement: page.title,
                             keyresults: [],
                             onenoteWebUrl: page.links.oneNoteWebUrl.href

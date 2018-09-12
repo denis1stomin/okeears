@@ -63,6 +63,13 @@
                         </InputForm>
 
                         <KeyResults :objective="objective" :readonly="!canChangeOkr"/>
+
+                        <div class="objective-additional-info">
+                            <a :href="objective.onenoteWebUrl" target="_blank" rel="noopener noreferrer">
+                                <img src="https://weuofficehome.msocdn.com/s/7047452e/Images/favicon_metro.ico" />
+                                </a>
+                            <span>Updated at: {{objective.lastModifiedDateTime}}</span>
+                        </div>
                     </div>
 
                     <div class="objective-restore-layer" v-if="isRemovedObjective(objective.id)">
