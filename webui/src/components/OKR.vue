@@ -65,10 +65,10 @@
                         <KeyResults :objective="objective" :readonly="!canChangeOkr"/>
 
                         <div class="objective-additional-info">
-                            <a title="View objective in OneNote" :href="objective.onenoteWebUrl" target="_blank" rel="noopener noreferrer">
+                            <span>{{getLastChangedMessage(objective.lastModifiedDateTime)}}</span>
+                            <a title="View objective in Microsoft OneNote" :href="objective.onenoteWebUrl" target="_blank" rel="noopener noreferrer">
                                 <img src="https://weuofficehome.msocdn.com/s/7047452e/Images/favicon_metro.ico" />
-                                </a>
-                            <span>Updated at: {{objective.lastModifiedDateTime}}</span>
+                            </a>
                         </div>
                     </div>
 
@@ -223,6 +223,11 @@ Please take a look at your objective '${objective.statement}' on ${window.locati
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
 Please fill objectives for the next period on ${window.location}.`;
+            },
+
+            getLastChangedMessage(timestamp) {
+                const parsed = new Date(timestamp);
+                return `Updated ${parsed.toLocaleDateString()} at ${parsed.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             }
         }
     }
