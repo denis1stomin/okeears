@@ -5,7 +5,7 @@
                        autosave="true"
                        acceptEmpty="true"
                        :readonly="readonly"
-                       :action="text => { editKeyresult(objective, text, keyresult); }"
+                       :action="text => { editKeyresult(objective, text, keyresult, keyresult.description); }"
                        :value="keyresult.statement">
                 <span v-if="!readonly" class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
@@ -19,7 +19,18 @@
             <span class="input-icon"
                   v-if="!readonly"
                   title="Delete key result"
-                  @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
+                  @click="deleteKeyresult(objective, keyresult)"><TrashIcon/>
+            </span>
+
+            <InputForm class="key-result-description"
+                       placeholder="Some description here"
+                       autosave="true"
+                       acceptEmpty="true"
+                       :readonly="readonly"
+                       :action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"
+                       :value="keyresult.description">
+                <div/>
+            </InputForm>
         </div>
         <InputForm ref="newKRForm"
                    v-if="!readonly"
@@ -51,17 +62,19 @@
                     objective: objective,
                     keyresult: {
                         statement: statement,
-                        percent: 0
+                        percent: 0,
+                        description: ""
                     }
                 })
             },
 
-            editKeyresult(objective, krStatement, keyresult) {
+            editKeyresult(objective, krStatement, keyresult, krDescription) {
                 this.$store.dispatch('EDIT_KEYRESULT', {
                     objective: objective,
                     keyresult: keyresult,
                     krStatement: krStatement,
-                    krPercent: keyresult.percent
+                    krPercent: keyresult.percent,
+                    krDescription: krDescription
                 });
             },
 
@@ -77,7 +90,8 @@
                     objective: objective,
                     keyresult: keyresult,
                     krStatement: keyresult.statement,
-                    krPercent: keyresult.percent
+                    krPercent: keyresult.percent,
+                    krDescription: keyresult.description
                 });
             }
         }
