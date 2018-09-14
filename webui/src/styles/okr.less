@@ -1,3 +1,5 @@
+@import "./variables";
+
 .okr {
   min-width: 230px;
   max-width: 900px;
@@ -80,8 +82,19 @@
 
         .objective-additional-info {
           text-align: right;
-          margin-right: 5px;
-          font-size: 12px;
+          font-size: 13px;
+
+          .objective-additional-info-text {
+            margin-bottom: 10px;
+            color: @textgrey;
+          }
+
+          .objective-additional-info-o465 {
+            margin-left: 5px;
+            margin-right: 10px;
+            max-width: 24px;
+            max-height: 24px;
+          }
         }
 
         .key-results {

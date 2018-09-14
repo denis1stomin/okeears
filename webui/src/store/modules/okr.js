@@ -19,19 +19,6 @@ export default {
     state: {
         objectives: [],
         removedObjectives: [],
-        landingObjective: {
-            statement: "Create a few ambitious objectives",
-            keyresults: [
-                { 
-                    statement: "Create 3 objectives for the next iteration",
-                    percent: 0
-                },
-                {
-                    statement: "Create 1-3 measurable key results for each objective",
-                    percent: 0
-                }
-            ]
-        },
         loading: false,
         saving: false,
         error: null,
