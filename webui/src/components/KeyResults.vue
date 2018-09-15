@@ -18,7 +18,7 @@
             <div class="icons-container" v-if="!readonly">
                 <span class="input-icon"
                       title="Look at key result description"
-                      @click="openChat(objective, keyresult)"><ChatIcon/>
+                      @click="openChat(keyresult.id)"><ChatIcon/>
                 </span>
 
                 <span class="input-icon"
@@ -29,9 +29,10 @@
 
             <InputForm class="key-result-description"
                        v-if="showDescription"
-                       placeholder="Describe result achievement here"
+                       placeholder="+ Result achievement description"
                        autosave="true"
                        acceptEmpty="true"
+                       :name="keyresult.id"
                        :readonly="readonly"
                        :action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"
                        :value="keyresult.description">
@@ -105,8 +106,11 @@
                 });
             },
 
-            openChat(objective, keyresult) {
+            openChat(keyresultId) {
                 this.showDescription = !this.showDescription;
+
+                // TODO : FIND InputForm html-element WHERE :name == keyresultId
+                //        THEN change its style to 'key-result-description[-hidden]'
             }
         }
     }
