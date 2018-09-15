@@ -108,11 +108,17 @@
 
           .key-result {
             display: flex;
-            align-items: center;
+            flex-wrap: wrap;
+            align-items: baseline;
             margin: 5px 0;
 
             .key-result-description {
+              width: 100%;
               font-size: 12px;
+
+              textarea {
+                color: @textgrey;
+              }
             }
 
             .input-form {

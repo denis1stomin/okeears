@@ -27,14 +27,15 @@
                 </span>
             </div>
 
-            <!--<InputForm class="key-result-description"-->
-                       <!--placeholder="Some description here"-->
-                       <!--autosave="true"-->
-                       <!--acceptEmpty="true"-->
-                       <!--:readonly="readonly"-->
-                       <!--:action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"-->
-                       <!--:value="keyresult.description">-->
-            <!--</InputForm>-->
+            <InputForm class="key-result-description"
+                       v-if="showDescription"
+                       placeholder="Some description here"
+                       autosave="true"
+                       acceptEmpty="true"
+                       :readonly="readonly"
+                       :action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"
+                       :value="keyresult.description">
+            </InputForm>
         </div>
 
         <InputForm ref="newKRForm"
@@ -57,6 +58,12 @@
         components: {InputForm, ChatIcon, TrashIcon},
 
         props: ['objective', 'readonly'],
+
+        data() {
+            return {
+                showDescription: false
+            }
+        },
 
         methods: {
             addKeyresult(objective, statement) {
@@ -96,6 +103,10 @@
                     krPercent: keyresult.percent,
                     krDescription: keyresult.description
                 });
+            },
+
+            openChat(objective, keyresult) {
+                this.showDescription = !this.showDescription;
             }
         }
     }
