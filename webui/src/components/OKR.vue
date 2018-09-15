@@ -65,8 +65,11 @@
                         <KeyResults :objective="objective" :readonly="!canChangeOkr"/>
 
                         <div class="objective-additional-info">
-                            <span class="objective-additional-info-text">{{getLastChangedMessage(objective.lastModifiedDateTime)}}</span>
-                            <a title="View objective in Microsoft OneNote" :href="objective.onenoteWebUrl" target="_blank" rel="noopener noreferrer">
+                            <span class="objective-additional-info-text">
+                                {{getLastChangedMessage(objective.lastModifiedDateTime)}}
+                            </span>
+                            <a title="View objective in Microsoft OneNote"
+                               :href="objective.onenoteWebUrl" target="_blank" rel="noopener noreferrer">
                                 <img class="objective-additional-info-o465"
                                      src="https://weuofficehome.msocdn.com/s/7047452e/Images/favicon_metro.ico" />
                             </a>
