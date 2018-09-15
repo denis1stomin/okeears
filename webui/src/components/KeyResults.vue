@@ -17,19 +17,19 @@
 
             <div class="icons-container" v-if="!readonly">
                 <span class="input-icon"
-                      title="Delete key result"
-                      @click="deleteKeyresult(objective, keyresult)"><TrashIcon/>
+                      title="Look at key result description"
+                      @click="openChat(objective, keyresult)"><ChatIcon/>
                 </span>
 
                 <span class="input-icon"
-                      title="Description for key result"
-                      @click="openChat(objective, keyresult)"><ChatIcon/>
+                      title="Delete key result"
+                      @click="deleteKeyresult(objective, keyresult)"><TrashIcon/>
                 </span>
             </div>
 
             <InputForm class="key-result-description"
                        v-if="showDescription"
-                       placeholder="Some description here"
+                       placeholder="Describe result achievement here"
                        autosave="true"
                        acceptEmpty="true"
                        :readonly="readonly"
