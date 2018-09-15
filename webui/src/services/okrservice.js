@@ -106,6 +106,8 @@ export default class OkrService {
                 .then(body => {
                     objective.id = body.id;
                     objective.createdDateTime = body.createdDateTime;
+                    objective.lastModifiedDateTime = body.lastModifiedDateTime;
+                    objective.onenoteWebUrl = body.links.oneNoteWebUrl.href;
 
                     if (objective.keyresults && objective.keyresults.length > 0) {
                         // TODO : we should avoid using timers

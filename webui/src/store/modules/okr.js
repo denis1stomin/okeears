@@ -200,6 +200,8 @@ export default {
             // otherwise Vue's list rendering engine (v-for statement) will reuse DOM elements
             // and display several items with the same text for newly added objectives.
             objective.id = 'temp-' + okrSvc.createId();
+            objective.lastModifiedDateTime = new Date();
+            objective.onenoteWebUrl = null;
 
             commit('ADD_OBJECTIVE', objective);
             commit('SAVING_STARTED');
