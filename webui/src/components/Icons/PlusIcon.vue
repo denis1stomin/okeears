@@ -7,7 +7,7 @@
 
 <script>
     export default {
-        name: "plus-icon"
+        name: "PlusIcon"
     }
 </script>
 

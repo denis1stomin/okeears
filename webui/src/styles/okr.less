@@ -98,8 +98,7 @@
         }
 
         .key-results {
-          margin-right: 5px;
-          margin-left: 15px;
+          margin: 0 15px;
 
           .input-form {
             textarea {
@@ -113,17 +112,12 @@
             margin: 5px 0;
 
             .key-result-description {
-              // TODO: new line
               font-size: 12px;
             }
 
             .input-form {
               padding: 2px;
               flex-grow: 1;
-
-              .icon-trash {
-                display: none;
-              }
             }
 
             .key-result-range {
@@ -155,11 +149,19 @@
               font-weight: 600;
             }
 
-            .icon-trash {
-              width: 18px;
-              .linkstyle();
-              &:hover {
-                .linkhover();
+            .icons-container {
+              display: flex;
+
+              .icon {
+                width: 18px;
+                .linkstyle();
+                &:hover {
+                  .linkhover();
+                }
+              }
+
+              .icon-chat {
+                margin-left: 5px;
               }
             }
           }
@@ -203,10 +205,8 @@
 
   .centered-suggestion-message {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    margin: 40px;
+    font-size: 1.2em;
+    margin-top: 40px;
   }
 
   .input-form {
@@ -215,12 +215,6 @@
     textarea {
       background: transparent;
       border: none;
-    }
-
-    .icon-plus {
-      &:hover {
-        transform: scale(1);
-      }
     }
   }
 }

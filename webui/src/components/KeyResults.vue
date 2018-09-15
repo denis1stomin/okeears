@@ -7,31 +7,36 @@
                        :readonly="readonly"
                        :action="text => { editKeyresult(objective, text, keyresult, keyresult.description); }"
                        :value="keyresult.statement">
-                <span v-if="!readonly" class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
 
             <input class="key-result-range" type="range" min="0" max="100"
                    v-if="!readonly"
                    v-model.number="keyresult.percent"
-                   @blur="editPercent(objective, keyresult)"/>
+                   @blur="editPercent(objective, keyresult)" title="percentage"/>
             <span class="key-result-percents">{{keyresult.percent}}%</span>
 
-            <span class="input-icon"
-                  v-if="!readonly"
-                  title="Delete key result"
-                  @click="deleteKeyresult(objective, keyresult)"><TrashIcon/>
-            </span>
+            <div class="icons-container" v-if="!readonly">
+                <span class="input-icon"
+                      title="Delete key result"
+                      @click="deleteKeyresult(objective, keyresult)"><TrashIcon/>
+                </span>
 
-            <InputForm class="key-result-description"
-                       placeholder="Some description here"
-                       autosave="true"
-                       acceptEmpty="true"
-                       :readonly="readonly"
-                       :action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"
-                       :value="keyresult.description">
-                <div/>
-            </InputForm>
+                <span class="input-icon"
+                      title="Description for key result"
+                      @click="openChat(objective, keyresult)"><ChatIcon/>
+                </span>
+            </div>
+
+            <!--<InputForm class="key-result-description"-->
+                       <!--placeholder="Some description here"-->
+                       <!--autosave="true"-->
+                       <!--acceptEmpty="true"-->
+                       <!--:readonly="readonly"-->
+                       <!--:action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"-->
+                       <!--:value="keyresult.description">-->
+            <!--</InputForm>-->
         </div>
+
         <InputForm ref="newKRForm"
                    v-if="!readonly"
                    autosave="true"
@@ -43,15 +48,13 @@
 
 <script>
     import InputForm from './InputForm'
-    import PlusIcon from './Icons/PlusIcon'
+    import ChatIcon from './Icons/ChatIcon'
     import TrashIcon from './Icons/TrashIcon'
-
-    import { mapGetters } from 'vuex'
 
     export default {
         name: 'KeyResults',
 
-        components: {InputForm, PlusIcon, TrashIcon},
+        components: {InputForm, ChatIcon, TrashIcon},
 
         props: ['objective', 'readonly'],
 
