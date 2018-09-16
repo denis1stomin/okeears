@@ -124,6 +124,7 @@ export default {
 
             objectives[objectiveIndex].keyresults[keyresultIndex].statement = payload.krStatement;
             objectives[objectiveIndex].keyresults[keyresultIndex].percent = payload.krPercent;
+            objectives[objectiveIndex].keyresults[keyresultIndex].description = payload.krDescription;
             state.objectives = objectives;
         },
 

@@ -39,7 +39,8 @@ export default class OkrService {
                 return {
                     id: id,
                     statement: cells[0].innerText,
-                    percent: parseInt(cells[1] ? cells[1].innerText : "0", 10)
+                    percent: parseInt(cells[1] ? cells[1].innerText : "0", 10),
+                    description: cells[2] ? cells[2].innerText : ""
                 }
             });
             dataHandler(results);
@@ -145,7 +146,12 @@ export default class OkrService {
                 if(!each.percent) {
                     each.percent = 0;
                 }
-                content += `<tr data-id="${each.id}"><td>${each.statement}</td><td>${each.percent}</td></tr>`;
+                content +=
+                    `<tr data-id="${each.id}">
+                        <td>${each.statement}</td>
+                        <td>${each.percent}</td>
+                        <td>${each.description || ""}</td>
+                    </tr>`;
             });
         }
 
