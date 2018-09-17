@@ -5,22 +5,40 @@
                        autosave="true"
                        acceptEmpty="true"
                        :readonly="readonly"
-                       :action="text => { editKeyresult(objective, text, keyresult); }"
+                       :action="text => { editKeyresult(objective, text, keyresult, keyresult.description); }"
                        :value="keyresult.statement">
-                <span v-if="!readonly" class="input-icon" @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
             </InputForm>
 
             <input class="key-result-range" type="range" min="0" max="100"
                    v-if="!readonly"
                    v-model.number="keyresult.percent"
-                   @blur="editPercent(objective, keyresult)"/>
+                   @blur="editPercent(objective, keyresult)" title="percentage"/>
             <span class="key-result-percents">{{keyresult.percent}}%</span>
 
-            <span class="input-icon"
-                  v-if="!readonly"
-                  title="Delete key result"
-                  @click="deleteKeyresult(objective, keyresult)"><TrashIcon/></span>
+            <div class="icons-container" v-if="!readonly">
+                <span class="input-icon"
+                      title="Look at key result description"
+                      @click="openChat(keyresult.id)"><ChatIcon/>
+                </span>
+
+                <span class="input-icon"
+                      title="Delete key result"
+                      @click="deleteKeyresult(objective, keyresult)"><TrashIcon/>
+                </span>
+            </div>
+
+            <InputForm class="key-result-description"
+                       v-if="showDescription"
+                       placeholder="+ Result achievement description"
+                       autosave="true"
+                       acceptEmpty="true"
+                       :name="keyresult.id"
+                       :readonly="readonly"
+                       :action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"
+                       :value="keyresult.description">
+            </InputForm>
         </div>
+
         <InputForm ref="newKRForm"
                    v-if="!readonly"
                    autosave="true"
@@ -32,17 +50,21 @@
 
 <script>
     import InputForm from './InputForm'
-    import PlusIcon from './Icons/PlusIcon'
+    import ChatIcon from './Icons/ChatIcon'
     import TrashIcon from './Icons/TrashIcon'
-
-    import { mapGetters } from 'vuex'
 
     export default {
         name: 'KeyResults',
 
-        components: {InputForm, PlusIcon, TrashIcon},
+        components: {InputForm, ChatIcon, TrashIcon},
 
         props: ['objective', 'readonly'],
+
+        data() {
+            return {
+                showDescription: false
+            }
+        },
 
         methods: {
             addKeyresult(objective, statement) {
@@ -51,17 +73,19 @@
                     objective: objective,
                     keyresult: {
                         statement: statement,
-                        percent: 0
+                        percent: 0,
+                        description: ""
                     }
                 })
             },
 
-            editKeyresult(objective, krStatement, keyresult) {
+            editKeyresult(objective, krStatement, keyresult, krDescription) {
                 this.$store.dispatch('EDIT_KEYRESULT', {
                     objective: objective,
                     keyresult: keyresult,
                     krStatement: krStatement,
-                    krPercent: keyresult.percent
+                    krPercent: keyresult.percent,
+                    krDescription: krDescription
                 });
             },
 
@@ -77,8 +101,16 @@
                     objective: objective,
                     keyresult: keyresult,
                     krStatement: keyresult.statement,
-                    krPercent: keyresult.percent
+                    krPercent: keyresult.percent,
+                    krDescription: keyresult.description
                 });
+            },
+
+            openChat(keyresultId) {
+                this.showDescription = !this.showDescription;
+
+                // TODO : FIND InputForm html-element WHERE :name == keyresultId
+                //        THEN change its style to 'key-result-description[-hidden]'
             }
         }
     }

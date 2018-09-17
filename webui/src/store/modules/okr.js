@@ -19,19 +19,6 @@ export default {
     state: {
         objectives: [],
         removedObjectives: [],
-        landingObjective: {
-            statement: "Create a few ambitious objectives",
-            keyresults: [
-                { 
-                    statement: "Create 3 objectives for the next iteration",
-                    percent: 0
-                },
-                {
-                    statement: "Create 1-3 measurable key results for each objective",
-                    percent: 0
-                }
-            ]
-        },
         loading: false,
         saving: false,
         error: null,
@@ -137,6 +124,7 @@ export default {
 
             objectives[objectiveIndex].keyresults[keyresultIndex].statement = payload.krStatement;
             objectives[objectiveIndex].keyresults[keyresultIndex].percent = payload.krPercent;
+            objectives[objectiveIndex].keyresults[keyresultIndex].description = payload.krDescription;
             state.objectives = objectives;
         },
 
@@ -213,6 +201,8 @@ export default {
             // otherwise Vue's list rendering engine (v-for statement) will reuse DOM elements
             // and display several items with the same text for newly added objectives.
             objective.id = 'temp-' + okrSvc.createId();
+            objective.lastModifiedDateTime = new Date();
+            objective.onenoteWebUrl = null;
 
             commit('ADD_OBJECTIVE', objective);
             commit('SAVING_STARTED');

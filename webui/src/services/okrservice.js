@@ -39,7 +39,8 @@ export default class OkrService {
                 return {
                     id: id,
                     statement: cells[0].innerText,
-                    percent: parseInt(cells[1] ? cells[1].innerText : "0", 10)
+                    percent: parseInt(cells[1] ? cells[1].innerText : "0", 10),
+                    description: cells[2] ? cells[2].innerText : ""
                 }
             });
             dataHandler(results);
@@ -58,7 +59,7 @@ export default class OkrService {
 
             this.graphClient
                 .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections/${sectionId}/pages`)
-                .select('id, title, createdDateTime, links')
+                .select('id, title, createdDateTime, lastModifiedDateTime, links')
                 .orderby('createdDateTime asc')
                 .get()
                 .then(body => {
@@ -66,6 +67,7 @@ export default class OkrService {
                         const objective = {
                             id: page.id,
                             createdDateTime: page.createdDateTime,
+                            lastModifiedDateTime: page.lastModifiedDateTime,
                             statement: page.title,
                             keyresults: [],
                             onenoteWebUrl: page.links.oneNoteWebUrl.href
@@ -105,6 +107,8 @@ export default class OkrService {
                 .then(body => {
                     objective.id = body.id;
                     objective.createdDateTime = body.createdDateTime;
+                    objective.lastModifiedDateTime = body.lastModifiedDateTime;
+                    objective.onenoteWebUrl = body.links.oneNoteWebUrl.href;
 
                     if (objective.keyresults && objective.keyresults.length > 0) {
                         // TODO : we should avoid using timers
@@ -142,7 +146,12 @@ export default class OkrService {
                 if(!each.percent) {
                     each.percent = 0;
                 }
-                content += `<tr data-id="${each.id}"><td>${each.statement}</td><td>${each.percent}</td></tr>`;
+                content +=
+                    `<tr data-id="${each.id}">
+                        <td>${each.statement}</td>
+                        <td>${each.percent}</td>
+                        <td>${each.description || ""}</td>
+                    </tr>`;
             });
         }
 

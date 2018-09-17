@@ -12,7 +12,7 @@
             <div class="user-card-item-links">
                 View in
                 <a class="user-card-item-link" target="_blank" rel="noopener noreferrer"
-                   :href="user.delvelink">Delve</a>
+                   :href="user.delvelink">Microsoft Delve</a>
             </div>
         </div>
     </div>

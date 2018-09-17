@@ -62,7 +62,19 @@
                                    :value="objective.statement">
                         </InputForm>
 
-                        <KeyResults :objective="objective" :readonly="!canChangeOkr"/>
+                        <KeyResults :objective="objective" :readonly="!canChangeOkr">
+                        </KeyResults>
+
+                        <div class="objective-additional-info">
+                            <span class="objective-additional-info-text">
+                                {{getLastChangedMessage(objective.lastModifiedDateTime)}}
+                            </span>
+                            <a title="View objective in Microsoft OneNote"
+                               :href="objective.onenoteWebUrl" target="_blank" rel="noopener noreferrer">
+                                <img class="objective-additional-info-o365"
+                                     src="https://weuofficehome.msocdn.com/s/7047452e/Images/favicon_metro.ico" />
+                            </a>
+                        </div>
                     </div>
 
                     <div class="objective-restore-layer" v-if="isRemovedObjective(objective.id)">
@@ -78,28 +90,13 @@
             </div>
 
             <div class="empty-objectives" v-if="!haveVisibleObjectives">
-                <div class="objective-card" v-if="canChangeOkr">
-                    <div class="objective">
-                        <div class="objective-item-header">
-                            <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
-                                <StarIcon class="objective-like-icon-selected"/>
-                            </div>
-
-                            <div class="objective-icons icons-container">
-                                <span @click="copyObjective(landingObjective)"><CopyIcon/></span>
-                            </div>
-                        </div>
-
-                        <div class="objective-item-body">
-                            <InputForm class="objective-title"
-                                       placeholder=""
-                                       :value="landingObjective.statement" />
-
-                            <KeyResults :objective="landingObjective" :readonly="true"/>
-                        </div>
-                    </div>
+                <div class="centered-suggestion-message" v-if="canChangeOkr">
+                    <span>
+                        Here is no any objective yet.<br/>
+                        Let's create your first ambitious objective right now
+                    </span>
                 </div>
-                <div class="centered-suggestion-message" v-if="!canChangeOkr">
+                <div class="centered-suggestion-message" v-else>
                     <span>
                         There is no any objective yet.<br/>
                         You can send a friendly reminder to your teammate
@@ -142,7 +139,6 @@
             ...mapState({
                objectives: state => state.okr.objectives,
                removedObjectives: state => state.okr.removedObjectives,
-               landingObjective: state => state.okr.landingObjective,
                error: state => state.okr.error,
                currentlyLoading: state => state.okr.loading,
                selectedSubject: state => state.user.selectedSubject,
@@ -216,6 +212,11 @@ Please take a look at your objective '${objective.statement}' on ${window.locati
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
 Please fill objectives for the next period on ${window.location}.`;
+            },
+
+            getLastChangedMessage(timestamp) {
+                const parsed = new Date(timestamp);
+                return `Updated ${parsed.toLocaleDateString()} at ${parsed.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             }
         }
     }
