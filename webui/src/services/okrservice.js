@@ -24,7 +24,7 @@ export default class OkrService {
 
     getKeyResults(subjectId, objectiveId, dataHandler, errHandler) {
         this.getPageContent(subjectId, objectiveId, document => {
-
+            
             const table = document.querySelector('div > table');
             if(!table) {
                 return dataHandler([]);
@@ -301,17 +301,11 @@ export default class OkrService {
     getPageContent(subjectId, pageId, dataHandler, errHandler) {
         this.graphClient
             .api(`${this.getSubjectPrefix(subjectId)}/onenote/pages/${pageId}/content`)
-            .responseType('document')
+            .responseType(MicrosoftGraph.ResponseType.TEXT)
             .get()
             .then((body) => {
-                if(ArrayBuffer.isView(body)) {
-                    // Chrome, Edge on Windows
-                    let document = new DOMParser().parseFromString(body, 'text/html');
-                    dataHandler(document);   
-                } else {
-                    // Chrome on Mac, probably something else
-                    dataHandler(body);   
-                }
+                const document = new DOMParser().parseFromString(body, 'text/html');
+                dataHandler(document);   
             })
             .catch(errHandler);
     }
