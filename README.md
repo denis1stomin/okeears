@@ -59,9 +59,9 @@ _OneDrive permissions are used only to share your OKR notebook with your teammat
 Allows the app to read a list of people in the order that's most relevant to you. This includes your local contacts, your contacts from social networking, people listed in your organization's directory, and people from recent communications.
 _Since firstly you want to look at objectives of people most relevant to you, Okeears automatically suggests you those people list. See links below to find more details about relevant people list._
 
-* __Not consented by Okeears currently__ `Read all users' full profiles`
+* __Not requested by Okeears currently__ `Read all users' full profiles`
 Allows the app to read the full set of profile properties, reports, and managers of other users in your organization, on behalf of the signed-in user.
-_The permission requires admin consent, therefore it is not consented by Okeears currently. But the permission is under consideration to be added in the future. Using this permission Okeears could retrieve full organizational structure relevant to you like it is done in Microsoft Delve. It will help you to align your goals with your managers tree._
+_The permission requires admin consent, therefore it is not requested by Okeears currently. But the permission is under consideration to be added in the future. Using this permission Okeears could retrieve full organizational structure relevant to you like it is done in Microsoft Delve. It will help you to align your goals with your managers tree._
 
 
 ## Useful links
