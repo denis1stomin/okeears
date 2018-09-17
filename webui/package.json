@@ -15,16 +15,16 @@
     "babel-core": "^6.26.3",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "less": "^3.0.4",
+    "less": "^3.8.1",
     "parcel-bundler": "^1.8.1",
     "parcel-plugin-vue": "^1.5.0",
-    "vue-template-compiler": "^2.5.16"
+    "vue-template-compiler": "^2.5.17"
   },
   "dependencies": {
     "@microsoft/microsoft-graph-client": "^1.0.0",
     "adal-angular": "^1.0.17",
     "axios": "^0.18.0",
-    "vue": "^2.5.16",
+    "vue": "^2.5.17",
     "vue-autosize": "^1.0.2",
     "vue-hot-reload-api": "^2.3.0",
     "vue-router": "^3.0.1",
