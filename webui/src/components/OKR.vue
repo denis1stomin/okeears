@@ -70,7 +70,7 @@
                             </span>
                             <a title="View objective in Microsoft OneNote"
                                :href="objective.onenoteWebUrl" target="_blank" rel="noopener noreferrer">
-                                <img class="objective-additional-info-o465"
+                                <img class="objective-additional-info-o365"
                                      src="https://weuofficehome.msocdn.com/s/7047452e/Images/favicon_metro.ico" />
                             </a>
                         </div>
