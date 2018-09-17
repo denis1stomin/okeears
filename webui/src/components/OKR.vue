@@ -62,7 +62,8 @@
                                    :value="objective.statement">
                         </InputForm>
 
-                        <KeyResults :objective="objective" :readonly="!canChangeOkr"/>
+                        <KeyResults :objective="objective" :readonly="!canChangeOkr">
+                        </KeyResults>
 
                         <div class="objective-additional-info">
                             <span class="objective-additional-info-text">
