@@ -13,16 +13,45 @@ if (!ACCESS_TOKEN) {
     process.exit(1);
 }
 
-
-HttpClient.get('me', {
+function handleNextUsersBunch(usersUrl) {
+    HttpClient.get(usersUrl, {
         headers: {
             'Authorization': `Bearer ${ACCESS_TOKEN}`
         }
     })
     .then(resp => {
-        const body = resp.data;
-        console.log(body);
+        const usersBunch = resp.data['value'];
+        const nextUsersUrl = resp.data['@odata.nextLink'];
+
+        usersBunch.forEach(each => {
+            HttpClient
+                .get(`users/${each.id}/onenote/notebooks?$filter=displayName eq 'Okeears'&$select=id`, {
+                    headers: {
+                        'Authorization': `Bearer ${ACCESS_TOKEN}`
+                    }
+                })
+                .then(resp => {
+                    if (resp.value && resp.value.length > 0) {
+                        console.log(each.userPrincipalName);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    if (err.statusCode != 404 && err.statusCode != 429) {
+                        //console.log('get notebook', err);
+                    }
+                });
+
+            //await sleep(50);
+        });
+
+        //handleNextUsersBunch(nextUsersUrl);
+        setTimeout(() => handleNextUsersBunch(nextUsersUrl), 100);
     })
     .catch(err => {
-        console.log(err);
+        //console.log('get users', err);
     });
+};
+
+console.log('Users which have Okeears file:');
+handleNextUsersBunch('users');
