@@ -17,6 +17,10 @@ Okeears is a simple-to-use SaaS application which helps your team and organizati
 * Okeears is hosted in Azure as static web site.
 * All the code is open-source!
 
+## High level architecture
+
+![Alt text](denis1stomin/okeears/blob/misc/doc/okeears_high_level_architecture.png?raw=true "Diagram")
+
 ## Application permissions
 
 Okeears needs you to provide a number of Azure AD `on-behalf-of` or delegated permissions.
