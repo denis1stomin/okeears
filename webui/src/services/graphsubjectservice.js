@@ -125,7 +125,7 @@ or startswith(mail,'${textQuery}')`)
     getUserPhoto(subjectId, dataHandler, errHandler) {
         this.graphClient
             .api(`/users/${subjectId}/photo/$value`)
-            .responseType('blob')
+            .responseType(MicrosoftGraph.ResponseType.BLOB)
             .version('beta')
             .get()
             .then(dataHandler)
