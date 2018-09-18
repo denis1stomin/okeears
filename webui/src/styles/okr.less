@@ -81,11 +81,12 @@
         }
 
         .objective-additional-info {
-          text-align: right;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
           font-size: 13px;
 
           .objective-additional-info-text {
-            margin-bottom: 10px;
             color: @textgrey;
           }
 
@@ -114,10 +115,8 @@
 
             .key-result-description {
               width: 100%;
-              font-size: 12px;
-              margin-left: 40px;
-              margin-right: 60px;
-              margin-bottom: 20px;
+              font-size: 13px;
+              margin: 0 20px 10px;
 
               textarea {
                 color: @textgrey;
