@@ -1,43 +1,9 @@
 <template>
     <div class="key-results">
-        <div class="key-result" v-for="keyresult in objective.keyresults" :key="keyresult.id">
-            <InputForm placeholder=""
-                       autosave="true"
-                       acceptEmpty="true"
-                       :readonly="readonly"
-                       :action="text => { editKeyresult(objective, text, keyresult, keyresult.description); }"
-                       :value="keyresult.statement">
-            </InputForm>
-
-            <input class="key-result-range" type="range" min="0" max="100"
-                   v-if="!readonly"
-                   v-model.number="keyresult.percent"
-                   @blur="editPercent(objective, keyresult)" title="percentage"/>
-            <span class="key-result-percents">{{keyresult.percent}}%</span>
-
-            <div class="icons-container" v-if="!readonly">
-                <span class="input-icon"
-                      title="Look at key result description"
-                      @click="openChat(keyresult.id)"><ChatIcon/>
-                </span>
-
-                <span class="input-icon"
-                      title="Delete key result"
-                      @click="deleteKeyresult(objective, keyresult)"><TrashIcon/>
-                </span>
-            </div>
-
-            <InputForm class="key-result-description"
-                       v-if="showDescription"
-                       placeholder="+ Result achievement description"
-                       autosave="true"
-                       acceptEmpty="true"
-                       :name="keyresult.id"
-                       :readonly="readonly"
-                       :action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"
-                       :value="keyresult.description">
-            </InputForm>
-        </div>
+        <KeyResult v-for="keyresult in objective.keyresults" :key="keyresult.id" 
+            :keyresult="keyresult"
+            :objective="objective"
+            :readonly="readonly"/>
 
         <InputForm ref="newKRForm"
                    v-if="!readonly"
@@ -50,21 +16,14 @@
 
 <script>
     import InputForm from './InputForm'
-    import ChatIcon from './Icons/ChatIcon'
-    import TrashIcon from './Icons/TrashIcon'
+    import KeyResult from './KeyResult'
 
     export default {
         name: 'KeyResults',
 
-        components: {InputForm, ChatIcon, TrashIcon},
+        components: { InputForm, KeyResult },
 
         props: ['objective', 'readonly'],
-
-        data() {
-            return {
-                showDescription: false
-            }
-        },
 
         methods: {
             addKeyresult(objective, statement) {
@@ -77,41 +36,7 @@
                         description: ""
                     }
                 })
-            },
-
-            editKeyresult(objective, krStatement, keyresult, krDescription) {
-                this.$store.dispatch('EDIT_KEYRESULT', {
-                    objective: objective,
-                    keyresult: keyresult,
-                    krStatement: krStatement,
-                    krPercent: keyresult.percent,
-                    krDescription: krDescription
-                });
-            },
-
-            deleteKeyresult(objective, keyresult) {
-                this.$store.dispatch('DELETE_KEYRESULT', {
-                    objective: objective,
-                    keyresult: keyresult
-                })
-            },
-
-            editPercent(objective, keyresult) {
-                this.$store.dispatch('EDIT_KEYRESULT', {
-                    objective: objective,
-                    keyresult: keyresult,
-                    krStatement: keyresult.statement,
-                    krPercent: keyresult.percent,
-                    krDescription: keyresult.description
-                });
-            },
-
-            openChat(keyresultId) {
-                this.showDescription = !this.showDescription;
-
-                // TODO : FIND InputForm html-element WHERE :name == keyresultId
-                //        THEN change its style to 'key-result-description[-hidden]'
-            }
+            }        
         }
     }
 </script>

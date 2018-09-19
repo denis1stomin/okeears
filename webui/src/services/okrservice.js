@@ -315,7 +315,7 @@ export default class OkrService {
             .then((body) => {
                 if(ArrayBuffer.isView(body)) {
                     // Chrome, Edge on Windows
-                    let document = new DOMParser().parseFromString(body, 'text/html');
+                    const document = new DOMParser().parseFromString(body, 'text/html');
                     dataHandler(document);   
                 } else {
                     // Chrome on Mac, probably something else
