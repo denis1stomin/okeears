@@ -13,6 +13,31 @@ if (!ACCESS_TOKEN) {
     process.exit(1);
 }
 
+function getDelay() {
+    return Math.floor((Math.random() * 10000) + 1000);
+}
+
+function getUserOkeears(userId, userName, cnt) {
+    HttpClient
+        .get(`users/${userId}/onenote/notebooks?$filter=displayName eq 'Okeears'&$select=id`, {
+            headers: {
+                'Authorization': `Bearer ${ACCESS_TOKEN}`
+            }
+        })
+        .then(resp => {
+            if (resp.value && resp.value.length > 0) {
+                console.log(userName);
+            }
+        })
+        .catch(err => {
+            //console.log('get okeears', err.response.status);
+            if (err.response.status != 404) {
+                cnt = cnt + 1;
+                setTimeout(() => getUserOkeears(userId, userName, cnt + 1), 3000 * cnt);
+            }
+        });
+}
+
 function handleNextUsersBunch(usersUrl) {
     HttpClient.get(usersUrl, {
         headers: {
@@ -23,33 +48,14 @@ function handleNextUsersBunch(usersUrl) {
         const usersBunch = resp.data['value'];
         const nextUsersUrl = resp.data['@odata.nextLink'];
 
-        usersBunch.forEach(each => {
-            HttpClient
-                .get(`users/${each.id}/onenote/notebooks?$filter=displayName eq 'Okeears'&$select=id`, {
-                    headers: {
-                        'Authorization': `Bearer ${ACCESS_TOKEN}`
-                    }
-                })
-                .then(resp => {
-                    if (resp.value && resp.value.length > 0) {
-                        console.log(each.userPrincipalName);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    if (err.statusCode != 404 && err.statusCode != 429) {
-                        //console.log('get notebook', err);
-                    }
-                });
+        usersBunch.forEach(each => setTimeout(
+            () => getUserOkeears(each.id, each.userPrincipalName, 1), getDelay()));
 
-            //await sleep(50);
-        });
-
-        //handleNextUsersBunch(nextUsersUrl);
-        setTimeout(() => handleNextUsersBunch(nextUsersUrl), 100);
+        handleNextUsersBunch(nextUsersUrl);
     })
     .catch(err => {
-        //console.log('get users', err);
+        console.log('get users', err);
+        setTimeout(() => handleNextUsersBunch(usersUrl), 3000);
     });
 };
 
