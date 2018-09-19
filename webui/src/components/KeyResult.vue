@@ -14,15 +14,16 @@
                 @blur="editPercent(objective, keyresult)" title="percentage"/>
         <span class="key-result-percents">{{keyresult.percent}}%</span>
 
-        <div class="icons-container" v-if="!readonly">
+        <div class="icons-container">
             <span class="input-icon"
-                    title="Look at key result description"
-                    @click="toggleChat()"><ChatIcon/>
+                  title="Look at key result description"
+                  @click="toggleChat()"><ChatIcon/>
             </span>
 
             <span class="input-icon"
-                    title="Delete key result"
-                    @click="deleteKeyresult(objective, keyresult)"><TrashIcon/>
+                  v-if="!readonly"
+                  title="Delete key result"
+                  @click="deleteKeyresult(objective, keyresult)"><TrashIcon/>
             </span>
         </div>
 
