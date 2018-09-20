@@ -124,6 +124,9 @@
     
     import { mapState, mapGetters } from 'vuex'
 
+    import TelemetryService from './../services/telemetryservice';
+    const telemetry = new TelemetryService();
+
     export default {
         name: 'Objectives',
 
@@ -202,6 +205,8 @@
 subject=Objective: ${objective.statement}&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
 Please take a look at your objective '${objective.statement}' on ${window.location}.`;
+
+                telemetry.trackEvent("buttonObjectiveEmail");
             },
 
             // TODO : check is it safe to invite user to window.location?
@@ -212,6 +217,8 @@ Please take a look at your objective '${objective.statement}' on ${window.locati
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
 Please fill objectives for the next period on ${window.location}.`;
+
+                telemetry.trackEvent("buttonReminderEmail");
             },
 
             getLastChangedMessage(timestamp) {
