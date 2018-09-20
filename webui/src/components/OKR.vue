@@ -106,8 +106,6 @@
                 </div>
             </div>
         </div>
-
-        <ChangeLog/>
     </div>
 </template>
 
@@ -118,7 +116,6 @@
     import StarIcon from './Icons/StarIcon'
     import PlusIcon from './Icons/PlusIcon'
     import InputForm from './InputForm'
-    import ChangeLog from './ChangeLog'
     import KeyResults from './KeyResults'
     import Spinner from './Animation/Spinner'
     
@@ -130,7 +127,7 @@
     export default {
         name: 'Objectives',
 
-        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults, Spinner},
+        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, KeyResults, Spinner},
 
         computed: {
             ...mapGetters({

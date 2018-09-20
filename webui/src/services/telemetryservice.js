@@ -10,8 +10,4 @@ export default class TelemetryService {
     trackEvent(name, data) {
         window.appInsights.trackEvent(name, data);
     }
-
-    trackError(message, data) {
-        window.appInsights.trackTrace(message, window.appInsights.SeverityLevel.Warning, data);
-    }
 }
