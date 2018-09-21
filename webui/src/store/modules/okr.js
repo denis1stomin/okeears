@@ -52,15 +52,27 @@ export default {
             state.invalidOneDriveForBusinessLicense = false;
             state.loading = false;
             state.saving = false;
+
+            telemetry.trackEvent("error", {
+                method: "OBJECTIVES_FAILED"
+            });
         },
 
         MARK_ONEDRIVE_LICENSE_ERROR(state) {
             state.invalidOneDriveForBusinessLicense = true;
+
+            telemetry.trackEvent("error", {
+                method: "MARK_ONEDRIVE_LICENSE_ERROR"
+            });
         },
 
         CREATE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
+
+            telemetry.trackEvent("error", {
+                method: "CREATE_OBJECTIVE_FAILED"
+            });
         },
 
         EDIT_OBJECTIVE(state, payload) {
@@ -76,6 +88,10 @@ export default {
         EDIT_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
+
+            telemetry.trackEvent("error", {
+                method: "EDIT_OBJECTIVE_FAILED"
+            });
         },
 
         DELETE_OBJECTIVE(state, objectiveId) {
@@ -88,6 +104,10 @@ export default {
         DELETE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
+
+            telemetry.trackEvent("error", {
+                method: "DELETE_OBJECTIVE_FAILED"
+            });
         },
 
         RESTORE_OBJECTIVE(state, objectiveId) {
@@ -113,6 +133,10 @@ export default {
         CREATE_KEYRESULT_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
+
+            telemetry.trackEvent("error", {
+                method: "CREATE_KEYRESULT_FAILED"
+            });
         },
 
         EDIT_KEYRESULT(state, payload) {
@@ -131,6 +155,10 @@ export default {
         EDIT_KEYRESULT_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
+
+            telemetry.trackEvent("error", {
+                method: "EDIT_KEYRESULT_FAILED"
+            });
         },
 
         DELETE_KEYRESULT(state, payload) {
@@ -145,6 +173,10 @@ export default {
         DELETE_KEYRESULT_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
+
+            telemetry.trackEvent("error", {
+                method: "DELETE_KEYRESULT_FAILED"
+            });
         },
 
         SAVING_SUCCESSFULLY_COMPLETE(state) {
@@ -215,7 +247,9 @@ export default {
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
 
-            telemetry.trackEvent("CreateObjective");
+            telemetry.trackEvent("CreateObjective", {
+                statementLength: objective.statement.length
+            });
         },
 
         COPY_OBJECTIVE_TO_CURRENT_USER({state, commit}, objective) {
@@ -233,7 +267,10 @@ export default {
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
 
-            telemetry.trackEvent("CopyObjective");
+            telemetry.trackEvent("CopyObjective", {
+                sourceSubjectId: user.state.selectedSubject.id,
+                statementLength: objective.statement.length
+            });
         },
 
         EDIT_OBJECTIVE({state, commit}, data) {
@@ -248,7 +285,9 @@ export default {
                 err => commit('EDIT_OBJECTIVE_FAILED', err)
             )
 
-            telemetry.trackEvent("EditObjective");
+            telemetry.trackEvent("EditObjective", {
+                statementLength: data.objective.statement.length
+            });
         },
 
         DELETE_OBJECTIVE({state, commit}, objectiveId) {
@@ -279,12 +318,17 @@ export default {
                 createdObjective => commit('SAVING_SUCCESSFULLY_COMPLETE'),
                 err => commit('CREATE_OBJECTIVE_FAILED', err)
             )
-            telemetry.trackEvent("RestoreObjective");
+            telemetry.trackEvent("RestoreObjective", {
+                objectiveId: objectiveId,
+                statementLength: objective.statement.length
+            });
         },
 
         PURGE_OBJECTIVE({commit}, objectiveId) {
             commit('PURGE_OBJECTIVE', objectiveId);
-            telemetry.trackEvent("PurgeObjective");
+            telemetry.trackEvent("PurgeObjective", {
+                objectiveId: objectiveId
+            });
         },
 
         CREATE_KEYRESULT({state, commit}, data) {
@@ -300,7 +344,11 @@ export default {
                 err => commit('CREATE_KEYRESULT_FAILED', err)
             );
 
-            telemetry.trackEvent("CreateKeyResult");
+            telemetry.trackEvent("CreateKeyResult", {
+                objectiveId: data.objective.id,
+                statementLength: data.objective.statement.length,
+                krStatementLength: data.keyresult.statement.length
+            });
         },
 
         EDIT_KEYRESULT({state, commit}, data) {
@@ -316,7 +364,12 @@ export default {
                 err => commit('EDIT_KEYRESULT_FAILED', err)
             );
 
-            telemetry.trackEvent("EditKeyResult");
+            telemetry.trackEvent("EditKeyResult", {
+                objectiveId: data.objective.id,
+                statementLength: data.objective.statement.length,
+                krStatementLength: krStatement.length,
+                krDescriptionLength: krDescription.length
+            });
         },
 
         DELETE_KEYRESULT({state, commit}, data) {
@@ -332,7 +385,12 @@ export default {
                 err => commit('DELETE_KEYRESULT_FAILED', err)
             );
 
-            telemetry.trackEvent("DeleteKeyResult");
+            telemetry.trackEvent("DeleteKeyResult", {
+                objectiveId: data.objective.id,
+                statementLength: data.objective.statement.length,
+                krStatementLength: data.keyresult.statement.length,
+                krDescriptionLength: data.keyresult.description.length
+            });
         },
     }
 }

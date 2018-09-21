@@ -45,6 +45,9 @@
     import ChatIcon from './Icons/ChatIcon'
     import TrashIcon from './Icons/TrashIcon'
 
+    import TelemetryService from './../services/telemetryservice';
+    const telemetry = new TelemetryService();
+
     export default {
         name: 'KeyResult',
 
@@ -91,6 +94,10 @@
 
             toggleChat() {
                 this.showDescription = !this.showDescription;
+
+                telemetry.trackEvent("chatButton", {
+                    showDescription: this.showDescription
+                });
             }
         }
     }

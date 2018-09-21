@@ -126,14 +126,18 @@ export default {
             context.dispatch('GET_ORGTREE');
             context.dispatch('SET_SELECTED_SUBJECT', subject);
             
-            telemetry.trackEvent("SetInterestingSubject");
+            telemetry.trackEvent("SetInterestingSubject", {
+                targetId: subject.id
+            });
         },
 
         SET_SELECTED_SUBJECT(context, subject) {
             context.commit('SELECTED_SUBJECT', subject);
             context.dispatch('GET_OBJECTIVES');
-            
-            telemetry.trackEvent("SetSelectedSubject");
+
+            telemetry.trackEvent("SetSelectedSubject", {
+                targetId: subject.id
+            });
         },
 
         // Gets OrgTree for an interesting subject
