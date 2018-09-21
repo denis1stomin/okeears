@@ -11,4 +11,3 @@ export default class TelemetryService {
         window.appInsights.trackEvent(name, data);
     }
 }
-

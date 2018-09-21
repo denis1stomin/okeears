@@ -106,8 +106,6 @@
                 </div>
             </div>
         </div>
-
-        <ChangeLog/>
     </div>
 </template>
 
@@ -118,16 +116,18 @@
     import StarIcon from './Icons/StarIcon'
     import PlusIcon from './Icons/PlusIcon'
     import InputForm from './InputForm'
-    import ChangeLog from './ChangeLog'
     import KeyResults from './KeyResults'
     import Spinner from './Animation/Spinner'
     
     import { mapState, mapGetters } from 'vuex'
 
+    import TelemetryService from './../services/telemetryservice';
+    const telemetry = new TelemetryService();
+
     export default {
         name: 'Objectives',
 
-        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, ChangeLog, KeyResults, Spinner},
+        components: {TrashIcon, CopyIcon, SendIcon, StarIcon, PlusIcon, InputForm, KeyResults, Spinner},
 
         computed: {
             ...mapGetters({
@@ -202,6 +202,8 @@
 subject=Objective: ${objective.statement}&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
 Please take a look at your objective '${objective.statement}' on ${window.location}.`;
+
+                telemetry.trackEvent("buttonObjectiveEmail");
             },
 
             // TODO : check is it safe to invite user to window.location?
@@ -212,6 +214,8 @@ Please take a look at your objective '${objective.statement}' on ${window.locati
 subject=Please fill objectives&
 body=Hi ${targetSubject.givenName || ''}%2C%0A
 Please fill objectives for the next period on ${window.location}.`;
+
+                telemetry.trackEvent("buttonReminderEmail");
             },
 
             getLastChangedMessage(timestamp) {
