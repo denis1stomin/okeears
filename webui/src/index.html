@@ -11,26 +11,43 @@
             margin: 0;
         }
 
-        .loading {
+        .loading-page {
             width: 100vw;
             height: 100vh;
+        }
+
+        .header {
+            height: 60px;
+            position: fixed;
+            left: 0;
+            right: 0;
+            z-index: 1;
+            color: #fff;
+            background-color: #a13742;
+        }
+
+        .loading {
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #a13742;
+            position: relative;
+            padding-top: 60px;
+            background: #fff;
         }
 
         .loading-spinner-default {
-            display: inline-block;
-            position: relative;
             width: 64px;
             height: 64px;
+            display: inline-block;
+            position: relative;
         }
         .loading-spinner-default div {
             position: absolute;
             width: 5px;
             height: 5px;
-            background: #fff;
+            background: #a13742;
             border-radius: 50%;
             animation: loading-spinner-default 1.2s linear infinite;
         }
@@ -94,6 +111,7 @@
             top: 41px;
             left: 50px;
         }
+
         @keyframes loading-spinner-default {
             0%, 20%, 80%, 100% {
                 transform: scale(1);
@@ -105,10 +123,15 @@
     </style>
 
     <div id="app">
-        <div class="loading">
-            <div class="loading-spinner-default">
-                <div></div><div></div><div></div><div></div><div></div><div></div>
-                <div></div><div></div><div></div><div></div><div></div><div></div>
+        <div class="loading-page">
+            <header class="header">
+                <h2 class="title">Okeears</h2>
+            </header>
+            <div class="loading">
+                <div class="loading-spinner-default">
+                    <div></div><div></div><div></div><div></div><div></div><div></div>
+                    <div></div><div></div><div></div><div></div><div></div><div></div>
+                </div>
             </div>
         </div>
     </div>
