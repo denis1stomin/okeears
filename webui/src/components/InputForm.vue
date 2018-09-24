@@ -6,6 +6,8 @@
                   v-model="text"
                   :id="name"
                   :readonly="readonly"
+                  :disabled="readonly"
+                  :style="{resize: readonly ? 'none' : 'vertical'}"
                   :placeholder="placeholder"
                   @blur="onBlur(text)"
                   @keyup.enter="onEnter(text)"
