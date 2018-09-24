@@ -53,20 +53,20 @@ export default {
             state.loading = false;
             state.saving = false;
 
-            telemetry.trackError();
+            telemetry.trackError('OBJECTIVES_FAILED');
         },
 
         MARK_ONEDRIVE_LICENSE_ERROR(state) {
             state.invalidOneDriveForBusinessLicense = true;
 
-            telemetry.trackError();
+            telemetry.trackError('MARK_ONEDRIVE_LICENSE_ERROR');
         },
 
         CREATE_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
 
-            telemetry.trackError();
+            telemetry.trackError('CREATE_OBJECTIVE_FAILED');
         },
 
         EDIT_OBJECTIVE(state, payload) {
@@ -77,15 +77,13 @@ export default {
 
             objectives[objectives.indexOf(obj)].statement = payload.statement;
             state.objectives = objectives;
-
-            telemetry.trackError();
         },
 
         EDIT_OBJECTIVE_FAILED(state, payload) {
             state.error = payload;
             state.saving = false;
 
-            telemetry.trackError();
+            telemetry.trackError('EDIT_OBJECTIVE_FAILED');
         },
 
         DELETE_OBJECTIVE(state, objectiveId) {
@@ -99,7 +97,7 @@ export default {
             state.error = payload;
             state.saving = false;
 
-            telemetry.trackError();
+            telemetry.trackError('DELETE_OBJECTIVE_FAILED');
         },
 
         RESTORE_OBJECTIVE(state, objectiveId) {
@@ -126,7 +124,7 @@ export default {
             state.error = payload;
             state.saving = false;
 
-            telemetry.trackError();
+            telemetry.trackError('CREATE_KEYRESULT_FAILED');
         },
 
         EDIT_KEYRESULT(state, payload) {
@@ -146,7 +144,7 @@ export default {
             state.error = payload;
             state.saving = false;
 
-            telemetry.trackError();
+            telemetry.trackError('EDIT_KEYRESULT_FAILED');
         },
 
         DELETE_KEYRESULT(state, payload) {
@@ -162,7 +160,7 @@ export default {
             state.error = payload;
             state.saving = false;
 
-            telemetry.trackError();
+            telemetry.trackError('DELETE_KEYRESULT_FAILED');
         },
 
         SAVING_SUCCESSFULLY_COMPLETE(state) {
