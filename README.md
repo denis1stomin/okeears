@@ -19,7 +19,7 @@ Okeears is a simple-to-use SaaS application which helps your team and organizati
 
 ## High level architecture
 
-![Alt text](https://github.com/denis1stomin/okeears/blob/misc/doc/okeears_high_level_architecture.png?raw=true "High level architecture diagram")
+![Alt text](https://raw.githubusercontent.com/denis1stomin/okeears/master/doc/okeears_high_level_architecture.png "High level architecture diagram")
 
 ## Application permissions
 
