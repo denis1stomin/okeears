@@ -4,11 +4,12 @@ const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
 const NOTEBOOK_NAME = 'Okeears';
-const SECTION_NAME = 'FY2018';
 
 export default class OkrService {
     constructor() {
         
+        this.scope = this.getScopes()[0];
+
         // Stores mapping from user id to his notebook section with objectives-pages
         this.sectionIds = new Map();
 
@@ -20,6 +21,23 @@ export default class OkrService {
                 }, ACCESS_TOKEN_RESOURCE);
             }
         });
+    }
+
+    getSectionName() {
+        return this.scope;
+    }
+
+    getScope() {
+        return this.scope;
+    }
+
+    getScopes() {
+        return ['FY2018', 'FY2019_temp'];
+    }
+
+    changeScope(scope, dataHandler, errHandler) {
+        this.scope = scope;
+        this.sectionIds.clear();
     }
 
     getKeyResults(subjectId, objectiveId, dataHandler, errHandler) {
@@ -181,7 +199,7 @@ export default class OkrService {
         const createSectionHandler = (notebookId) => {
             this.graphClient
                 .api(`me/onenote/notebooks/${notebookId}/sections`)
-                .post({ displayName: SECTION_NAME })
+                .post({ displayName: this.getSectionName() })
                 .then((body) => {
                     let sectionId = body.id;
                     this.setSubjectSectionId(subjectId, sectionId);
@@ -328,7 +346,7 @@ export default class OkrService {
     searchForSection(subjectId, dataHandler, errHandler) {
         this.graphClient
             .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections`)
-            .filter(`displayName eq '${SECTION_NAME}'`)
+            .filter(`displayName eq '${this.getSectionName()}'`)
             .select('id')
             .expand('parentNotebook')
             .get()
@@ -343,7 +361,7 @@ export default class OkrService {
                 } else if(sections.length == 0) {
                     dataHandler(null, null);
                 } else {
-                    errHandler({ message: `More than one '${SECTION_NAME}' sections found in the '${NOTEBOOK_NAME}' notebook.`});
+                    errHandler({ message: `More than one '${this.getSectionName()}' sections found in the '${NOTEBOOK_NAME}' notebook.`});
                 }
             })
             .catch(errHandler);
