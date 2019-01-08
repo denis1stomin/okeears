@@ -17,6 +17,8 @@ const moveItem = (itemId, fromArr, toArr) => {
 
 export default {
     state: {
+        scopes: [],
+        scope: null,
         objectives: [],
         removedObjectives: [],
         loading: false,
@@ -26,6 +28,17 @@ export default {
     },
 
     mutations: {
+        SET_SCOPE(state, payload) {
+            state.scope = payload;
+        },
+
+        SCOPES_COMPLETE(state, payload) {
+            state.error = null;
+            state.loading = false;
+            state.saving = false;
+            state.scopes = payload;
+        },
+
         OBJECTIVES_COMPLETE(state, payload) {
             state.error = null;
             state.invalidOneDriveForBusinessLicense = false;
@@ -191,7 +204,25 @@ export default {
         }
     },
 
-    actions: {
+    actions: {       
+        SET_SCOPE({state, commit, dispatch}, scope) {
+            commit('SET_SCOPE', scope);
+            okrSvc.changeScope(scope);
+            
+            // Trigger objectives reload for the new scope
+            dispatch('GET_OBJECTIVES');
+        },
+
+        LOAD_SCOPES({state, commit}) {
+            commit('LOADING_STARTED');
+
+            let scopes = okrSvc.getScopes();
+            commit('SCOPES_COMPLETE', scopes);
+
+            let scope = okrSvc.getScope();
+            commit('SET_SCOPE', scope);
+        },
+
         GET_OBJECTIVES({state, commit}) {
             commit('LOADING_STARTED');
 
