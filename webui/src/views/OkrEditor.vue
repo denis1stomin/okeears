@@ -11,6 +11,8 @@
         </header>
 
         <div class="menu">
+            <ScopeSelector/>
+
             <SearchForm/>
 
             <div class="menu-user" v-if="user.id !== selectedSubject.id"
@@ -31,6 +33,7 @@
 
 <script>
     import LogoutIcon from './../components/Icons/LogoutIcon'
+    import ScopeSelector from './../components/ScopeSelector'
     import SearchForm from './../components/SearchForm'
     import UserCard from './../components/UserCard'
     import OrgTree from './../components/OrgTree'
@@ -39,7 +42,7 @@
     import { mapState, mapGetters } from 'vuex'
 
     export default {
-        components: {LogoutIcon, SearchForm, OrgTree, UserCard, OKR},
+        components: {LogoutIcon, ScopeSelector, SearchForm, OrgTree, UserCard, OKR},
 
         computed: {
             ...mapGetters({
@@ -64,6 +67,7 @@
         },
 
         mounted() {
+            this.$store.dispatch('LOAD_SCOPES');
             this.$store.dispatch('GET_CURRENT_USER');
             this.$store.dispatch('GET_RELEVANT_SUBJECTS');
         }

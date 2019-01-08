@@ -4,11 +4,22 @@ const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
 const NOTEBOOK_NAME = 'Okeears';
-const SECTION_NAME = 'FY2018';
+
+const SCOPE_STORAGE_KEY = 'last_selected_scope';
+
+// In the future scopes can be modified by user, their names become editable
+const SCOPES = [
+    { id: 'FY2019',     name: 'Objectives for 2019' },
+    { id: 'FY2018',     name: 'Objectives for 2018' },
+    { id: 'PLAYGROUND', name: 'Playground' }
+];
 
 export default class OkrService {
     constructor() {
-        
+
+        let scopeId = localStorage.getItem(SCOPE_STORAGE_KEY);
+        this.scope = scopeId ? this.getScopes().find(each => each.id == scopeId) : this.getScopes()[0];
+
         // Stores mapping from user id to his notebook section with objectives-pages
         this.sectionIds = new Map();
 
@@ -20,6 +31,26 @@ export default class OkrService {
                 }, ACCESS_TOKEN_RESOURCE);
             }
         });
+    }
+
+    getSectionName() {
+        return this.scope.id;
+    }
+
+    getScope() {
+        return this.scope;
+    }
+
+    getScopes() {
+        return SCOPES;
+    }
+
+    changeScope(scope) {
+        localStorage.setItem(SCOPE_STORAGE_KEY, scope.id);
+        this.scope = scope;
+        
+        // Section IDs cache is scope-specific, so need to reset cache on scope change
+        this.sectionIds.clear();
     }
 
     getKeyResults(subjectId, objectiveId, dataHandler, errHandler) {
@@ -181,7 +212,7 @@ export default class OkrService {
         const createSectionHandler = (notebookId) => {
             this.graphClient
                 .api(`me/onenote/notebooks/${notebookId}/sections`)
-                .post({ displayName: SECTION_NAME })
+                .post({ displayName: this.getSectionName() })
                 .then((body) => {
                     let sectionId = body.id;
                     this.setSubjectSectionId(subjectId, sectionId);
@@ -328,7 +359,7 @@ export default class OkrService {
     searchForSection(subjectId, dataHandler, errHandler) {
         this.graphClient
             .api(`${this.getSubjectPrefix(subjectId)}/onenote/sections`)
-            .filter(`displayName eq '${SECTION_NAME}'`)
+            .filter(`displayName eq '${this.getSectionName()}'`)
             .select('id')
             .expand('parentNotebook')
             .get()
@@ -343,7 +374,7 @@ export default class OkrService {
                 } else if(sections.length == 0) {
                     dataHandler(null, null);
                 } else {
-                    errHandler({ message: `More than one '${SECTION_NAME}' sections found in the '${NOTEBOOK_NAME}' notebook.`});
+                    errHandler({ message: `More than one '${this.getSectionName()}' sections found in the '${NOTEBOOK_NAME}' notebook.`});
                 }
             })
             .catch(errHandler);
