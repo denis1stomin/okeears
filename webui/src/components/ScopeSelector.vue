@@ -1,7 +1,7 @@
 <template>
     <div class="input-form">
         <select v-model="scope">
-            <option v-for="scope in scopes" v-bind:value="scope" :key="scope"> {{ scope }}</option>
+            <option v-for="scope in scopes" v-bind:value="scope" :key="scope.id"> {{ scope.name }}</option>
         </select>
     </div>
 </template>

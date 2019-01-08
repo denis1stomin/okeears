@@ -5,10 +5,20 @@ const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
 const NOTEBOOK_NAME = 'Okeears';
 
+const SCOPE_STORAGE_KEY = 'last_selected_scope';
+
+// In the future scopes can be modified by user, their names become editable
+const SCOPES = [
+    { id: 'FY2019',     name: 'Objectives for 2019' },
+    { id: 'FY2018',     name: 'Objectives for 2018' },
+    { id: 'PLAYGROUND', name: 'Playground' }
+];
+
 export default class OkrService {
     constructor() {
-        
-        this.scope = this.getScopes()[0];
+
+        let scopeId = localStorage.getItem(SCOPE_STORAGE_KEY);
+        this.scope = scopeId ? this.getScopes().find(each => each.id == scopeId) : this.getScopes()[0];
 
         // Stores mapping from user id to his notebook section with objectives-pages
         this.sectionIds = new Map();
@@ -24,7 +34,7 @@ export default class OkrService {
     }
 
     getSectionName() {
-        return this.scope;
+        return this.scope.id;
     }
 
     getScope() {
@@ -32,11 +42,14 @@ export default class OkrService {
     }
 
     getScopes() {
-        return ['FY2018', 'FY2019_temp'];
+        return SCOPES;
     }
 
-    changeScope(scope, dataHandler, errHandler) {
+    changeScope(scope) {
+        localStorage.setItem(SCOPE_STORAGE_KEY, scope.id);
         this.scope = scope;
+        
+        // Section IDs cache is scope-specific, so need to reset cache on scope change
         this.sectionIds.clear();
     }
 
