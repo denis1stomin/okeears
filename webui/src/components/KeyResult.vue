@@ -17,7 +17,9 @@
         <div class="icons-container">
             <span class="input-icon"
                   title="Look at key result description"
-                  @click="toggleChat()"><ChatIcon/>
+                  @click="toggleChat()">
+                  <ChatIcon v-if="!keyresult.description"/>
+                  <ChatIconActive v-if="keyresult.description"/>
             </span>
 
             <span class="input-icon"
@@ -43,6 +45,7 @@
 <script>
     import InputForm from './InputForm'
     import ChatIcon from './Icons/ChatIcon'
+    import ChatIconActive from './Icons/ChatIconActive'
     import TrashIcon from './Icons/TrashIcon'
 
     import TelemetryService from './../services/telemetryservice';
@@ -51,7 +54,7 @@
     export default {
         name: 'KeyResult',
 
-        components: {InputForm, ChatIcon, TrashIcon},
+        components: {InputForm, ChatIcon, ChatIconActive, TrashIcon},
 
         props: ['objective', 'keyresult', 'readonly'],
 
