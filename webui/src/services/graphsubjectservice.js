@@ -1,7 +1,6 @@
 import AuthSvc from './authservice'
 
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
-
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
 const ORGTREE_USER_SELECT = 'id,displayName,jobTitle,officeLocation,givenName,surname,mail,userPrincipalName';

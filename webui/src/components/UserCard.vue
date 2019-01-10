@@ -21,17 +21,17 @@
 <script>
     import UserIcon from './Icons/UserIcon';
 
+    import { mapState } from 'vuex'
+
     export default {
         name: 'UserCard',
 
         components: {UserIcon},
 
         computed: {
-            user: {
-                get() {
-                    return this.$store.state.user.selectedSubject;
-                }
-            }
+            ...mapState({
+               user: state => state.user.selectedSubject
+            })
         }
     }
 </script>

@@ -38,13 +38,14 @@
                     <div class="objective-item-header">
                         <div class="objective-like-icon icons-container" @click="objective.like = !objective.like">
                             <StarIcon :class="{'objective-like-icon-selected': objective.like}"/>
+                            <div>{{getObjectiveCompetitionInfo(objective).likesNumber}}</div>
                         </div>
 
                         <div class="objective-icons icons-container">
                             <span v-if="!canChangeOkr"
                                   title="Send suggestion email"
                                   @click="sendChangeSuggestion(objective)"><SendIcon/></span>
-                            <span title="Duplicate objective"
+                            <span title="Duplicate objective to your list"
                                   @click="copyObjective(objective)"><CopyIcon/></span>
                             <span v-if="canChangeOkr"
                                   title="Delete objective"
@@ -142,7 +143,8 @@
                error: state => state.okr.error,
                currentlyLoading: state => state.okr.loading,
                selectedSubject: state => state.user.selectedSubject,
-               invalidOneDriveForBusinessLicense: state => state.okr.invalidOneDriveForBusinessLicense
+               invalidOneDriveForBusinessLicense: state => state.okr.invalidOneDriveForBusinessLicense,
+               competitionInfo: state => state.okr.competitionInfo
             })
         },
 
@@ -221,6 +223,13 @@ Please fill objectives for the next period on ${window.location}.`;
             getLastChangedMessage(timestamp) {
                 const parsed = new Date(timestamp);
                 return `Updated ${parsed.toLocaleDateString()} at ${parsed.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            },
+
+            getObjectiveCompetitionInfo(objective) {
+                const targetSubject = this.$store.state.user.selectedSubject;
+                const info = this.$store.state.user.competitionInfo;
+
+                return info;
             }
         }
     }

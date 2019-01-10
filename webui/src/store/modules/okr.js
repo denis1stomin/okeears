@@ -1,9 +1,11 @@
 import OkrService from './../../services/okrservice';
 import TelemetryService from './../../services/telemetryservice';
+import UserCompetitionService from './../../services/usercompetitionservice';
 import user from './user'
 
 const okrSvc = new OkrService();
 const telemetry = new TelemetryService();
+const userCompetition = new UserCompetitionService();
 
 const moveItem = (itemId, fromArr, toArr) => {
     const idx = fromArr.findIndex((x) => x.id === itemId);
@@ -24,7 +26,8 @@ export default {
         loading: false,
         saving: false,
         error: null,
-        invalidOneDriveForBusinessLicense: false
+        invalidOneDriveForBusinessLicense: false,
+        competitionInfo: {}
     },
 
     mutations: {
@@ -187,6 +190,10 @@ export default {
 
         LOADING_STARTED(state) {
             state.loading = true;
+        },
+
+        SET_USER_COMPETITION_INFO(state, info) {
+            state.competitionInfo = info;
         }
     },
 
@@ -407,5 +414,12 @@ export default {
                 krDescriptionLength: data.keyresult.description.length
             });
         },
+
+        GET_COMPETITION_INFO({commit}) {
+            userCompetition.getUserInfo(
+                user.state.selectedSubject.id,
+                data => commit('SET_USER_COMPETITION_INFO', data),
+                err => console.log(err));
+        }
     }
 }
