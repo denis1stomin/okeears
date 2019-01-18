@@ -66,10 +66,10 @@
                         </KeyResults>
 
                         <div class="objective-additional-info">
-                            <span class="objective-additional-info-text">
+                            <span class="objective-additional-info-text" v-if="objective.lastModifiedDateTime">
                                 {{getLastChangedMessage(objective.lastModifiedDateTime)}}
                             </span>
-                            <a title="View objective in Microsoft OneNote"
+                            <a title="View objective in Microsoft OneNote" v-if="objective.onenoteWebUrl"
                                :href="objective.onenoteWebUrl" target="_blank" rel="noopener noreferrer">
                                 <img class="objective-additional-info-o365"
                                      src="https://weuofficehome.msocdn.com/s/7047452e/Images/favicon_metro.ico" />
@@ -168,8 +168,13 @@
                     // Make deep copy below
                     keyresults: JSON.parse(JSON.stringify(objective.keyresults))
                 };
+
+                // KRs percent and description should not be copied
                 objectiveCopy.keyresults.forEach(
-                    each => { each.percent = 0; }
+                    each => {
+                         each.percent = 0;
+                         each.description = null;
+                    }
                 );
 
                 this.$store.dispatch('COPY_OBJECTIVE_TO_CURRENT_USER', objectiveCopy);
