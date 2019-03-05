@@ -71,8 +71,7 @@
                             </span>
                             <a title="View objective in Microsoft OneNote" v-if="objective.onenoteWebUrl"
                                :href="objective.onenoteWebUrl" target="_blank" rel="noopener noreferrer">
-                                <img class="objective-additional-info-o365"
-                                     src="https://weuofficehome.msocdn.com/s/7047452e/Images/favicon_metro.ico" />
+                                <img class="objective-additional-info-o365" src="../assets/onenote.png" />
                             </a>
                         </div>
                     </div>
