@@ -1,8 +1,7 @@
 <template>
     <div class="input-form">
         <label :for="name"></label>
-        <textarea type="text"
-                  v-autosize="text"
+        <textarea-autosize type="text"
                   v-model="text"
                   :id="name"
                   :readonly="readonly"
