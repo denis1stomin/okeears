@@ -6,11 +6,11 @@
             <div class="header-nav-item">
                 <span class="saving-indicator" v-if="currentlySaving">Saving...</span>
                 <span class="user-name">{{authenticatedUser.displayName}}</span>
+                <span class="widescreen" @click="wideScreen"><WideScreenIcon/></span>
                 <span class="log-out" @click="logOut"><LogoutIcon/></span>
             </div>
         </header>
-
-        <div class="menu">
+        <div class="menu" v-if="!widescreen">
             <ScopeSelector/>
 
             <SearchForm/>
@@ -21,7 +21,7 @@
             <OrgTree/>
         </div>
 
-        <div class="user-card">
+        <div class="user-card" v-if="!widescreen">
             <UserCard/>
         </div>
 
@@ -33,16 +33,17 @@
 
 <script>
     import LogoutIcon from './../components/Icons/LogoutIcon'
+    import WideScreenIcon from '../components/Icons/WideScreenIcon'
     import ScopeSelector from './../components/ScopeSelector'
     import SearchForm from './../components/SearchForm'
     import UserCard from './../components/UserCard'
     import OrgTree from './../components/OrgTree'
     import OKR from './../components/OKR'
-   
+
     import { mapState, mapGetters } from 'vuex'
 
     export default {
-        components: {LogoutIcon, ScopeSelector, SearchForm, OrgTree, UserCard, OKR},
+        components: {WideScreenIcon, LogoutIcon, ScopeSelector, SearchForm, OrgTree, UserCard, OKR},
 
         computed: {
             ...mapGetters({
@@ -52,11 +53,14 @@
             ...mapState({
                currentlySaving: state => state.okr.saving,
                selectedSubject: state => state.user.selectedSubject,
-               user: state => state.user.me
-            })            
+               user: state => state.user.me,
+               widescreen: state => state.user.widescreen
+            })
         },
-
         methods: {
+            wideScreen(){
+                this.$store.dispatch('WIDESCREEN_MODE')
+            },
             logOut() {
                 this.$store.dispatch('LOGOUT');
             },
