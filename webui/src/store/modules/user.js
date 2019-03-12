@@ -54,8 +54,9 @@ export default {
 
     mutations: {
         CHANGE_VIEW_MODE(state){
-          state.widescreen = !state.widescreen;
+            state.widescreen = !state.widescreen;
         },
+        
         CHANGE_SEARCH_QUERY(state, value) {
             state.searchQuery = value;
         },
