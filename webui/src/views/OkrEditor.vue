@@ -5,7 +5,7 @@
 
             <div class="header-nav-item">
                 <span class="saving-indicator" v-if="currentlySaving">Saving...</span>
-                <span class="widescreen" title="Enter widescreen mode" @click="wideScreen"><WideScreenIcon/></span>
+                <span class="widescreen" title="Toggle widescreen mode" @click="wideScreen"><WideScreenIcon/></span>
                 <span class="user-name">{{authenticatedUser.displayName}}</span>
                 <span class="log-out" title="Log out"@click="logOut"><LogoutIcon/></span>
             </div>
