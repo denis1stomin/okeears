@@ -28,7 +28,10 @@ export default {
         searchQuery: '',
 
         // last error
-        error: ''
+        error: '',
+
+        // widescreen mode (hides menu and user card)
+        widescreen: false
     },
 
     getters: {
@@ -50,6 +53,10 @@ export default {
     },
 
     mutations: {
+        CHANGE_VIEW_MODE(state){
+            state.widescreen = !state.widescreen;
+        },
+
         CHANGE_SEARCH_QUERY(state, value) {
             state.searchQuery = value;
         },
@@ -84,6 +91,9 @@ export default {
     },
 
     actions: {
+        WIDESCREEN_MODE(context){
+            context.commit('CHANGE_VIEW_MODE');
+        },
         // Gets current user information
         GET_CURRENT_USER(context) {
             SubjectSvc.getCurrentUser(
