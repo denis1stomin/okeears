@@ -68,7 +68,6 @@
 
         methods: {
             editKeyresult(objective, krStatement, keyresult, krDescription) {
-                console.log(keyresult);
                 this.$store.dispatch('EDIT_KEYRESULT', {
                     objective: objective,
                     keyresult: keyresult,

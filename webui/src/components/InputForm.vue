@@ -1,27 +1,16 @@
 <template>
     <div class="input-form">
         <label :for="name"></label>
-        <textarea-autosize v-if="multiline"
-                  type="text"
+        <textarea-autosize type="text"
                   v-model="text"
                   :id="name"
                   :readonly="readonly"
                   :disabled="readonly"
                   :style="{resize: readonly ? 'none' : 'vertical'}"
                   :placeholder="placeholder"
-                  @blur.native="onBlur(text)"/>
-        <textarea v-else
-                  type="text"
-                  v-model="text"
-                  v-autosize="text"
-                  :id="name"
-                  :readonly="readonly"
-                  :disabled="readonly"
-                  :style="{resize: readonly ? 'none' : 'vertical'}"
-                  :placeholder="placeholder"
-                  @blur="onBlur(text)"
-                  @keyup.enter="onEnter(text)"
-                  @keydown.enter="suppressEnter"/>
+                  @blur.native="onBlur(text)"
+                  @keyup.enter.native="onEnter(text)"
+                  @keydown.enter.native="suppressEnter"/>
         <div class="action-button">
             <slot/>
         </div>
@@ -48,7 +37,10 @@
             },
 
             onEnter(text) {
-                this.actionIfNeeded(text);
+                // Save the data on Enter only for NON multiline textareas
+                if (!this.multiline) {
+                    this.actionIfNeeded(text);
+                }
             },
 
             actionIfNeeded(text) {
@@ -58,10 +50,13 @@
             },
 
             suppressEnter(event) {
-                event.stopPropagation();
-    	        event.preventDefault();
-                event.returnValue = false;
-                this.text = event.target.value;
+                // Save the data on Enter only for NON multiline textareas
+                if (!this.multiline) {
+                    event.stopPropagation();
+    	            event.preventDefault();
+                    event.returnValue = false;
+                    this.text = event.target.value;
+                }
             },
 
             clear() {
