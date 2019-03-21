@@ -1,8 +1,21 @@
 <template>
     <div class="input-form">
         <label :for="name"></label>
-        <textarea-autosize type="text"
+        <textarea-autosize v-if="multiline"
+                  type="text"
                   v-model="text"
+                  :id="name"
+                  :readonly="readonly"
+                  :disabled="readonly"
+                  :style="{resize: readonly ? 'none' : 'vertical'}"
+                  :placeholder="placeholder"
+                  @blur="onBlur(text)"
+                  @keyup.enter="onEnter(text)"
+                  @keydown.enter="suppressEnter"/>
+        <textarea v-else
+                  type="text"
+                  v-model="text"
+                  v-autosize="text"
                   :id="name"
                   :readonly="readonly"
                   :disabled="readonly"
@@ -21,7 +34,7 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'value', 'autosave', 'readonly', 'acceptEmpty'],
+        props: ['name', 'placeholder', 'action', 'value', 'autosave', 'readonly', 'acceptEmpty', 'multiline'],
 
         data() {
             return {

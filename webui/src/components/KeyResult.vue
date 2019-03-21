@@ -4,6 +4,7 @@
                     autosave="true"
                     acceptEmpty="true"
                     :readonly="readonly"
+                    :multiline="true"
                     :action="text => { editKeyresult(objective, text, keyresult, keyresult.description); }"
                     :value="keyresult.statement">
         </InputForm>
@@ -36,6 +37,7 @@
                     acceptEmpty="true"
                     :name="keyresult.id"
                     :readonly="readonly"
+                    :multiline="true"
                     :action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"
                     :value="keyresult.description">
         </InputForm>
