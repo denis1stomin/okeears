@@ -9,9 +9,7 @@
                   :disabled="readonly"
                   :style="{resize: readonly ? 'none' : 'vertical'}"
                   :placeholder="placeholder"
-                  @blur="onBlur(text)"
-                  @keyup.enter="onEnter(text)"
-                  @keydown.enter="suppressEnter"/>
+                  @blur.native="onBlur(text)"/>
         <textarea v-else
                   type="text"
                   v-model="text"
@@ -45,15 +43,15 @@
         methods: {
             onBlur(text) {
                 if(this.autosave) {
-                    this.saveContent(text);
+                    this.actionIfNeeded(text);
                 }
             },
 
             onEnter(text) {
-                this.saveContent(text);
+                this.actionIfNeeded(text);
             },
 
-            saveContent(text) {
+            actionIfNeeded(text) {
                 if(!this.readonly && (text || this.acceptEmpty)) {
                     this.action(text);
                 }

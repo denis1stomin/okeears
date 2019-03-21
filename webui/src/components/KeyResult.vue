@@ -68,12 +68,13 @@
 
         methods: {
             editKeyresult(objective, krStatement, keyresult, krDescription) {
+                console.log(keyresult);
                 this.$store.dispatch('EDIT_KEYRESULT', {
                     objective: objective,
                     keyresult: keyresult,
-                    krStatement: krStatement,
+                    krStatement: krStatement.replace(/(?:\r\n|\r|\n)/g, '<br>'),
                     krPercent: keyresult.percent,
-                    krDescription: krDescription
+                    krDescription: krDescription.replace(/(?:\r\n|\r|\n)/g, '<br>')
                 });
             },
 
