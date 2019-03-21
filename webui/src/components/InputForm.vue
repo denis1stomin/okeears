@@ -45,11 +45,15 @@
         methods: {
             onBlur(text) {
                 if(this.autosave) {
-                    this.onEnter(text);
+                    this.saveContent(text);
                 }
             },
 
             onEnter(text) {
+                this.saveContent(text);
+            },
+
+            saveContent(text) {
                 if(!this.readonly && (text || this.acceptEmpty)) {
                     this.action(text);
                 }
