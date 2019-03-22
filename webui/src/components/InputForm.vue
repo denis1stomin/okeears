@@ -8,9 +8,9 @@
                   :disabled="readonly"
                   :style="{resize: readonly ? 'none' : 'vertical'}"
                   :placeholder="placeholder"
-                  @blur="onBlur(text)"
-                  @keyup.enter="onEnter(text)"
-                  @keydown.enter="suppressEnter"/>
+                  @blur.native="onBlur(text)"
+                  @keyup.enter.native="event => onEnterUp(event, text)"
+                  @keydown.enter.native="event => onEnterDown(event)" />
         <div class="action-button">
             <slot/>
         </div>
@@ -21,7 +21,7 @@
     export default {
         name: 'InputForm',
 
-        props: ['name', 'placeholder', 'action', 'value', 'autosave', 'readonly', 'acceptEmpty'],
+        props: ['name', 'placeholder', 'action', 'value', 'autosave', 'readonly', 'acceptEmpty', 'multiline'],
 
         data() {
             return {
@@ -32,17 +32,41 @@
         methods: {
             onBlur(text) {
                 if(this.autosave) {
-                    this.onEnter(text);
+                    this.actionIfNeeded(text);
                 }
             },
 
-            onEnter(text) {
+            onEnterUp(event, text) {
+                if (event.shiftKey) {
+                    if (!this.multiline) {
+                        // Save the data on Shift+Enter only for NON multiline textareas
+                        this.actionIfNeeded(text);
+                    }
+                } else {
+                    // Always save the data on clear Enter
+                    this.actionIfNeeded(text);
+                }
+            },
+
+            onEnterDown(event) {
+                if (event.shiftKey) {
+                    if (!this.multiline) {
+                        // Don't need new lines on Shift+Enter for NON multiline textareas
+                        this.suppressEnter();
+                    }
+                } else {
+                    // Don't need new lines on clear Enter
+                    this.suppressEnter();
+                }
+            },
+
+            actionIfNeeded(text) {
                 if(!this.readonly && (text || this.acceptEmpty)) {
                     this.action(text);
                 }
             },
 
-            suppressEnter(event) {
+            suppressEnter() {
                 event.stopPropagation();
     	        event.preventDefault();
                 event.returnValue = false;
