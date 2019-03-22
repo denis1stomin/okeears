@@ -3,6 +3,7 @@
         <InputForm placeholder=""
                     autosave="true"
                     acceptEmpty="true"
+                    multiline="true"
                     :readonly="readonly"
                     :action="text => { editKeyresult(objective, text, keyresult, keyresult.description); }"
                     :value="keyresult.statement">
@@ -34,6 +35,7 @@
                     placeholder="+ Result achievement description"
                     autosave="true"
                     acceptEmpty="true"
+                    multiline="true"
                     :name="keyresult.id"
                     :readonly="readonly"
                     :action="text => { editKeyresult(objective, keyresult.statement, keyresult, text); }"
@@ -69,9 +71,9 @@
                 this.$store.dispatch('EDIT_KEYRESULT', {
                     objective: objective,
                     keyresult: keyresult,
-                    krStatement: krStatement,
+                    krStatement: krStatement.replace(/(?:\r\n|\r|\n)/g, '<br>'),
                     krPercent: keyresult.percent,
-                    krDescription: krDescription
+                    krDescription: krDescription.replace(/(?:\r\n|\r|\n)/g, '<br>')
                 });
             },
 
