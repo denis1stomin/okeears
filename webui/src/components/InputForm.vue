@@ -9,8 +9,8 @@
                   :style="{resize: readonly ? 'none' : 'vertical'}"
                   :placeholder="placeholder"
                   @blur.native="onBlur(text)"
-                  @keyup.enter.native="onEnter(text)"
-                  @keydown.enter.native="suppressEnter"/>
+                  @keyup.enter.native="event => onEnterUp(event, text)"
+                  @keydown.enter.native="event => onEnterDown(event)" />
         <div class="action-button">
             <slot/>
         </div>
@@ -36,10 +36,27 @@
                 }
             },
 
-            onEnter(text) {
-                // Save the data on Enter only for NON multiline textareas
-                if (!this.multiline) {
+            onEnterUp(event, text) {
+                if (event.shiftKey) {
+                    if (!this.multiline) {
+                        // Save the data on Shift+Enter only for NON multiline textareas
+                        this.actionIfNeeded(text);
+                    }
+                } else {
+                    // Always save the data on clear Enter
                     this.actionIfNeeded(text);
+                }
+            },
+
+            onEnterDown(event) {
+                if (event.shiftKey) {
+                    if (!this.multiline) {
+                        // Don't need new lines on Shift+Enter for NON multiline textareas
+                        this.suppressEnter();
+                    }
+                } else {
+                    // Don't need new lines on clear Enter
+                    this.suppressEnter();
                 }
             },
 
@@ -49,14 +66,11 @@
                 }
             },
 
-            suppressEnter(event) {
-                // Save the data on Enter only for NON multiline textareas
-                if (!this.multiline) {
-                    event.stopPropagation();
-    	            event.preventDefault();
-                    event.returnValue = false;
-                    this.text = event.target.value;
-                }
+            suppressEnter() {
+                event.stopPropagation();
+    	        event.preventDefault();
+                event.returnValue = false;
+                this.text = event.target.value;
             },
 
             clear() {
