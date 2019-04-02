@@ -6,5 +6,9 @@ window.AppConfig = {
         //redirectUri: 'https://www.okeears.com/signin'
     },
 
+    app: {
+        autoShareNotebook: false
+    },
+
     instrumentationKey: "0a12fbd1-0c70-41d3-87d8-34cbd47955fb"
 };
