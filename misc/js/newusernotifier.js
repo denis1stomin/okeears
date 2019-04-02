@@ -63,15 +63,15 @@ function checkUser(userId, newUserHandler, onRequestDone) {
 }
 
 function notifyAboutNewUsers(cnt, exit) {
-    let msg = 'New unique user has joined \`Okeears\` in the last hour!';
+    let msg = 'New unique user has joined https://okeears.com in the last hour!';
     if (cnt > 1) {
-        msg = `Wow! ${cnt} unique users have joined \`Okeears\` in the last hour!`;
+        msg = `Wow! ${cnt} unique users have joined https://okeears.com in the last hour!`;
     }
 
     SlackClient
         .post(WEBHOOK_PATH, {
             text: msg,
-            username: "Okeears watcher",
+            username: "Okeears Watcher",
             channel: WEBHOOK_CHANNEL
         })
         .then(resp => {

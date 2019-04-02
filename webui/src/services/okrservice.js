@@ -4,8 +4,8 @@ const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 
 const NOTEBOOK_NAME = 'Okeears';
-
 const SCOPE_STORAGE_KEY = 'last_selected_scope';
+const AUTO_SHARE_NOTEBOOK = window.AppConfig.app.autoShareNotebook;
 
 // In the future scopes can be modified by user, their names become editable
 const SCOPES = [
@@ -216,7 +216,9 @@ export default class OkrService {
                 .then((body) => {
                     let sectionId = body.id;
                     this.setSubjectSectionId(subjectId, sectionId);
-                    this.shareNotebook(notebookId, errHandler);
+                    if (AUTO_SHARE_NOTEBOOK) {
+                        this.shareNotebook(notebookId, errHandler);
+                    }
                     dataHandler(sectionId);
                 })
                 .catch(errHandler);
@@ -326,7 +328,9 @@ export default class OkrService {
                 if(!readonlyMode && notebookId) {
                     // Ensure that notebook is shared.
                     // It is OK to share notebook several times
-                    this.shareNotebook(notebookId, errHandler);
+                    if (AUTO_SHARE_NOTEBOOK) {
+                        this.shareNotebook(notebookId, errHandler);
+                    }
                 }
             } else {
                 if(!readonlyMode) {

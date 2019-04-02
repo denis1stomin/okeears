@@ -8,12 +8,31 @@ import TelemetryService from './services/telemetryservice';
 
 Vue.use(Router);
 
+const hexString = buffer => {
+    const byteArray = new Uint8Array(buffer);
+
+    const hexCodes = [...byteArray].map(value => {
+      const hexCode = value.toString(16);
+      const paddedHexCode = hexCode.padStart(2, '0');
+      return paddedHexCode;
+    });
+
+    return hexCodes.join('');
+  }
+
 const checkAuth = (to, from, next) => {
     AuthSvc.handleCurrentWindowLocation();
 
     if (AuthSvc.isAuthenticated()) {
         const user = AuthSvc.getCurrentUser();
-        new TelemetryService().setAuthenticatedUser( user.profile.oid );
+
+        // Use userId hash as identifier
+        const encoder = new TextEncoder();
+        const data = encoder.encode(user.profile.oid);
+        window.crypto.subtle.digest('SHA-256', data).then(digest => {
+            const strHash = hexString(digest);
+            new TelemetryService().setAuthenticatedUser(strHash);
+        });
 
         next();
         return;
