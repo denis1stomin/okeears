@@ -194,6 +194,10 @@ export default {
             }, errorHandler);
         },
 
+        LOGIN() {
+            AuthSvc.login();
+        },
+
         LOGOUT() {
             AuthSvc.logout();
         }
