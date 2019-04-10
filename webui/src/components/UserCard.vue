@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import UserIcon from './Icons/UserIcon';
+    import UserIcon from './Icons/UserIcon.vue';
 
     export default {
         name: 'UserCard',

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import SearchIcon from './../components/Icons/SearchIcon'
+    import SearchIcon from './../components/Icons/SearchIcon.vue'
 
     export default {
         name: "SearchForm",

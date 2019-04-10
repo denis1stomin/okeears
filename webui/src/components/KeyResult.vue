@@ -45,10 +45,10 @@
 </template>
 
 <script>
-    import InputForm from './InputForm'
-    import ChatIcon from './Icons/ChatIcon'
-    import ChatIconActive from './Icons/ChatIconActive'
-    import TrashIcon from './Icons/TrashIcon'
+    import InputForm from './InputForm.vue'
+    import ChatIcon from './Icons/ChatIcon.vue'
+    import ChatIconActive from './Icons/ChatIconActive.vue'
+    import TrashIcon from './Icons/TrashIcon.vue'
 
     import TelemetryService from './../services/telemetryservice';
     const telemetry = new TelemetryService();

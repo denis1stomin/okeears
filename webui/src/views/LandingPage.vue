@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import HeaderTitle from './../components/HeaderTitle'
+    import HeaderTitle from './../components/HeaderTitle.vue'
 
     export default {
         components: {

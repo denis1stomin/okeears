@@ -15,7 +15,7 @@ const STYLE_DIR = path.resolve(ROOT_DIR, 'src/styles');
 module.exports = [
   {
     entry: [
-      './src/index.html'
+      './src/main.js'
     ],
     output: {
       filename: 'main.js',
@@ -37,20 +37,39 @@ module.exports = [
           loader: 'vue-loader'
         },
         {
-          test: /\.js$/,
-          loader: 'babel-loader'
+          test: /\.css$/,
+          use: [
+            'vue-style-loader',
+            'css-loader'
+          ]
         },
         {
-          test: /\.less$/,
+          test: /\.png/,
+          loader: 'file-loader'
+        },
+        {
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              //presets: ['env'],
+              //plugins: ['transform-object-rest-spread']
+            }
+          }
+        },
+        {
+          test: /\.less|css$/,
           include: STYLE_DIR,
           use: [
-            devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+            //devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
             //{
             //    loader: 'postcss-loader',
             //    options: {
             //      plugins: () => [autoprefixer()]
             //    }
             //},
+            'vue-style-loader',
             'css-loader',
             'less-loader'
           ]
@@ -58,9 +77,9 @@ module.exports = [
       ]
     },
     plugins: [
-      new CleanWebpackPlugin({
-        //dry: true
-      }),
+      //new CleanWebpackPlugin({
+      //  //dry: true
+      //}),
       //new webpack.optimize.OccurrenceOrderPlugin(),
       new VueLoaderPlugin(),
       new MiniCssExtractPlugin({

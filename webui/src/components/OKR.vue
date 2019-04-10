@@ -109,14 +109,14 @@
 </template>
 
 <script>
-    import TrashIcon from './Icons/TrashIcon'
-    import CopyIcon from './Icons/CopyIcon'
-    import SendIcon from './Icons/SendIcon'
-    import StarIcon from './Icons/StarIcon'
-    import PlusIcon from './Icons/PlusIcon'
-    import InputForm from './InputForm'
-    import KeyResults from './KeyResults'
-    import Spinner from './Animation/Spinner'
+    import TrashIcon from './Icons/TrashIcon.vue'
+    import CopyIcon from './Icons/CopyIcon.vue'
+    import SendIcon from './Icons/SendIcon.vue'
+    import StarIcon from './Icons/StarIcon.vue'
+    import PlusIcon from './Icons/PlusIcon.vue'
+    import InputForm from './InputForm.vue'
+    import KeyResults from './KeyResults.vue'
+    import Spinner from './Animation/Spinner.vue'
     
     import { mapState, mapGetters } from 'vuex'
 

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import UserIcon from './Icons/UserIcon'
+    import UserIcon from './Icons/UserIcon.vue'
     
     import { mapState } from 'vuex'
 

@@ -15,8 +15,8 @@
 </template>
 
 <script>
-    import InputForm from './InputForm'
-    import KeyResult from './KeyResult'
+    import InputForm from './InputForm.vue'
+    import KeyResult from './KeyResult.vue'
 
     export default {
         name: 'KeyResults',

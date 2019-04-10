@@ -32,14 +32,14 @@
 </template>
 
 <script>
-    import HeaderTitle from './../components/HeaderTitle'
-    import LogoutIcon from './../components/Icons/LogoutIcon'
-    import WideScreenIcon from '../components/Icons/WideScreenIcon'
-    import ScopeSelector from './../components/ScopeSelector'
-    import SearchForm from './../components/SearchForm'
-    import UserCard from './../components/UserCard'
-    import OrgTree from './../components/OrgTree'
-    import OKR from './../components/OKR'
+    import HeaderTitle from './../components/HeaderTitle.vue'
+    import LogoutIcon from './../components/Icons/LogoutIcon.vue'
+    import WideScreenIcon from './../components/Icons/WideScreenIcon.vue'
+    import ScopeSelector from './../components/ScopeSelector.vue'
+    import SearchForm from './../components/SearchForm.vue'
+    import UserCard from './../components/UserCard.vue'
+    import OrgTree from './../components/OrgTree.vue'
+    import OKR from './../components/OKR.vue'
 
     import { mapState, mapGetters } from 'vuex'
 
