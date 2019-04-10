@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <header class="header">
-            <h2 class="title">Okeears</h2>
+            <HeaderTitle></HeaderTitle>
 
             <div class="header-nav-item">
                 <span class="saving-indicator" v-if="currentlySaving">Saving...</span>
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+    import HeaderTitle from './../components/HeaderTitle'
     import LogoutIcon from './../components/Icons/LogoutIcon'
     import WideScreenIcon from '../components/Icons/WideScreenIcon'
     import ScopeSelector from './../components/ScopeSelector'
@@ -43,7 +44,16 @@
     import { mapState, mapGetters } from 'vuex'
 
     export default {
-        components: {WideScreenIcon, LogoutIcon, ScopeSelector, SearchForm, OrgTree, UserCard, OKR},
+        components: {
+            HeaderTitle,
+            WideScreenIcon,
+            LogoutIcon,
+            ScopeSelector,
+            SearchForm,
+            OrgTree,
+            UserCard,
+            OKR
+        },
 
         computed: {
             ...mapGetters({

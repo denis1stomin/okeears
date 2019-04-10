@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import LandingPage from './views/LandingPage.vue'
 import OkrEditor from './views/OkrEditor.vue'
 import Signin from './views/Signin.vue'
 
@@ -26,7 +27,7 @@ const checkAuth = (to, from, next) => {
     if (AuthSvc.isAuthenticated()) {
         const user = AuthSvc.getCurrentUser();
 
-        // Use userId hash as identifier
+        // Using userId hash as identifier
         const encoder = new TextEncoder();
         const data = encoder.encode(user.profile.oid);
         window.crypto.subtle.digest('SHA-256', data).then(digest => {
@@ -34,11 +35,22 @@ const checkAuth = (to, from, next) => {
             new TelemetryService().setAuthenticatedUser(strHash);
         });
 
-        next();
-        return;
+        if (to.path === '/editor')
+            next();
+        else
+            next({ name: 'editor' });
+        
+        return true;
     }
 
-    AuthSvc.login();
+    next();
+    return false;
+};
+
+const ensureAuth = (to, from, next) => {
+    if (!checkAuth(to, from, next)) {
+        AuthSvc.login();
+    }
 };
 
 const router = new Router({
@@ -47,8 +59,14 @@ const router = new Router({
         {
             path: '/',
             name: 'home',
-            component: OkrEditor,
+            component: LandingPage,
             beforeEnter: checkAuth
+        },
+        {
+            path: '/editor',
+            name: 'editor',
+            component: OkrEditor,
+            beforeEnter: ensureAuth
         },
         {
             path: '/signin',
@@ -57,8 +75,6 @@ const router = new Router({
             beforeEnter: (to, from, next) => { next({ name: 'home' }) }
         }
 
-        // TODO : signout
-        // TODO : home page before user is authenticated page
         // TODO : fake editor page ?
         // TODO : user settings page
     ]
