@@ -1,15 +1,12 @@
 <template>
     <div class="container">
         <header class="header">
-            <HeaderTitle/>
+            <HeaderTitle></HeaderTitle>
 
             <div class="header-nav-item">
                 <span class="log-out" @click="logIn">Log in</span>
             </div>
         </header>
-        <div class="menu">
-            <div class="menu-user" />
-        </div>
 
         <div class="content">
             <div class="centered-suggestion-message">

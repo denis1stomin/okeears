@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <header class="header">
-            <HeaderTitle/>
+            <HeaderTitle></HeaderTitle>
 
             <div class="header-nav-item">
                 <span class="saving-indicator" v-if="currentlySaving">Saving...</span>
