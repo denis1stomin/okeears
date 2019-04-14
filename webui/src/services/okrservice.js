@@ -1,4 +1,6 @@
 import AuthSvc from './authservice';
+import OneDriveHelper from './onedrivehelper';
+import OneDriveNoteMatcher from './onedrivenotematcher';
 
 const MicrosoftGraph = require('@microsoft/microsoft-graph-client');
 const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
@@ -6,6 +8,7 @@ const ACCESS_TOKEN_RESOURCE = 'https://graph.microsoft.com';
 const NOTEBOOK_NAME = 'Okeears';
 const SCOPE_STORAGE_KEY = 'last_selected_scope';
 const AUTO_SHARE_NOTEBOOK = window.AppConfig.app.autoShareNotebook;
+const CHECK_NOTEBOOK_IS_SHARED = window.AppConfig.app.checkNotebookIsShared;
 
 // In the future scopes can be modified by user, their names become editable
 const SCOPES = [
@@ -31,6 +34,8 @@ export default class OkrService {
                 }, ACCESS_TOKEN_RESOURCE);
             }
         });
+
+        this.oneDriveHelper = new OneDriveHelper(this.graphClient);
     }
 
     getSectionName() {
@@ -216,9 +221,11 @@ export default class OkrService {
                 .then((body) => {
                     let sectionId = body.id;
                     this.setSubjectSectionId(subjectId, sectionId);
+                    
                     if (AUTO_SHARE_NOTEBOOK) {
                         this.shareNotebook(notebookId, errHandler);
                     }
+                    
                     dataHandler(sectionId);
                 })
                 .catch(errHandler);
@@ -244,6 +251,13 @@ export default class OkrService {
                             if (notebooks.length == 1) {
                                 const notebookId = notebooks[0].id;
                                 createSectionHandler(notebookId);
+
+                                if (CHECK_NOTEBOOK_IS_SHARED) {
+                                    this.checkNotebookIsShared(
+                                        notebookId, isShared => {
+                                            console.log('OKESERVICE: shared=', isShared);
+                                        }, errHandler);
+                                }
                             } else {
                                 errHandler({ message: `Cannot find and/or create the '${NOTEBOOK_NAME}' notebook.`});
                             }
@@ -256,63 +270,19 @@ export default class OkrService {
     }
 
     shareNotebook(notebookId, errHandler) {
-        const oneDriveETag = notebookId.substr(2);
-        const oneDriveSearchUrl = `me/drive/root/search(q='{${oneDriveETag}}')`;
-        this.graphClient
-            .api(oneDriveSearchUrl)
-            .get()
-            .then(data => {
-                if(data.value.length > 0) {
-                    this.shareOneDriveItem(data.value[0].id, errHandler);
-                }
-            })
-            .catch(errHandler);
+        const oneDriveETag = OneDriveNoteMatcher.getOneDriveEtagByNotebookId(notebookId);
+        this.oneDriveHelper.getOneDriveItemIdByEtag(
+            oneDriveETag, id => {
+                this.oneDriveHelper.shareOneDriveItem(id, errHandler);
+            }, errHandler);
     }
 
-    shareOneDriveItem(itemId, errHandler, aliasIndex = 0) {
-
-        // From https://github.com/SharePoint/PnP-Sites-Core/blob/master/Core/OfficeDevPnP.Core/Extensions/SecurityExtensions.cs#L171
-        const aliases = [
-            "Everyone except external users",
-            "Все, кроме внешних пользователей",
-            "Jeder, außer externen Benutzern",
-            "Tout le monde sauf les utilisateurs externes",
-            "除外部用户外的任何人",
-            "外部使用者以外的所有人",
-        ];
-
-        if(aliasIndex >= aliases.length) {
-            // We have tried all the known aliases but still no luck :(
-            return;
-        }
-
-        const body = {
-            "recipients": [
-                {
-                    "alias": aliases[aliasIndex]
-                }
-            ],
-            "requireSignIn": true,
-            "sendInvitation": false,
-            "roles": [ 
-                "read"
-            ]
-        };
-        
-        this.graphClient
-            .api(`me/drive/items/${itemId}/invite`)
-            .post(body)
-            .then(data => {})
-            .catch(error => {
-                // Most likely it is "The request is malformed or incorrect." 
-                // due to wrong alias language or (probably?) already shared notebook.
-                // TODO: Refactor this when OneNote API sharing functionality will be used.
-                if(error.code == 'invalidRequest') {
-                    this.shareOneDriveItem(itemId, errHandler, aliasIndex + 1);
-                } else {
-                    errHandler(error);
-                }
-            });        
+    checkNotebookIsShared(notebookId, resultHandler, errHandler) {
+        const oneDriveETag = OneDriveNoteMatcher.getOneDriveEtagByNotebookId(notebookId);
+        this.oneDriveHelper.getOneDriveItemIdByEtag(
+            oneDriveETag, id => {
+                this.oneDriveHelper.checkOneDriveItemIsShared(id, resultHandler, errHandler);
+            }, errHandler);
     }
 
     getSection(subjectId, readonlyMode, dataHandler, errHandler) {
@@ -326,11 +296,12 @@ export default class OkrService {
             if (sectionId) {
                 dataHandler(sectionId);
                 if(!readonlyMode && notebookId) {
-                    // Ensure that notebook is shared.
-                    // It is OK to share notebook several times
                     if (AUTO_SHARE_NOTEBOOK) {
+                        // Ensure that notebook is shared.
+                        // It is OK to share notebook several times
                         this.shareNotebook(notebookId, errHandler);
                     }
+
                 }
             } else {
                 if(!readonlyMode) {
