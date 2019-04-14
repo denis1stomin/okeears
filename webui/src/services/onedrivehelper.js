@@ -67,8 +67,11 @@ export default class OneDriveHelper {
             .api(`me/drive/items/${itemId}`)
             .get()
             .then(data => {
-                console.log(data.body);
-                resultHandler(true);
+                const linkReg = new RegExp('(https://.+/)_layouts/.+');
+                resultHandler({
+                    isShared: data.hasOwnProperty('shared'),
+                    webUrl: linkReg.exec(data.webUrl)[1]
+                });
             })
             .catch(errHandler);
     }

@@ -251,13 +251,6 @@ export default class OkrService {
                             if (notebooks.length == 1) {
                                 const notebookId = notebooks[0].id;
                                 createSectionHandler(notebookId);
-
-                                if (CHECK_NOTEBOOK_IS_SHARED) {
-                                    this.checkNotebookIsShared(
-                                        notebookId, isShared => {
-                                            console.log('OKESERVICE: shared=', isShared);
-                                        }, errHandler);
-                                }
                             } else {
                                 errHandler({ message: `Cannot find and/or create the '${NOTEBOOK_NAME}' notebook.`});
                             }
@@ -302,6 +295,15 @@ export default class OkrService {
                         this.shareNotebook(notebookId, errHandler);
                     }
 
+                    if (CHECK_NOTEBOOK_IS_SHARED) {
+                        this.checkNotebookIsShared(
+                            notebookId, shareInfo => {
+                                if (!shareInfo.isShared) {
+                                    // TODO : create beatiful UI dialog with OneDrive screenshots!
+                                    alert(`You need to manually share your Okeears.\r\nTo do so you need to go to your OneDrive\r\n${shareInfo.webUrl}\r\nFind Okeears notebook and share it with "Everyone except external users" without permission to edit.`);
+                                }
+                            }, errHandler);
+                    }
                 }
             } else {
                 if(!readonlyMode) {
