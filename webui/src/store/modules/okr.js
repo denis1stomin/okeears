@@ -236,6 +236,10 @@ export default {
                         commit('MARK_ONEDRIVE_LICENSE_ERROR');
                         // No objectives available for such users
                         commit('CLEAR_OBJECTIVES');
+                    } else if (err.statusCode === 403) {
+                        // Authorization_RequestDenied is the marker that goals are not accessible for current user.
+                        // In this case we will just clean current objectives list.
+                        commit('CLEAR_OBJECTIVES');
                     } else {
                         commit('OBJECTIVES_FAILED', err);
                     }
