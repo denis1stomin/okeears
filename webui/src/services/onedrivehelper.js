@@ -76,3 +76,4 @@ export default class OneDriveHelper {
             .catch(errHandler);
     }
 }
+
