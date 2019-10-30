@@ -3,11 +3,11 @@
 
 https://okeears.com/
 
-_Delivered from https://github.com/denis1stomin/okeears-prod_
+_Production deployment is hosted by https://github.com/denis1stomin/okeears-prod_
 
 https://stage.okeears.com/
 
-_Delivered from https://github.com/denis1stomin/okeears-stage_
+_Staging deployment is hosted by https://github.com/denis1stomin/okeears-stage_
 
 Okeears is a simple-to-use SaaS application which helps your team and organization to easily start charging ahead objectives and key results (OKR) process. By design the application is highly integrated with Microsoft Office 365.
 
