@@ -2,9 +2,11 @@
 [![Build Status](https://travis-ci.org/denis1stomin/okeears.svg?branch=master)](https://travis-ci.org/denis1stomin/okeears) [![Known Vulnerabilities](https://snyk.io/test/github/denis1stomin/okeears/badge.svg?targetFile=webui%2Fpackage.json)](https://snyk.io/test/github/denis1stomin/okeears?targetFile=webui%2Fpackage.json)
 
 https://okeears.com/
+
 _Delivered from https://github.com/denis1stomin/okeears-prod_
 
 https://stage.okeears.com/
+
 _Delivered from https://github.com/denis1stomin/okeears-stage_
 
 Okeears is a simple-to-use SaaS application which helps your team and organization to easily start charging ahead objectives and key results (OKR) process. By design the application is highly integrated with Microsoft Office 365.
@@ -31,46 +33,50 @@ Okeears is a simple-to-use SaaS application which helps your team and organizati
 Okeears needs you to provide a number of Azure AD `on-behalf-of` or delegated permissions.
 You can easily revoke application permissions any time on https://portal.office.com/account/#apps.
 
-* `Read all OneNote notebooks that you can access`
-Allows the app to read all the OneNote notebooks that you have access to.
+* `Read all OneNote notebooks that user can access`
+Allows the app to read OneNote notebooks that the signed-in user has access to in the organization.
 _You need the permission to look over your teammates' objectives._
 
-* `Read your OneNote notebooks`
-Allows the app to read OneNote notebooks on your behalf.
+* `Read user OneNote notebooks`
+Allows the app to read the titles of OneNote notebooks and sections and to create new pages, notebooks, and sections on behalf of the signed-in user.
 
-* `Read and write your OneNote notebooks`
-Allows the app to read, share, and modify OneNote notebooks on your behalf.
+* `Read and write user OneNote notebooks`
+Allows the app to read, share, and modify OneNote notebooks on behalf of the signed-in user.
 
-* `Create your OneNote notebooks`
-Allows the app to view the titles of your OneNote notebooks and sections and to create new pages, notebooks, and sections on your behalf.
+* `Create user OneNote notebooks`
+Allows the app to read the titles of OneNote notebooks and sections and to create new pages, notebooks, and sections on behalf of the signed-in user.
 _You need those three permissions above to work with your objectives._
 
-* `Sign you in and read your profile`
-Allows you to sign in to the app with your organizational account and let the app read your profile. It also allows the app to read basic company information.
+* `Sign-in and read user profile`
+Allows users to sign-in to the app, and allows the app to read the profile of signed-in users. It also allows the app to read basic company information of signed-in users.
 _The permission is used to retrieve basic information about your teammates._
 
 * `Read all users' basic profiles`
-Allows the app to read a basic set of profile properties of other users in your organization on your behalf. Includes display name, first and last name, email address and photo.
+Allows the app to read a basic set of profile properties of other users in your organization on behalf of the signed-in user. This includes display name, first and last name, email address, open extensions and photo. Also allows the app to read the full profile of the signed-in user.
 _The permission is used to retrieve your profile basic information._
-
-* `Read your files`
-Allows the app to read your files.
-
-* __NOT REQUESTED CURRENTLY__ `Have full access to your files`
-Allows the app to read, create, update, and delete your files.
-_OneDrive permissions are used only to share your OKR notebook with your teammates since OneNote API currently does not provide such possibility. Theoretically OneDrive permissions will be removed from the application in future when OneNote API become more mature._
-
-* `Read your relevant people list`
-Allows the app to read a list of people in the order that's most relevant to you. This includes your local contacts, your contacts from social networking, people listed in your organization's directory, and people from recent communications.
-_Since firstly you want to look at objectives of people most relevant to you, Okeears automatically suggests you those people list. See links below to find more details about relevant people list._
 
 * __NOT REQUESTED CURRENTLY__ `Read all users' full profiles`
 Allows the app to read the full set of profile properties, reports, and managers of other users in your organization, on behalf of the signed-in user.
 _The permission requires admin consent, therefore it is not requested by Okeears currently. But the permission is under consideration to be added in the future. Using this permission Okeears could retrieve full organizational structure relevant to you like it is done in Microsoft Delve. It will help you to align your goals with your managers tree._
 
-* `Read write users' timeline`
-Allows the app to write to timeline..
-_TODO_
+* `Read user files`
+Allows the app to read the signed-in user's files.
+
+* __NOT REQUESTED CURRENTLY__ `Have full access to user files`
+Allows the app to read, create, update, and delete the signed-in user's files.
+_OneDrive permissions are used only to share your OKR notebook with your teammates since OneNote API currently does not provide such possibility. Theoretically OneDrive permissions will be removed from the application in future when OneNote API become more mature._
+
+* __NOT REQUESTED CURRENTLY__ `Have full access to the application's folder`
+Allows the app to read, create, update, and delete files in the application's folder.
+_In theory this permission will replace all other notes/files permissions in the future. It will be used to store Okeears users' data._
+
+* `Read users' relevant people lists`
+Allows the app to read a scored list of people relevant to the signed-in user. The list can include local contacts, contacts from social networking or your organization's directory, and people from recent communications (such as email and Skype).
+_Since firstly you want to look at objectives of people most relevant to you, Okeears automatically suggests you those people list. See links below to find more details about relevant people list._
+
+* `Read and write app activity to users' activity feed`
+Allows the app to read and report the signed-in user's activity in the app.
+_Okeears uses this permission to update your activity feed._
 
 
 ## Useful links
