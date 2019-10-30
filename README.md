@@ -1,7 +1,11 @@
 # Okeears - objectives and key results web app
 [![Build Status](https://travis-ci.org/denis1stomin/okeears.svg?branch=master)](https://travis-ci.org/denis1stomin/okeears) [![Known Vulnerabilities](https://snyk.io/test/github/denis1stomin/okeears/badge.svg?targetFile=webui%2Fpackage.json)](https://snyk.io/test/github/denis1stomin/okeears?targetFile=webui%2Fpackage.json)
 
-https://www.okeears.com/
+https://okeears.com/
+_Delivered from https://github.com/denis1stomin/okeears-prod_
+
+https://stage.okeears.com/
+_Delivered from https://github.com/denis1stomin/okeears-stage_
 
 Okeears is a simple-to-use SaaS application which helps your team and organization to easily start charging ahead objectives and key results (OKR) process. By design the application is highly integrated with Microsoft Office 365.
 
@@ -15,7 +19,7 @@ Okeears is a simple-to-use SaaS application which helps your team and organizati
 * OneNote API is used to store the data in human-readable format.
 (You can use the OKR information in other O365-integrated systems. You can use OneNote mobile app on your phone)
 * GDPR compliant :) since OneDrive/OneNote is used as a backend solution.
-* Okeears is hosted in Azure as static web site.
+* Okeears is hosted using GitHub Pages open repository!
 * All the code is open-source!
 
 ## High level architecture
@@ -52,7 +56,7 @@ _The permission is used to retrieve your profile basic information._
 * `Read your files`
 Allows the app to read your files.
 
-* `Have full access to your files`
+* __NOT REQUESTED CURRENTLY__ `Have full access to your files`
 Allows the app to read, create, update, and delete your files.
 _OneDrive permissions are used only to share your OKR notebook with your teammates since OneNote API currently does not provide such possibility. Theoretically OneDrive permissions will be removed from the application in future when OneNote API become more mature._
 
@@ -60,9 +64,13 @@ _OneDrive permissions are used only to share your OKR notebook with your teammat
 Allows the app to read a list of people in the order that's most relevant to you. This includes your local contacts, your contacts from social networking, people listed in your organization's directory, and people from recent communications.
 _Since firstly you want to look at objectives of people most relevant to you, Okeears automatically suggests you those people list. See links below to find more details about relevant people list._
 
-* __Not requested by Okeears currently__ `Read all users' full profiles`
+* __NOT REQUESTED CURRENTLY__ `Read all users' full profiles`
 Allows the app to read the full set of profile properties, reports, and managers of other users in your organization, on behalf of the signed-in user.
 _The permission requires admin consent, therefore it is not requested by Okeears currently. But the permission is under consideration to be added in the future. Using this permission Okeears could retrieve full organizational structure relevant to you like it is done in Microsoft Delve. It will help you to align your goals with your managers tree._
+
+* `Read write users' timeline`
+Allows the app to write to timeline..
+_TODO_
 
 
 ## Useful links
