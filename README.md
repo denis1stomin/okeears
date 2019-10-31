@@ -62,10 +62,6 @@ _The permission requires admin consent, therefore it is not requested by Okeears
 * `Read user files`
 Allows the app to read the signed-in user's files.
 
-* __NOT REQUESTED CURRENTLY__ `Have full access to user files`
-Allows the app to read, create, update, and delete the signed-in user's files.
-_OneDrive permissions are used only to share your OKR notebook with your teammates since OneNote API currently does not provide such possibility. Theoretically OneDrive permissions will be removed from the application in future when OneNote API become more mature._
-
 * __NOT REQUESTED CURRENTLY__ `Have full access to the application's folder`
 Allows the app to read, create, update, and delete files in the application's folder.
 _In theory this permission will replace all other notes/files permissions in the future. It will be used to store Okeears users' data._
