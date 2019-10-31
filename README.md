@@ -1,13 +1,13 @@
 # Okeears - objectives and key results web app
 [![Build Status](https://travis-ci.org/denis1stomin/okeears.svg?branch=master)](https://travis-ci.org/denis1stomin/okeears) [![Known Vulnerabilities](https://snyk.io/test/github/denis1stomin/okeears/badge.svg?targetFile=webui%2Fpackage.json)](https://snyk.io/test/github/denis1stomin/okeears?targetFile=webui%2Fpackage.json)
 
-https://okeears.com/
+https://okeears.com
 
-_Production deployment is hosted by https://github.com/denis1stomin/okeears-prod_
+_Production deployment is served by https://github.com/denis1stomin/okeears-prod_
 
-https://stage.okeears.com/
+https://stage.okeears.com
 
-_Staging deployment is hosted by https://github.com/denis1stomin/okeears-stage_
+_Staging deployment is served by https://github.com/denis1stomin/okeears-stage_
 
 Okeears is a simple-to-use SaaS application which helps your team and organization to easily start charging ahead objectives and key results (OKR) process. By design the application is highly integrated with Microsoft Office 365.
 
@@ -21,7 +21,7 @@ Okeears is a simple-to-use SaaS application which helps your team and organizati
 * OneNote API is used to store the data in human-readable format.
 (You can use the OKR information in other O365-integrated systems. You can use OneNote mobile app on your phone)
 * GDPR compliant :) since OneDrive/OneNote is used as a backend solution.
-* Okeears is hosted using GitHub Pages open repository!
+* Okeears is hosted using GitHub Pages open repositories!
 * All the code is open-source!
 
 ## High level architecture
