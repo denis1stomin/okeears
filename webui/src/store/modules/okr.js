@@ -1,8 +1,9 @@
 import OkrService from './../../services/okrservice';
+import OneDriveOkrService from './../../services/okrservice-onedrive';
 import TelemetryService from './../../services/telemetryservice';
 import user from './user'
 
-const okrSvc = new OkrService();
+const okrSvc = new OneDriveOkrService; //new OkrService();
 const telemetry = new TelemetryService();
 
 const moveItem = (itemId, fromArr, toArr) => {
@@ -216,10 +217,10 @@ export default {
         LOAD_SCOPES({state, commit}) {
             commit('LOADING_STARTED');
 
-            let scopes = okrSvc.getScopes();
+            let scopes = okrSvc.getObjectiveGroups();
             commit('SCOPES_COMPLETE', scopes);
 
-            let scope = okrSvc.getScope();
+            let scope = okrSvc.getCurrentObjectiveGroup();
             commit('SET_SCOPE', scope);
         },
 
@@ -251,7 +252,7 @@ export default {
             // We need to set unique objective id before committing mutation,
             // otherwise Vue's list rendering engine (v-for statement) will reuse DOM elements
             // and display several items with the same text for newly added objectives.
-            objective.id = 'temp-' + okrSvc.createId();
+            objective.id = 'temp-' + Math.random().toString(36).substr(2, 9);
             objective.lastModifiedDateTime = new Date();
             objective.onenoteWebUrl = null;
 
