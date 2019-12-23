@@ -6,7 +6,7 @@
   "scripts": {
     "build": "parcel build src/index.html --public-url ./",
     "clean": "if [ -d dist ]; then rm -R dist; fi && if [ -d .cache ]; then rm -R .cache; fi",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\""
   },
   "repository": {
     "type": "git",
