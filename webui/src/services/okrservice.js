@@ -12,6 +12,7 @@ const CHECK_NOTEBOOK_IS_SHARED = window.AppConfig.app.checkNotebookIsShared;
 
 // In the future scopes can be modified by user, their names become editable
 const SCOPES = [
+    { id: 'FY2020',     name: 'Objectives for 2020' },
     { id: 'FY2019',     name: 'Objectives for 2019' },
     { id: 'FY2018',     name: 'Objectives for 2018' },
     { id: 'PLAYGROUND', name: 'Playground' }
